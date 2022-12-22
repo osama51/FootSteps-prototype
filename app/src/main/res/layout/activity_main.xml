@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#F6F6F6">
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.12"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/leftLineChart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="18dp"
+                android:layout_weight="0.5"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/rightLineChart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="18dp"
+                android:layout_weight="0.5" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.14"/>
+
+            <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
+                android:id="@+id/left_mask"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.29"
+                app:layout_constraintEnd_toStartOf="@+id/right_mask"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:mask="@drawable/left"
+                app:porterduffxfermode="DST_IN"
+                tools:layout_editor_absoluteY="300dp">
+
+                <ca.hss.heatmaplib.HeatMap
+                    android:id="@+id/heatmap_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray"
+                    app:maxOpacity="220"
+                    app:minOpacity="0"
+                    app:radius="400dp" />
+
+            </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.14"
+                />
+
+            <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
+                android:id="@+id/right_mask"
+                android:layout_width="0dp"
+                android:layout_weight="0.29"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/left_mask"
+                app:mask="@drawable/right"
+                app:porterduffxfermode="DST_IN"
+                tools:layout_editor_absoluteY="-16dp">
+
+                <ca.hss.heatmaplib.HeatMap
+                    android:id="@+id/heatmap_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray"
+                    app:maxOpacity="220"
+                    app:minOpacity="0"
+                    app:radius="400dp" />
+
+            </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.14"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messages_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/log_background"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="7dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/white"
+                android:elevation="24dp"
+                android:src="@drawable/ic_enabled_bluetooth"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/send_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/sender_background"
+                android:padding="5dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_send_message"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.545">
+
+                <EditText
+                    android:id="@+id/ed_enter_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#B9CFDA"
+                    android:textColor="#4E5459"
+                    android:textSize="@dimen/text_size_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/msg_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageButton
+                android:id="@+id/btn_send_message"
+                android:layout_width="60dp"
+                android:layout_height="0dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_send"
+                android:text="@string/str_label_btn_send"
+
+                app:backgroundTint="@color/sweet"
+                app:layout_constraintBottom_toBottomOf="@+id/send_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/send_layout"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</layout>

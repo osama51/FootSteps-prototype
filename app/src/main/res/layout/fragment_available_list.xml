@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AvailableListFragment">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.toddler.bluecomm.bluetooth.BluetoothViewModel" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipe_available_layout">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/available_devices_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/available_devices"/>
+
+            <ProgressBar
+                android:id="@+id/available_devices_progressbar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:visibility="@{viewModel.finished ? View.GONE : View.VISIBLE}"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/available_device_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="20dp"/>
+
+            <TextView
+                android:id="@+id/no_devices_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#686868"
+                android:layout_marginTop="24dp"
+                android:text="@string/no_devices_msg"
+                android:layout_gravity="center"
+                android:visibility="@{viewModel.noDevices ? View.VISIBLE : View.GONE}"
+            />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

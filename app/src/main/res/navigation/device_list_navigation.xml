@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/pairedListFragment">
+
+    <fragment
+        android:id="@+id/pairedListFragment"
+        android:name="com.toddler.bluecomm.bluetooth.PairedListFragment"
+        android:label="PairedListFragment"
+        tools:layout="@layout/fragment_paired_list">
+        <action
+            android:id="@+id/action_pairedListFragment_to_availableListFragment"
+            app:destination="@id/availableListFragment"
+            app:popUpTo="@id/pairedListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/availableListFragment"
+        android:name="com.toddler.bluecomm.bluetooth.AvailableListFragment"
+        android:label="AvailableListFragment"
+        tools:layout="@layout/fragment_available_list">
+
+        <action
+            android:id="@+id/action_availableListFragment_to_pairedListFragment"
+            app:destination="@id/pairedListFragment"
+            app:popUpTo="@id/availableListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
