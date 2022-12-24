@@ -1,4 +1,4 @@
-package com.toddler.bluecomm.bluetooth
+package com.toddler.footsteps.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
-import com.toddler.bluecomm.R
-import com.toddler.bluecomm.databinding.ActivityDeviceListBinding
+import com.toddler.footsteps.R
+import com.toddler.footsteps.databinding.ActivityDeviceListBinding
 
 class DeviceListActivity : AppCompatActivity(),
     AvailableListFragment.OnFetchAvailableAddressListener, PairedListFragment.OnFetchPairedAddressListener {

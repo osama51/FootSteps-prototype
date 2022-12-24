@@ -1,4 +1,4 @@
-package com.toddler.bluecomm.bluetooth
+package com.toddler.footsteps.bluetooth
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.toddler.bluecomm.R
-import com.toddler.bluecomm.databinding.FragmentPairedListBinding
+import com.toddler.footsteps.R
+import com.toddler.footsteps.databinding.FragmentPairedListBinding
 
 class PairedListFragment : Fragment() {
 

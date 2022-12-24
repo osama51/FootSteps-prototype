@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/pairedListFragment"
-        android:name="com.toddler.bluecomm.bluetooth.PairedListFragment"
+        android:name="com.toddler.footsteps.bluetooth.PairedListFragment"
         android:label="PairedListFragment"
         tools:layout="@layout/fragment_paired_list">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/availableListFragment"
-        android:name="com.toddler.bluecomm.bluetooth.AvailableListFragment"
+        android:name="com.toddler.footsteps.bluetooth.AvailableListFragment"
         android:label="AvailableListFragment"
         tools:layout="@layout/fragment_available_list">
 

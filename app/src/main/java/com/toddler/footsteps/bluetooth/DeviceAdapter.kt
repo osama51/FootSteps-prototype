@@ -1,4 +1,4 @@
-package com.toddler.bluecomm.bluetooth
+package com.toddler.footsteps.bluetooth
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.toddler.bluecomm.R
-import com.toddler.bluecomm.databinding.ItDeviceBinding
+import com.toddler.footsteps.R
+import com.toddler.footsteps.databinding.ItDeviceBinding
 import kotlinx.android.synthetic.main.it_device.view.*
 
 class DeviceAdapter(private val clickListener: DeviceListener) :

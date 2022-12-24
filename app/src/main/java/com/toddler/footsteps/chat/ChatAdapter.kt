@@ -1,4 +1,4 @@
-package com.toddler.bluecomm.chat
+package com.toddler.footsteps.chat
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.toddler.bluecomm.R
-import com.toddler.bluecomm.databinding.ItChatbubbleBinding
+import com.toddler.footsteps.R
+import com.toddler.footsteps.databinding.ItChatbubbleBinding
 import kotlinx.android.synthetic.main.it_chatbubble.view.*
 
 class ChatAdapter(val context: Context, private val clickListener: ChatBubbleListener) :

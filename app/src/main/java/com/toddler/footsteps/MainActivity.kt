@@ -1,4 +1,4 @@
-package com.toddler.bluecomm
+package com.toddler.footsteps
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,10 +6,8 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -30,15 +28,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.toddler.bluecomm.bluetooth.DeviceListActivity
-import com.toddler.bluecomm.chat.ChatAdapter
-import com.toddler.bluecomm.chat.ChatBubble
-import com.toddler.bluecomm.chat.ChatViewModel
-import com.toddler.bluecomm.databinding.ActivityMainBinding
-import java.io.IOException
+import com.toddler.footsteps.bluetooth.DeviceListActivity
+import com.toddler.footsteps.chat.ChatAdapter
+import com.toddler.footsteps.chat.ChatBubble
+import com.toddler.footsteps.chat.ChatViewModel
+import com.toddler.footsteps.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 

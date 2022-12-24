@@ -1,4 +1,4 @@
-package com.toddler.bluecomm
+package com.toddler.footsteps
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter

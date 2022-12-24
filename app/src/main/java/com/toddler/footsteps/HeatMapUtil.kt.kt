@@ -1,4 +1,4 @@
-package com.toddler.bluecomm
+package com.toddler.footsteps
 
 import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap

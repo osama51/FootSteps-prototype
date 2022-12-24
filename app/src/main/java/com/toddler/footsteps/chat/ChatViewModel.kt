@@ -1,4 +1,4 @@
-package com.toddler.bluecomm.chat
+package com.toddler.footsteps.chat
 
 
 import android.annotation.SuppressLint

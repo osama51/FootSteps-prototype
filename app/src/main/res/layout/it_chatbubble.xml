@@ -8,11 +8,11 @@
 
         <variable
             name="chatBubble"
-            type="com.toddler.bluecomm.chat.ChatBubble" />
+            type="com.toddler.footsteps.chat.ChatBubble" />
 
         <variable
             name="clickListener"
-            type="com.toddler.bluecomm.chat.ChatAdapter.ChatBubbleListener" />
+            type="com.toddler.footsteps.chat.ChatAdapter.ChatBubbleListener" />
 
     </data>
 
