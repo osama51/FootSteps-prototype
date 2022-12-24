@@ -8,7 +8,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.toddler.bluecomm"
+        applicationId "com.toddler.footsteps"
         minSdk 21
         targetSdk 32
         versionCode 1
