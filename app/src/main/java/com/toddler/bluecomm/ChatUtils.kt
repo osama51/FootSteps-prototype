@@ -215,49 +215,6 @@ class ChatUtils(context: Context, handler: Handler) {
         }
     }
 
-//    inner class ConnectedThread(var socket: BluetoothSocket) : Thread() {
-//        private var inputStream: InputStream?
-//        private var outputStream: OutputStream?
-//
-//        var tempInput: InputStream? = null
-//        var tempOutput: OutputStream? = null
-//
-//        init {
-//            try {
-//                tempInput = socket.inputStream
-//                tempOutput = socket.outputStream
-//            } catch (e: IOException) {
-//
-//            }
-//
-//            inputStream = tempInput
-//            outputStream = tempOutput
-//        }
-//
-//        override fun run() {
-//            super.run()
-//            var buffer: ByteArray = ByteArray(1024)
-//            var bytes: Int
-//
-//            try {
-//                bytes = inputStream!!.read(buffer)
-//
-//                handler.obtainMessage(MessageEnum.MESSAGE_READ.ordinal, bytes, -1, buffer)
-//                    .sendToTarget()
-//            } catch (e: IOException) {
-//                Toast.makeText(context, "Connection lost", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        fun cancel() {
-//            try {
-//                socket?.close()
-//            } catch (e3: IOException) {
-//                Log.e("Connect.Cancel", e3.toString())
-//
-//            }
-//        }
-//    }
 
     private inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {
 
@@ -343,60 +300,6 @@ class ChatUtils(context: Context, handler: Handler) {
             }
         }
     }
-
-//    private inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {
-//        private val mmInStream: InputStream?
-//        private val mmOutStream: OutputStream?
-//        override fun run() {
-//            val buffer = ByteArray(1024)
-//            var begin = 0
-//            var bytes = 0
-//            while (true) {
-//                try {
-//                    bytes += mmInStream!!.read(buffer, bytes, buffer.size - bytes)
-//                    for (i in begin until bytes) {
-//                        if (buffer[i] == "#".toByteArray()[0]) {
-//                            handler.obtainMessage(1, begin, i, buffer).sendToTarget()
-//                            begin = i + 1
-//                            if (i == bytes - 1) {
-//                                bytes = 0
-//                                begin = 0
-//                            }
-//                        }
-//                    }
-//                } catch (e: IOException) {
-//                    break
-//                }
-//            }
-//        }
-//
-//        fun write(bytes: ByteArray?) {
-//            try {
-//                mmOutStream!!.write(bytes)
-//            } catch (e: IOException) {
-//            }
-//        }
-//
-//        fun cancel() {
-//            try {
-//                mmSocket.close()
-//            } catch (e: IOException) {
-//            }
-//        }
-//
-//        init {
-//            var tmpIn: InputStream? = null
-//            var tmpOut: OutputStream? = null
-//            try {
-//                tmpIn = mmSocket.inputStream
-//                tmpOut = mmSocket.outputStream
-//            } catch (e: IOException) {
-//            }
-//            mmInStream = tmpIn
-//            mmOutStream = tmpOut
-//        }
-//    }
-
 
     @Synchronized
     private fun connectionFailed(e: String) {

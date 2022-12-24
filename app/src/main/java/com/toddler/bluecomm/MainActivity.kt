@@ -6,8 +6,10 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -36,6 +38,7 @@ import com.toddler.bluecomm.databinding.ActivityMainBinding
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 
@@ -85,16 +88,28 @@ class MainActivity : AppCompatActivity() {
     private var stateEnum: StateEnum = StateEnum.STATE_NONE
 
     private var idIndex by Delegates.notNull<Int>()
-    private var fIndex by Delegates.notNull<Int>()
-    private var gIndex by Delegates.notNull<Int>()
-    private var hIndex by Delegates.notNull<Int>()
-    private var jIndex by Delegates.notNull<Int>()
+    private var f0Index by Delegates.notNull<Int>()
+    private var f1Index by Delegates.notNull<Int>()
+    private var a0Index by Delegates.notNull<Int>()
+    private var a1Index by Delegates.notNull<Int>()
+    private var a2Index by Delegates.notNull<Int>()
+    private var g0Index by Delegates.notNull<Int>()
+    private var g1Index by Delegates.notNull<Int>()
+    private var g2Index by Delegates.notNull<Int>()
+
 
     private var id: Int = 0
-    private var f: Int = 0
-    private var g: Int = 0
-    private var h: Int = 0
-    private var j: Int = 0
+    private var f0: Int = 0
+    private var f1: Int = 0
+    private var a0: Int = 0
+    private var a1: Int = 0
+    private var a2: Int = 0
+    private var g0: Int = 0
+    private var g1: Int = 0
+    private var g2: Int = 0
+
+
+
 
     @Synchronized
     fun setState2(state: StateEnum) {
@@ -133,14 +148,15 @@ class MainActivity : AppCompatActivity() {
         when (message.what) {
             MessageEnum.MESSAGE_STATE_CHANGED.ordinal -> {
                 when (message.arg1) {
-                    StateEnum.STATE_NONE.ordinal -> {
+                    StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
-                    }
-                    StateEnum.STATE_LISTEN.ordinal -> {
-                        setState("Not Connected")
+                        heatMapUtil.leftFootPoints(0.0,0.0)
+                        heatMapUtil.rightFootPoints(0.0,0.0)
                     }
                     StateEnum.STATE_CONNECTING.ordinal -> {
                         setState("Connecting...")
+                        heatMapUtil.leftFootPoints(0.0,0.0)
+                        heatMapUtil.rightFootPoints(0.0,0.0)
                     }
                     StateEnum.STATE_CONNECTED.ordinal -> {
                         setState("Connected to: $connectedDevice")
@@ -149,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             }
             MessageEnum.MESSAGE_READ.ordinal -> {
                 var buffer = message.obj as ByteArray
-                val begin: Int = message.arg1
+//                val begin: Int = message.arg1
                 val end: Int = message.arg2
 
                 var receivedMsg = String(buffer, 0, end)
@@ -158,50 +174,65 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
 //                try{
                 idIndex = receivedMsg.indexOf('i', 0)
-                fIndex = receivedMsg.indexOf('f', 0)
-                gIndex = receivedMsg.indexOf('g', 0)
-                hIndex = receivedMsg.indexOf('h', 0)
-                jIndex = receivedMsg.indexOf('j', 0)
+                f0Index = receivedMsg.indexOf("f0", 0)
+                f1Index = receivedMsg.indexOf("f1", 0)
+                a0Index = receivedMsg.indexOf("a0", 0)
+                a1Index = receivedMsg.indexOf("a1", 0)
+                a2Index = receivedMsg.indexOf("a2", 0)
+                g0Index = receivedMsg.indexOf("g0", 0)
+                g1Index = receivedMsg.indexOf("g1", 0)
+                g2Index = receivedMsg.indexOf("g2", 0)
 
                 when (-1) {
-                    idIndex, fIndex, gIndex, hIndex, jIndex -> {
-                        id = 0
-                        f = 0
-                        g = 0
-                        h = 0
-                        j = 0
+                    idIndex, f0Index, f1Index, a0Index, a1Index, a2Index, g0Index, g1Index, g2Index -> {
+
                     }
                     else -> {
-                        for (c in receivedMsg.indices) {
-                            if (receivedMsg[c] == 'i') {
-                                id = Integer.parseInt(receivedMsg.slice(c - 1 until c))
-                                idIndex = c
-                            }
-                            if (receivedMsg[c] == 'f') {
-                                f = Integer.parseInt(receivedMsg.slice(idIndex + 1 until c)) ?: 0
-                                fIndex = c
-                            }
-                            if (receivedMsg[c] == 'g') {
-                                g = Integer.parseInt(receivedMsg.slice(fIndex + 1 until c))
-                                gIndex = c
-                            }
-                            if (receivedMsg[c] == 'h') {
-                                h = Integer.parseInt(receivedMsg.slice(gIndex + 1 until c))
-                                hIndex = c
-                            }
-                            if (receivedMsg[c] == 'j') {
-                                j = Integer.parseInt(receivedMsg.slice(hIndex + 1 until c))
-                            }
-                        }
+//                        for (c in receivedMsg.indices) {
+
+                            id = receivedMsg.slice(idIndex - 1 until idIndex).toInt()
+                            f0 = receivedMsg.slice(idIndex + 2 until f0Index).toInt()
+                            f1 = receivedMsg.slice(f0Index + 2 until f1Index).toInt()
+                            a0 = receivedMsg.slice(f1Index + 2 until a0Index).toInt()
+                            a1 = receivedMsg.slice(a0Index + 2 until a1Index).toInt()
+                            a2 = receivedMsg.slice(a1Index + 2 until a2Index).toInt()
+                            g0 = receivedMsg.slice(a2Index + 2 until g0Index).toInt()
+                            g1 = receivedMsg.slice(g0Index + 2 until g1Index).toInt()
+                            g2 = receivedMsg.slice(g1Index + 2 until g2Index).toInt()
+
+//                            if (receivedMsg[c] == 'i') {
+//                                id = Integer.parseInt(receivedMsg.slice(c - 1 until c))
+//                                idIndex = c
+//                            }
+//                            if (receivedMsg[c] == 'f') {
+//                                f = Integer.parseInt(receivedMsg.slice(idIndex + 2 until c)) ?: 0
+//                                fIndex = c
+//                            }
+//                            if (receivedMsg[c] == 'g') {
+//                                g = Integer.parseInt(receivedMsg.slice(fIndex + 2 until c))
+//                                gIndex = c
+//                            }
+//                            if (receivedMsg[c] == 'h') {
+//                                h = Integer.parseInt(receivedMsg.slice(gIndex + 2 until c))
+//                                hIndex = c
+//                            }
+//                            if (receivedMsg[c] == 'j') {
+//                                j = Integer.parseInt(receivedMsg.slice(hIndex + 2 until c))
+//                            }
+//                        }
                     }
                 }
 
                 when(id){
-                    LeftRight.LEFT.ordinal -> {
-                        heatMapUtil.leftFootPoints(f.toDouble())
-                    }
                     LeftRight.RIGHT.ordinal -> {
-                        heatMapUtil.rightFootPoints(g.toDouble())
+                        f0 = (0..4095).random()
+                        f1 = (0..4095).random()
+                        heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+                    }
+                    LeftRight.LEFT.ordinal -> {
+                        f0 = (0..4095).random()
+                        f1 = (0..4095).random()
+                        heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
                     }
                 }
 
@@ -210,7 +241,7 @@ class MainActivity : AppCompatActivity() {
                 formattedDate = df!!.format(c.time)
                 var bubble = ChatBubble(
                     id = viewModel.id.value!!,
-                    chatMessage = "i: $id f: $f g: $g h: $h j: $j",
+                    chatMessage = "i: $id f0: $f0 f1: $f1 a0: $a0 a1: $a1 a2: $a2 g0: $g0 g1: $g1 g2: $g2",
                     messageDate = formattedDate,
                     sender = deviceName
                 )
@@ -222,7 +253,6 @@ class MainActivity : AppCompatActivity() {
                         )
                     )
                 }
-
             }
             MessageEnum.MESSAGE_WRITE.ordinal -> return@Callback true
             MessageEnum.MESSAGE_DEVICE_NAME.ordinal -> {
@@ -231,6 +261,8 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {
                 Toast.makeText(context, message.data.getString(toast), Toast.LENGTH_SHORT).show()
+                heatMapUtil.leftFootPoints(0.0,0.0)
+                heatMapUtil.rightFootPoints(0.0,0.0)
             }
         }
         return@Callback false
@@ -275,7 +307,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.selectedMessage.observe(this) {
             it?.let {
-
             }
         }
 
@@ -287,44 +318,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun testingStringSlicing() {
-        val msg: String = "1i231f1233g1543h1314j231k1233p2543m1314n#"
-        idIndex = msg.indexOf('i', 0)
-        fIndex = msg.indexOf('f', 0)
-        gIndex = msg.indexOf('g', 0)
-        hIndex = msg.indexOf('h', 0)
-        jIndex = msg.indexOf('j', 0)
-
-        try {
-            for (c in msg.indices) {
-                if (msg[c] == 'i') {
-                    id = Integer.parseInt(msg.slice(0 until c))
-                    idIndex = c
-                }
-                if (msg[c] == 'f') {
-                    f = Integer.parseInt(msg.slice(idIndex + 1 until c))
-                    fIndex = c
-                }
-                if (msg[c] == 'g') {
-                    g = Integer.parseInt(msg.slice(fIndex + 1 until c))
-                    gIndex = c
-                }
-                if (msg[c] == 'h') {
-                    h = Integer.parseInt(msg.slice(gIndex + 1 until c))
-                    hIndex = c
-                }
-                if (msg[c] == 'j') {
-                    j = Integer.parseInt(msg.slice(hIndex + 1 until c))
-                }
-            }
-
-            Toast.makeText(context, "i: $id f: $f g: $g h: $h j: $j", Toast.LENGTH_SHORT).show()
-
-        } catch (e: IOException) {
-            Log.e("GetIndices", "${e.message}")
-            Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG)
-        }
-    }
+//    fun testingStringSlicing() {
+//        val msg: String = "1i231f1233g1543h1314j231k1233p2543m1314n#"
+//        idIndex = msg.indexOf('i', 0)
+//
+//        try {
+//            for (c in msg.indices) {
+//                if (msg[c] == 'i') {
+//                    id = Integer.parseInt(msg.slice(0 until c))
+//                    idIndex = c
+//                }
+//                if (msg[c] == 'f') {
+//                    f = Integer.parseInt(msg.slice(idIndex + 1 until c))
+//                    fIndex = c
+//                }
+//                if (msg[c] == 'g') {
+//                    g = Integer.parseInt(msg.slice(fIndex + 1 until c))
+//                    gIndex = c
+//                }
+//                if (msg[c] == 'h') {
+//                    h = Integer.parseInt(msg.slice(gIndex + 1 until c))
+//                    hIndex = c
+//                }
+//                if (msg[c] == 'j') {
+//                    j = Integer.parseInt(msg.slice(hIndex + 1 until c))
+//                }
+//            }
+//
+//            Toast.makeText(context, "i: $id f: $f g: $g h: $h j: $j", Toast.LENGTH_SHORT).show()
+//
+//        } catch (e: IOException) {
+//            Log.e("GetIndices", "${e.message}")
+//            Toast.makeText(context, "${e.message}", Toast.LENGTH_LONG)
+//        }
+//    }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 //        hideKeyboard(this, window.decorView);
@@ -494,7 +521,7 @@ class MainActivity : AppCompatActivity() {
                     PackageManager.PERMISSION_GRANTED ==
                             ActivityCompat.checkSelfPermission(
                                 this,
-                                Manifest.permission.BLUETOOTH_SCAN
+                                 Manifest.permission.BLUETOOTH_SCAN
                             )
                 } else {
                     true

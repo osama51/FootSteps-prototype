@@ -1,6 +1,5 @@
 package com.toddler.bluecomm
 
-import android.util.Log
 import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap
 
@@ -38,8 +37,10 @@ class HeatMapUtil(
     private lateinit var pointRI: HeatMap.DataPoint
     private lateinit var pointRK: HeatMap.DataPoint
 
-    private var yLeft: Double = 0.0
-    private var yRight: Double = 0.0
+    private var y1Left: Double = 0.0
+    private var y2Left: Double = 0.0
+    private var y1Right: Double = 0.0
+    private var y2Right: Double = 0.0
 
     init {
         leftHeatMap.setMinimum(0.0)
@@ -69,19 +70,24 @@ class HeatMapUtil(
 
     }
 
-    fun leftFootPoints(y: Double) {
-        yLeft = if(y>100) 100.0 else y
-        pointLA = HeatMap.DataPoint(0.56F, 0.08F,yLeft / 1.0)
-        pointLAA = HeatMap.DataPoint(0.33F, 0.1F,yLeft / 1.0)
-        pointLB = HeatMap.DataPoint(0.7F, 0.27F, yLeft/ 1.0)
-        pointLC = HeatMap.DataPoint(0.29F, 0.28F,yLeft / 1.0)
-        pointLD = HeatMap.DataPoint(0.38F, 0.35F, yLeft/ 3.0)
-        pointLE = HeatMap.DataPoint(0.28F, 0.45F, yLeft/ 1.0)
-        pointLF = HeatMap.DataPoint(0.27F, 0.55F,yLeft / 1.0)
-        pointLG = HeatMap.DataPoint(0.44F, 0.65F,yLeft / 3.0)
-        pointLH = HeatMap.DataPoint(0.44F, 0.78F,yLeft / 1.0)
-        pointLI = HeatMap.DataPoint(0.64F, 0.89F,yLeft / 1.0)
-        pointLK = HeatMap.DataPoint(0.56F, 0.91F,yLeft / 1.0)
+    fun leftFootPoints(
+        y1: Double,
+        y2: Double
+    ) {
+        y1Left = (y1 / 4095) * 100.0
+        y2Left = (y2 / 4095) * 100.0
+
+        pointLA = HeatMap.DataPoint(0.56F, 0.08F, 0 / 1.0)
+        pointLAA = HeatMap.DataPoint(0.33F, 0.1F, 0 / 1.0)
+        pointLB = HeatMap.DataPoint(0.7F, 0.27F, y1Left / 1.0)
+        pointLC = HeatMap.DataPoint(0.29F, 0.28F, 0 / 1.0)
+        pointLD = HeatMap.DataPoint(0.38F, 0.35F, 0 / 3.0)
+        pointLE = HeatMap.DataPoint(0.28F, 0.45F, 0 / 1.0)
+        pointLF = HeatMap.DataPoint(0.27F, 0.55F, 0 / 1.0)
+        pointLG = HeatMap.DataPoint(0.44F, 0.65F, 0 / 3.0)
+        pointLH = HeatMap.DataPoint(0.44F, 0.78F, y2Left / 1.0)
+        pointLI = HeatMap.DataPoint(0.64F, 0.89F, 0 / 1.0)
+        pointLK = HeatMap.DataPoint(0.56F, 0.91F, 0 / 1.0)
 
         leftHeatMap.apply {
             addData(pointLA)
@@ -100,20 +106,24 @@ class HeatMapUtil(
     }
 
 
-    fun rightFootPoints(y: Double) {
-        yRight = if(y>100) 100.0 else y
+    fun rightFootPoints(
+        y1: Double,
+        y2: Double
+    ) {
+        y1Right = (y1 / 4095) * 100.0
+        y2Right = (y2 / 4095) * 100.0
 
-        pointRA = HeatMap.DataPoint(0.44F, 0.08F,yRight / 1.0)
-        pointRAA = HeatMap.DataPoint(0.67F, 0.1F,yRight / 1.0)
-        pointRB = HeatMap.DataPoint(0.3F, 0.27F, yRight/ 1.0)
-        pointRC = HeatMap.DataPoint(0.71F, 0.28F,yRight / 1.0)
-        pointRD = HeatMap.DataPoint(0.62F, 0.35F, yRight/ 3.0)
-        pointRE = HeatMap.DataPoint(0.72F, 0.45F, yRight/ 1.0)
-        pointRF = HeatMap.DataPoint(0.73F, 0.55F,yRight / 1.0)
-        pointRG = HeatMap.DataPoint(0.56F, 0.65F,yRight / 3.0)
-        pointRH = HeatMap.DataPoint(0.56F, 0.78F,yRight / 1.0)
-        pointRI = HeatMap.DataPoint(0.36F, 0.89F,yRight / 1.0)
-        pointRK = HeatMap.DataPoint(0.44F, 0.91F,yRight / 1.0)
+        pointRA = HeatMap.DataPoint(0.44F, 0.08F, 0 / 1.0)
+        pointRAA = HeatMap.DataPoint(0.67F, 0.1F, 0 / 1.0)
+        pointRB = HeatMap.DataPoint(0.3F, 0.27F, y1Right / 1.0)
+        pointRC = HeatMap.DataPoint(0.71F, 0.28F, 0 / 1.0)
+        pointRD = HeatMap.DataPoint(0.62F, 0.35F, 0 / 3.0)
+        pointRE = HeatMap.DataPoint(0.72F, 0.45F, 0 / 1.0)
+        pointRF = HeatMap.DataPoint(0.73F, 0.55F, 0 / 1.0)
+        pointRG = HeatMap.DataPoint(0.56F, 0.65F, 0 / 3.0)
+        pointRH = HeatMap.DataPoint(0.56F, 0.78F, y2Right / 1.0)
+        pointRI = HeatMap.DataPoint(0.36F, 0.89F, 0 / 1.0)
+        pointRK = HeatMap.DataPoint(0.44F, 0.91F, 0 / 1.0)
 
         rightHeatMap.apply {
             addData(pointRA)

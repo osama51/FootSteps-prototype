@@ -42,7 +42,7 @@
         android:theme="@style/Theme.BlueComm"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.toddler.bluecomm.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,9 +51,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".bluetooth.DeviceListActivity"
+            android:name="com.toddler.bluecomm.bluetooth.DeviceListActivity"
             android:exported="true">
         </activity>
+<!--        <receiver android:name="com.toddler.bluecomm.BluetoothReceiver"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />-->
+<!--                <action android:name="android.bluetooth.device.action.ACL_DISCONNECT_REQUESTED" />-->
+<!--                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
     </application>
 
 </manifest>

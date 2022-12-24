@@ -11,7 +11,9 @@ import android.widget.Toast
 class AvailableDevicesBroadcastReceiver(private val viewModel: BluetoothViewModel) : BroadcastReceiver() {
 
     @SuppressLint("MissingPermission")
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context?, intent: Intent?)
+
+    {
         val action = intent?.action
         /**
          *
