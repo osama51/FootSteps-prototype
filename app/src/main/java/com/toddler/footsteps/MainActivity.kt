@@ -27,6 +27,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
@@ -80,8 +85,24 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var leftRight: LeftRight
 
+    private lateinit var leftLineChart: LineChart
+    private lateinit var rightLineChart: LineChart
+    var leftf0LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+    var leftf1LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+
+    var rightf0LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+    var rightf1LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+    var iLineDataSet: java.util.ArrayList<ILineDataSet> = java.util.ArrayList()
+    private lateinit var lineData: LineData
+
+    private lateinit var chartStyle: LineChartStyle
+
     //    val bluetoothKit = BluetoothKit()
     private var stateEnum: StateEnum = StateEnum.STATE_NONE
+
+    private lateinit var buffer: ByteArray
+    private lateinit var receivedMsg: String
+    private var end by Delegates.notNull<Int>()
 
     private var idIndex by Delegates.notNull<Int>()
     private var f0Index by Delegates.notNull<Int>()
@@ -104,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     private var g1: Int = 0
     private var g2: Int = 0
 
-
+    private var strHolder: String = ""
 
 
     @Synchronized
@@ -146,13 +167,13 @@ class MainActivity : AppCompatActivity() {
                 when (message.arg1) {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
-                        heatMapUtil.leftFootPoints(0.0,0.0)
-                        heatMapUtil.rightFootPoints(0.0,0.0)
+                        heatMapUtil.leftFootPoints(0.0, 0.0)
+                        heatMapUtil.rightFootPoints(0.0, 0.0)
                     }
                     StateEnum.STATE_CONNECTING.ordinal -> {
                         setState("Connecting...")
-                        heatMapUtil.leftFootPoints(0.0,0.0)
-                        heatMapUtil.rightFootPoints(0.0,0.0)
+                        heatMapUtil.leftFootPoints(0.0, 0.0)
+                        heatMapUtil.rightFootPoints(0.0, 0.0)
                     }
                     StateEnum.STATE_CONNECTED.ordinal -> {
                         setState("Connected to: $connectedDevice")
@@ -160,95 +181,138 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             MessageEnum.MESSAGE_READ.ordinal -> {
-                var buffer = message.obj as ByteArray
+                buffer = message.obj as ByteArray
 //                val begin: Int = message.arg1
-                val end: Int = message.arg2
+                end = message.arg2
 
-                var receivedMsg = String(buffer, 0, end)
+                receivedMsg = String(buffer, 0, end)
 //                receivedMsg = receivedMsg.substring(begin, end)
 
 //                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
 //                try{
-                idIndex = receivedMsg.indexOf('i', 0)
-                f0Index = receivedMsg.indexOf("f0", 0)
-                f1Index = receivedMsg.indexOf("f1", 0)
-                a0Index = receivedMsg.indexOf("a0", 0)
-                a1Index = receivedMsg.indexOf("a1", 0)
-                a2Index = receivedMsg.indexOf("a2", 0)
-                g0Index = receivedMsg.indexOf("g0", 0)
-                g1Index = receivedMsg.indexOf("g1", 0)
-                g2Index = receivedMsg.indexOf("g2", 0)
 
-                when (-1) {
-                    idIndex, f0Index, f1Index, a0Index, a1Index, a2Index, g0Index, g1Index, g2Index -> {
-
-                    }
-                    else -> {
-//                        for (c in receivedMsg.indices) {
-
-                            id = receivedMsg.slice(idIndex - 1 until idIndex).toInt()
-                            f0 = receivedMsg.slice(idIndex + 2 until f0Index).toInt()
-                            f1 = receivedMsg.slice(f0Index + 2 until f1Index).toInt()
-                            a0 = receivedMsg.slice(f1Index + 2 until a0Index).toInt()
-                            a1 = receivedMsg.slice(a0Index + 2 until a1Index).toInt()
-                            a2 = receivedMsg.slice(a1Index + 2 until a2Index).toInt()
-                            g0 = receivedMsg.slice(a2Index + 2 until g0Index).toInt()
-                            g1 = receivedMsg.slice(g0Index + 2 until g1Index).toInt()
-                            g2 = receivedMsg.slice(g1Index + 2 until g2Index).toInt()
-
-//                            if (receivedMsg[c] == 'i') {
-//                                id = Integer.parseInt(receivedMsg.slice(c - 1 until c))
-//                                idIndex = c
-//                            }
-//                            if (receivedMsg[c] == 'f') {
-//                                f = Integer.parseInt(receivedMsg.slice(idIndex + 2 until c)) ?: 0
-//                                fIndex = c
-//                            }
-//                            if (receivedMsg[c] == 'g') {
-//                                g = Integer.parseInt(receivedMsg.slice(fIndex + 2 until c))
-//                                gIndex = c
-//                            }
-//                            if (receivedMsg[c] == 'h') {
-//                                h = Integer.parseInt(receivedMsg.slice(gIndex + 2 until c))
-//                                hIndex = c
-//                            }
-//                            if (receivedMsg[c] == 'j') {
-//                                j = Integer.parseInt(receivedMsg.slice(hIndex + 2 until c))
-//                            }
-//                        }
+                // sensors: s t u v w x y z
+                // IMUs:
+                //      accelerometer: a b c
+                //      gyroscope:     g h j
+                if(receivedMsg.last() != 'j'){}
+                else {
+                    receivedMsg.forEachIndexed { index, value ->
+                        strHolder += value
+                        when (value) {
+                            'i' -> {
+                                id = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            's' -> {
+                                f0 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            't' -> {
+                                f1 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'a' -> {
+                                a0 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'b' -> {
+                                a1 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'c' -> {
+                                a2 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'g' -> {
+                                g0 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'h' -> {
+                                g1 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            'j' -> {
+                                g2 = strHolder.toInt()
+                                strHolder = ""
+                            }
+                            else -> {}
+                        }
                     }
                 }
 
-                when(id){
+//                idIndex = receivedMsg.indexOf('i', 0)
+//                f0Index = receivedMsg.indexOf("f0", 0)
+//                f1Index = receivedMsg.indexOf("f1", 0)
+//                a0Index = receivedMsg.indexOf("a0", 0)
+//                a1Index = receivedMsg.indexOf("a1", 0)
+//                a2Index = receivedMsg.indexOf("a2", 0)
+//                g0Index = receivedMsg.indexOf("g0", 0)
+//                g1Index = receivedMsg.indexOf("g1", 0)
+//                g2Index = receivedMsg.indexOf("g2", 0)
+//
+//                when (-1) {
+//                    idIndex, f0Index, f1Index, a0Index, a1Index, a2Index, g0Index, g1Index, g2Index -> {
+//
+//                    }
+//                    else -> {
+////                        for (c in receivedMsg.indices) {
+//
+//                        id = receivedMsg.slice(idIndex - 1 until idIndex).toInt()
+//                        f0 = receivedMsg.slice(idIndex + 1 until f0Index).toInt()
+//                        f1 = receivedMsg.slice(f0Index + 2 until f1Index).toInt()
+//                        a0 = receivedMsg.slice(f1Index + 2 until a0Index).toInt()
+//                        a1 = receivedMsg.slice(a0Index + 2 until a1Index).toInt()
+//                        a2 = receivedMsg.slice(a1Index + 2 until a2Index).toInt()
+//                        g0 = receivedMsg.slice(a2Index + 2 until g0Index).toInt()
+//                        g1 = receivedMsg.slice(g0Index + 2 until g1Index).toInt()
+//                        g2 = receivedMsg.slice(g1Index + 2 until g2Index).toInt()
+//
+//                    }
+//                }
+
+                when (id) {
                     LeftRight.RIGHT.ordinal -> {
-                        f0 = (0..4095).random()
-                        f1 = (0..4095).random()
-                        heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
-                    }
-                    LeftRight.LEFT.ordinal -> {
-                        f0 = (0..4095).random()
-                        f1 = (0..4095).random()
+//                        f0 = (0..4095).random()
+//                        f1 = (0..4095).random()
                         heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
                     }
+
+                    LeftRight.LEFT.ordinal -> {
+//                        f0 = (0..4095).random()
+//                        f1 = (0..4095).random()
+                        heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+
+                    }
                 }
 
-                c = Calendar.getInstance()
-                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
-                formattedDate = df!!.format(c.time)
-                var bubble = ChatBubble(
-                    id = viewModel.id.value!!,
-                    chatMessage = "i: $id f0: $f0 f1: $f1 a0: $a0 a1: $a1 a2: $a2 g0: $g0 g1: $g1 g2: $g2",
-                    messageDate = formattedDate,
-                    sender = deviceName
-                )
-                viewModel.updateChatList(bubble)
-                viewModel.chatList.value?.size?.let {
-                    binding.messagesList.scrollToPosition(
-                        it.minus(
-                            1
-                        )
-                    )
-                }
+//                c = Calendar.getInstance()
+//                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
+//                formattedDate = df!!.format(c.time)
+//                var bubble = ChatBubble(
+//                    id = viewModel.id.value!!,
+//                    chatMessage = "i: $id f0: $f0 f1: $f1 a0: $a0 a1: $a1 a2: $a2 g0: $g0 g1: $g1 g2: $g2",
+////                    chatMessage = "${viewModel.leftf0List.value}",
+//                    messageDate = formattedDate,
+//                    sender = deviceName
+//                )
+
+                viewModel.updateRightPointsList(f0, f1)
+                viewModel.updateLeftPointsList(f0, f1)
+
+//                updateLeftGraphs(viewModel.leftf0List.value!!, viewModel.leftf1List.value!!)
+//                updateRightGraphs(viewModel.rightf0List.value!!, viewModel.rightf0List.value!!)
+
+//                arrayOfPoints.addAll(mutableListOf(id, f0, f1, a0, a1, a2, g0, g1, g2))
+
+//                viewModel.updateChatList(bubble)
+//                viewModel.chatList.value?.size?.let {
+//                    binding.messagesList.scrollToPosition(
+//                        it.minus(
+//                            1
+//                        )
+//                    )
+//                }
             }
             MessageEnum.MESSAGE_WRITE.ordinal -> return@Callback true
             MessageEnum.MESSAGE_DEVICE_NAME.ordinal -> {
@@ -257,8 +321,8 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {
                 Toast.makeText(context, message.data.getString(toast), Toast.LENGTH_SHORT).show()
-                heatMapUtil.leftFootPoints(0.0,0.0)
-                heatMapUtil.rightFootPoints(0.0,0.0)
+                heatMapUtil.leftFootPoints(0.0, 0.0)
+                heatMapUtil.rightFootPoints(0.0, 0.0)
             }
         }
         return@Callback false
@@ -283,8 +347,31 @@ class MainActivity : AppCompatActivity() {
         leftHeatMap = binding.heatmapLeft
         btActionBar = binding.floatingActionButton
 
-        heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
+        leftLineChart = binding.leftLineChart
+//        leftf0LineDataSet.lineWidth = 3F
+//        leftf0LineDataSet.formLineWidth = 3F
+//        leftf1LineDataSet.lineWidth = 3F
+//        leftf1LineDataSet.formLineWidth = 3F
 
+        rightLineChart = binding.rightLineChart
+//        rightf0LineDataSet.lineWidth = 3F
+//        rightf0LineDataSet.formLineWidth = 3F
+//        rightf1LineDataSet.lineWidth = 3F
+//        rightf1LineDataSet.formLineWidth = 3F
+
+        chartStyle = LineChartStyle(this)
+        chartStyle.styleChart(binding.leftLineChart)
+        chartStyle.styleChart(binding.rightLineChart)
+
+//        chartStyle.drawLineGraph(binding.tempChart)
+//        chartStyle.drawLineGraph(binding.ecgChart)
+
+        chartStyle.styleLineDataSet(leftf0LineDataSet)
+        chartStyle.styleLineDataSet(leftf1LineDataSet)
+        chartStyle.styleLineDataSet(rightf0LineDataSet)
+        chartStyle.styleLineDataSet(rightf1LineDataSet)
+
+        heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
 
         btActionBar.setOnClickListener {
             initBluetooth()
@@ -300,18 +387,65 @@ class MainActivity : AppCompatActivity() {
                 adapterMessages.submitList(it)
             }
         }
+        viewModel.leftf0List.observe(this) {
+            it?.let {
+                Log.i("leftF0List", "$f0")
+//                updateLeftGraphs(it)
+            }
+        }
+        viewModel.rightf0List.observe(this) {
+            it?.let {
+                Log.i("rightF0List", "$f0")
+//                updateRightGraphs(it)
+            }
+        }
 
         viewModel.selectedMessage.observe(this) {
             it?.let {
             }
         }
-
+//        , viewModel.rightf1List.value!!
         binding.messagesList.apply {
             layoutManager = LinearLayoutManager(context).apply {
                 stackFromEnd = true
                 reverseLayout = false
             }
         }
+    }
+
+    fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {
+//        Log.i("updateLEFTgraph", "$leftF0Data")
+        leftf0LineDataSet.values = leftF0Data
+        leftf0LineDataSet.label = "FSR 0"
+
+        leftf1LineDataSet.values = leftF1Data
+        leftf1LineDataSet.label = "FSR 1"
+
+        iLineDataSet.clear()
+        iLineDataSet.add(leftf0LineDataSet)
+        iLineDataSet.add(leftf1LineDataSet)
+        lineData = LineData(iLineDataSet)
+
+        leftLineChart.clear()
+        leftLineChart.data = lineData
+        leftLineChart.invalidate()
+    }
+
+    fun updateRightGraphs(rightF0Data: MutableList<Entry?>, rightF1Data: MutableList<Entry?>) {
+        rightf0LineDataSet.values = rightF0Data
+        rightf1LineDataSet.values = rightF1Data
+
+        rightf0LineDataSet.label = "FSR 0"
+        rightf1LineDataSet.label = "FSR 1"
+
+        iLineDataSet.clear()
+        iLineDataSet.add(rightf0LineDataSet)
+        iLineDataSet.add(rightf1LineDataSet)
+        lineData = LineData(iLineDataSet)
+
+        rightLineChart.clear()
+        rightLineChart.data = lineData
+        rightLineChart.invalidate()
     }
 
 //    fun testingStringSlicing() {
@@ -384,7 +518,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (FLAG_ON == 1) {}
+        if (FLAG_ON == 1) {
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -517,7 +652,7 @@ class MainActivity : AppCompatActivity() {
                     PackageManager.PERMISSION_GRANTED ==
                             ActivityCompat.checkSelfPermission(
                                 this,
-                                 Manifest.permission.BLUETOOTH_SCAN
+                                Manifest.permission.BLUETOOTH_SCAN
                             )
                 } else {
                     true
