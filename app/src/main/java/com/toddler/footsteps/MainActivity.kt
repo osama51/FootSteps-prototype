@@ -196,10 +196,10 @@ class MainActivity : AppCompatActivity() {
                 // sensors: s t u v w x y z
                 // IMUs:
                 //      accelerometer: a b c
-                //      gyroscope:     g h j
+                //      gyroscope:     d e f
                 if (receivedMsg.isEmpty()) {
                 } else {
-                    if (receivedMsg.last() != 'j') {
+                    if (receivedMsg.last() != 'f') {
                     } else {
                         receivedMsg.forEachIndexed { _, value ->
                             if ((value != '#') and (!value.isWhitespace()) and (value != ' ') and (value.toString()
@@ -230,15 +230,15 @@ class MainActivity : AppCompatActivity() {
                                         a2 = strHolder.toInt()
                                         strHolder = "0"
                                     }
-                                    'g' -> {
+                                    'd' -> {
                                         g0 = strHolder.toInt()
                                         strHolder = "0"
                                     }
-                                    'h' -> {
+                                    'e' -> {
                                         g1 = strHolder.toInt()
                                         strHolder = "0"
                                     }
-                                    'j' -> {
+                                    'f' -> {
                                         // sometimes this stores "" into g2 if I set strHolder to default ""
                                         // I still have no idea why it only happens to g2
                                         g2 = strHolder.toInt()

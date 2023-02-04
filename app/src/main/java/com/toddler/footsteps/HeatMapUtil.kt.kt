@@ -67,7 +67,6 @@ class HeatMapUtil(
 //        val point = HeatMap.DataPoint(0.5F, 0.5F, y )
 //        val point2 = HeatMap.DataPoint(0.2F, 0.5F, y / 2.0)
 //        val point3 = HeatMap.DataPoint(0.8F, 0.5F, y / 2.0)
-
     }
 
     fun leftFootPoints(
@@ -106,7 +105,6 @@ class HeatMapUtil(
             invalidate()
 //            postInvalidateOnAnimation()
         }
-
     }
 
 
@@ -145,7 +143,6 @@ class HeatMapUtil(
             forceRefreshOnWorkerThread()
             invalidate()
 //            postInvalidateOnAnimation()
-
         }
     }
 }
