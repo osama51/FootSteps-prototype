@@ -4,6 +4,7 @@ import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap
 
 enum class LeftRight {
+    NONE,
     RIGHT,
     LEFT
 }

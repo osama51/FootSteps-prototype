@@ -128,6 +128,8 @@ class MainActivity : AppCompatActivity() {
 
     private var strHolder: String = ""
 
+    var onScreen = true
+
 
     @Synchronized
     fun setState2(state: StateEnum) {
@@ -161,11 +163,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private var handler: Handler = Handler(Handler.Callback { message ->
 
         when (message.what) {
             MessageEnum.MESSAGE_STATE_CHANGED.ordinal -> {
+//                Log.i(TAG, "______________STATE CHANGED_____________")
                 when (message.arg1) {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
@@ -182,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             MessageEnum.MESSAGE_READ.ordinal -> {
                 buffer = message.obj as ByteArray
 //                val begin: Int = message.arg1
@@ -192,6 +195,8 @@ class MainActivity : AppCompatActivity() {
 
 //                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
 //                try{
+
+//                Log.i(TAG, "_________THIS THREAD_________" + Thread.currentThread().name)
 
                 // sensors: s t u v w x y z
                 // IMUs:
@@ -254,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-//
+
 //                idIndex = receivedMsg.indexOf('i', 0)
 //                f0Index = receivedMsg.indexOf("f0", 0)
 //                f1Index = receivedMsg.indexOf("f1", 0)
@@ -291,7 +296,7 @@ class MainActivity : AppCompatActivity() {
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
-                        heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
+                        if(onScreen){ heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble()) }
                     }
 
                     LeftRight.LEFT.ordinal -> {
@@ -299,7 +304,7 @@ class MainActivity : AppCompatActivity() {
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
-                        heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+                        if(onScreen){ heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble()) }
 
                     }
                 }
@@ -345,73 +350,73 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-            return@Callback false
-        })
+        return@Callback false
+    })
 
-        private fun setState(subTitle: CharSequence) {
-            supportActionBar?.subtitle = subTitle
-        }
+    private fun setState(subTitle: CharSequence) {
+        supportActionBar?.subtitle = subTitle
+    }
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-            viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
-            supportActionBar?.hide()
+        supportActionBar?.hide()
 
 //        setContentView(R.layout.activity_main)
-            context = this
+        context = this
 
-            chatUtils = ChatUtils(context, handler)
-            rightHeatMap = binding.heatmapRight
-            leftHeatMap = binding.heatmapLeft
-            btActionBar = binding.floatingActionButton
-            leftLineChart = binding.leftLineChart
+        chatUtils = ChatUtils(context, handler)
+        rightHeatMap = binding.heatmapRight
+        leftHeatMap = binding.heatmapLeft
+        btActionBar = binding.floatingActionButton
+        leftLineChart = binding.leftLineChart
 
-            rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-            leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-            scheduleMemoryClearing()
+//            scheduleMemoryClearing()
 
 //        leftf0LineDataSet.lineWidth = 3F
 //        leftf0LineDataSet.formLineWidth = 3F
 //        leftf1LineDataSet.lineWidth = 3F
 //        leftf1LineDataSet.formLineWidth = 3F
 
-            rightLineChart = binding.rightLineChart
+        rightLineChart = binding.rightLineChart
 //        rightf0LineDataSet.lineWidth = 3F
 //        rightf0LineDataSet.formLineWidth = 3F
 //        rightf1LineDataSet.lineWidth = 3F
 //        rightf1LineDataSet.formLineWidth = 3F
 
-            chartStyle = LineChartStyle(this)
-            chartStyle.styleChart(binding.leftLineChart)
-            chartStyle.styleChart(binding.rightLineChart)
+        chartStyle = LineChartStyle(this)
+        chartStyle.styleChart(binding.leftLineChart)
+        chartStyle.styleChart(binding.rightLineChart)
 
 //        chartStyle.drawLineGraph(binding.tempChart)
 //        chartStyle.drawLineGraph(binding.ecgChart)
 
-            chartStyle.styleLineDataSet(leftf0LineDataSet)
-            chartStyle.styleLineDataSet(leftf1LineDataSet)
-            chartStyle.styleLineDataSet(rightf0LineDataSet)
-            chartStyle.styleLineDataSet(rightf1LineDataSet)
+        chartStyle.styleLineDataSet(leftf0LineDataSet)
+        chartStyle.styleLineDataSet(leftf1LineDataSet)
+        chartStyle.styleLineDataSet(rightf0LineDataSet)
+        chartStyle.styleLineDataSet(rightf1LineDataSet)
 
-            heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
+        heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
 
-            btActionBar.setOnClickListener {
-                initBluetooth()
-                requestBluetoothPermissions()
-            }
+        btActionBar.setOnClickListener {
+            initBluetooth()
+            requestBluetoothPermissions()
+        }
 //        testingStringSlicing()
 
-            requestMultiplePermissionsLauncher()
-            chatRecyclerviewInit()
+        requestMultiplePermissionsLauncher()
+        chatRecyclerviewInit()
 
-            viewModel.chatList.observe(this) {
-                it?.let {
-                    adapterMessages.submitList(it)
-                }
+        viewModel.chatList.observe(this) {
+            it?.let {
+                adapterMessages.submitList(it)
             }
+        }
 //            viewModel.leftf0List.observe(this) {
 //                it?.let {
 //                    Log.i("leftF0List", "$f0")
@@ -430,48 +435,48 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        , viewModel.rightf1List.value!!
-            binding.messagesList.apply {
-                layoutManager = LinearLayoutManager(context).apply {
-                    stackFromEnd = true
-                    reverseLayout = false
-                }
+        binding.messagesList.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                stackFromEnd = true
+                reverseLayout = false
             }
         }
+    }
 
-        fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {
+    fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {
 //        Log.i("updateLEFTgraph", "$leftF0Data")
-            leftf0LineDataSet.values = leftF0Data
-            leftf0LineDataSet.label = "FSR 0"
+        leftf0LineDataSet.values = leftF0Data
+        leftf0LineDataSet.label = "FSR 0"
 
-            leftf1LineDataSet.values = leftF1Data
-            leftf1LineDataSet.label = "FSR 1"
+        leftf1LineDataSet.values = leftF1Data
+        leftf1LineDataSet.label = "FSR 1"
 
-            iLineDataSet.clear()
-            iLineDataSet.add(leftf0LineDataSet)
-            iLineDataSet.add(leftf1LineDataSet)
-            lineData = LineData(iLineDataSet)
+        iLineDataSet.clear()
+        iLineDataSet.add(leftf0LineDataSet)
+        iLineDataSet.add(leftf1LineDataSet)
+        lineData = LineData(iLineDataSet)
 
-            leftLineChart.clear()
-            leftLineChart.data = lineData
-            leftLineChart.invalidate()
-        }
+        leftLineChart.clear()
+        leftLineChart.data = lineData
+        leftLineChart.invalidate()
+    }
 
-        fun updateRightGraphs(rightF0Data: MutableList<Entry?>, rightF1Data: MutableList<Entry?>) {
-            rightf0LineDataSet.values = rightF0Data
-            rightf1LineDataSet.values = rightF1Data
+    fun updateRightGraphs(rightF0Data: MutableList<Entry?>, rightF1Data: MutableList<Entry?>) {
+        rightf0LineDataSet.values = rightF0Data
+        rightf1LineDataSet.values = rightF1Data
 
-            rightf0LineDataSet.label = "FSR 0"
-            rightf1LineDataSet.label = "FSR 1"
+        rightf0LineDataSet.label = "FSR 0"
+        rightf1LineDataSet.label = "FSR 1"
 
-            iLineDataSet.clear()
-            iLineDataSet.add(rightf0LineDataSet)
-            iLineDataSet.add(rightf1LineDataSet)
-            lineData = LineData(iLineDataSet)
+        iLineDataSet.clear()
+        iLineDataSet.add(rightf0LineDataSet)
+        iLineDataSet.add(rightf1LineDataSet)
+        lineData = LineData(iLineDataSet)
 
-            rightLineChart.clear()
-            rightLineChart.data = lineData
-            rightLineChart.invalidate()
-        }
+        rightLineChart.clear()
+        rightLineChart.data = lineData
+        rightLineChart.invalidate()
+    }
 
 //    fun testingStringSlicing() {
 //        val msg: String = "1i231f1233g1543h1314j231k1233p2543m1314n#"
@@ -523,136 +528,142 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed(clearMemoryRunnable, 3000)
     }
 
-        override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
 //        hideKeyboard(this, window.decorView);
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-            return super.onTouchEvent(event)
-        }
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        return super.onTouchEvent(event)
+    }
 
-        private fun hideKeyboard(context: Context, view: View) {
-            val imm: InputMethodManager =
-                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+    private fun hideKeyboard(context: Context, view: View) {
+        val imm: InputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
-        override fun onCreateOptionsMenu(menu: Menu): Boolean {
-            menuInflater.inflate(R.menu.main_menu, menu)
-            searchDevices = menu.findItem(R.id.menu_search_devices)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        searchDevices = menu.findItem(R.id.menu_search_devices)
 //        var switchOnBT = menu.findItem(R.id.menu_bluetooth_on)
 //        var switchOffBT = menu.findItem(R.id.menu_bluetooth_off)
 
-            return super.onCreateOptionsMenu(menu)
-        }
+        return super.onCreateOptionsMenu(menu)
+    }
 
-        override fun onResume() {
-            super.onResume()
-        }
+    override fun onResume() {
+        onScreen = true
+        super.onResume()
+    }
 
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.menu_search_devices -> {
+    override fun onPause() {
+        onScreen = false
+        super.onPause()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_search_devices -> {
 //                Toast.makeText(context, "Searching", Toast.LENGTH_SHORT).show()
-                    initBluetooth()
-                    requestBluetoothPermissions()
-                }
-            }
-
-            if (FLAG_ON == 1) {
-            }
-            return super.onOptionsItemSelected(item)
-        }
-
-        @SuppressLint("MissingPermission")
-        fun initBluetooth() {
-            val bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            bluetoothAdapter = bluetoothManager.adapter
-
-
-            // tells if the device supports bluetooth or not
-            // actually useless if I set bluetooth to be required in manifest
-            if (bluetoothAdapter == null) {
-                Toast.makeText(this, "The device does not support bluetooth", Toast.LENGTH_LONG)
-                    .show()
-            } else {
-                if (isPermissionGranted()) {
-
-                    if (bluetoothAdapter!!.isEnabled) {
-                        Toast.makeText(this, "Bluetooth already enabled", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "Turning on Bluetooth", Toast.LENGTH_SHORT).show()
-                        bluetoothAdapter?.enable()
-                    }
-                } else {
-                    requestBluetoothPermissions()
-                }
+                initBluetooth()
+                requestBluetoothPermissions()
             }
         }
 
-        private fun requestBluetoothPermissions() {
+        if (FLAG_ON == 1) {
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun initBluetooth() {
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
+
+
+        // tells if the device supports bluetooth or not
+        // actually useless if I set bluetooth to be required in manifest
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "The device does not support bluetooth", Toast.LENGTH_LONG)
+                .show()
+        } else {
             if (isPermissionGranted()) {
-                val intent = Intent(context, DeviceListActivity::class.java)
-//            startActivityForResult(intent, SELECT_DEVICE)
-                activityResultLauncher.launch(intent)
-            } else {
-                var permissionsArray =
-                    arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
 
-                if (runningSOrLater) {
-                    permissionsArray += arrayOf(
-                        Manifest.permission.BLUETOOTH_SCAN,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    )
+                if (bluetoothAdapter!!.isEnabled) {
+                    Toast.makeText(this, "Bluetooth already enabled", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Turning on Bluetooth", Toast.LENGTH_SHORT).show()
+                    bluetoothAdapter?.enable()
                 }
-                Log.d(TAG, "Request legacy bluetooth permissions")
-                requestMultiplePermissions.launch(permissionsArray)
+            } else {
+                requestBluetoothPermissions()
             }
         }
+    }
 
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
+    private fun requestBluetoothPermissions() {
+        if (isPermissionGranted()) {
+            val intent = Intent(context, DeviceListActivity::class.java)
+//            startActivityForResult(intent, SELECT_DEVICE)
+            activityResultLauncher.launch(intent)
+        } else {
+            var permissionsArray =
+                arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
 
-            /**     Replaced with registerForActivityResult() and ActivityResultLauncher
-             *                 since startActivityForResult is deprecated
-             *
-             *                  ctr + f ("var activityResultLauncher:")
-             *
-             * */
-            if (resultCode == SELECT_DEVICE && resultCode == RESULT_OK) {
-                Log.i(TAG, "Im in onActivityResult OOOOOOOOOOOOO")
+            if (runningSOrLater) {
+                permissionsArray += arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            }
+            Log.d(TAG, "Request legacy bluetooth permissions")
+            requestMultiplePermissions.launch(permissionsArray)
+        }
+    }
 
-                var address = data?.getStringExtra("deviceAddress")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        /**     Replaced with registerForActivityResult() and ActivityResultLauncher
+         *                 since startActivityForResult is deprecated
+         *
+         *                  ctr + f ("var activityResultLauncher:")
+         *
+         * */
+        if (resultCode == SELECT_DEVICE && resultCode == RESULT_OK) {
+            Log.i(TAG, "Im in onActivityResult OOOOOOOOOOOOO")
+
+            var address = data?.getStringExtra("deviceAddress")
 //            Toast.makeText(context, "Address: $address", Toast.LENGTH_LONG).show()
-                Log.i(TAG, "Address: $address")
-            }
+            Log.i(TAG, "Address: $address")
         }
+    }
 
-        private fun requestMultiplePermissionsLauncher() {
-            requestMultiplePermissions =
-                registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                    val notGranted = permissions.values.contains(false)
-                    if (notGranted) {
-                        Log.i("DEBUG", "permission not granted")
-                        Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show()
+    private fun requestMultiplePermissionsLauncher() {
+        requestMultiplePermissions =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                val notGranted = permissions.values.contains(false)
+                if (notGranted) {
+                    Log.i("DEBUG", "permission not granted")
+                    Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show()
 
-                        AlertDialog.Builder(context)
-                            .setCancelable(false)
-                            .setMessage("Bluetooth permission is required. \n Please grant")
-                            .setPositiveButton(R.string.grant) { _, _ ->
-                                requestBluetoothPermissions()
-                            }
-                            .setNegativeButton(R.string.deny) { _, _ ->
-                                finish()
-                            }
-                            .show()
+                    AlertDialog.Builder(context)
+                        .setCancelable(false)
+                        .setMessage("Bluetooth permission is required. \n Please grant")
+                        .setPositiveButton(R.string.grant) { _, _ ->
+                            requestBluetoothPermissions()
+                        }
+                        .setNegativeButton(R.string.deny) { _, _ ->
+                            finish()
+                        }
+                        .show()
 
-                        /**
-                         * Show a Snackbar instead of an AlertDialog if you wish,
-                         * but here, we have a chat app with an input field at
-                         * the bottom.. too risky to have a snackbar there
-                         * (might lead to misclicks)
-                         * */
+                    /**
+                     * Show a Snackbar instead of an AlertDialog if you wish,
+                     * but here, we have a chat app with an input field at
+                     * the bottom.. too risky to have a snackbar there
+                     * (might lead to misclicks)
+                     * */
 
 //                    Snackbar.make(
 //                        window.decorView.findViewById(android.R.id.content),
@@ -667,109 +678,110 @@ class MainActivity : AppCompatActivity() {
 //                            })
 //                        }.show()
 
-                    } else {
-                        Log.i("DEBUG", "permission granted")
-                        val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
+                } else {
+                    Log.i("DEBUG", "permission granted")
+                    val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
 //                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
-                        activityResultLauncher.launch(selectDeviceIntent)
-                    }
+                    activityResultLauncher.launch(selectDeviceIntent)
                 }
-        }
+            }
+    }
 
-        private fun isPermissionGranted(): Boolean {
-            val bluetoothApproved = (
-                    PackageManager.PERMISSION_GRANTED ==
-                            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-                    )
-            val bluetoothAdminApproved = (
-                    PackageManager.PERMISSION_GRANTED ==
-                            ActivityCompat.checkSelfPermission(
-                                this,
-                                Manifest.permission.BLUETOOTH_ADMIN
-                            )
-                    )
-            val bluetoothScanApproved = (
-                    if (runningSOrLater) {
-                        PackageManager.PERMISSION_GRANTED ==
-                                ActivityCompat.checkSelfPermission(
-                                    this,
-                                    Manifest.permission.BLUETOOTH_SCAN
-                                )
-                    } else {
-                        true
-                    }
-                    )
-            val bluetoothConnectApproved =
+    private fun isPermissionGranted(): Boolean {
+        val bluetoothApproved = (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+                )
+        val bluetoothAdminApproved = (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.BLUETOOTH_ADMIN
+                        )
+                )
+        val bluetoothScanApproved = (
                 if (runningSOrLater) {
                     PackageManager.PERMISSION_GRANTED ==
                             ActivityCompat.checkSelfPermission(
-                                this, Manifest.permission.BLUETOOTH_CONNECT
+                                this,
+                                Manifest.permission.BLUETOOTH_SCAN
                             )
                 } else {
                     true
                 }
-            return bluetoothApproved && bluetoothAdminApproved && bluetoothScanApproved && bluetoothConnectApproved
-        }
-
-        @SuppressLint("MissingPermission")
-        private fun chatRecyclerviewInit() {
-            messageList = binding.messagesList
-//        adapterPairedDevices = DeviceAdapter(viewModel.pairedDevices)
-            adapterMessages = ChatAdapter(this, ChatAdapter.ChatBubbleListener {
-                viewModel.messageSelected(it)
-            })
-            messageList.adapter = adapterMessages
-            messageList.layoutManager =
-                LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
-            binding.btnSendMessage.setOnClickListener {
-                if (binding.edEnterMessage.text != null) {
-                    var message: String = binding.edEnterMessage.text.toString()
-                    c = Calendar.getInstance()
-
-                    /**
-                     * https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat
-                     * */
-                    df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
-                    formattedDate = df!!.format(c.time)
-                    var bubble = ChatBubble(
-                        id = viewModel.id.value!!,
-                        chatMessage = message,
-                        messageDate = formattedDate,
-                        sender = deviceName
-                    )
-
-                    viewModel.updateChatList(bubble)
-                    binding.edEnterMessage.text.clear()
-                    viewModel.chatList.value?.size?.let {
-                        binding.messagesList.scrollToPosition(
-                            it.minus(
-                                1
-                            )
+                )
+        val bluetoothConnectApproved =
+            if (runningSOrLater) {
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            this, Manifest.permission.BLUETOOTH_CONNECT
                         )
-                    }
+            } else {
+                true
+            }
+        return bluetoothApproved && bluetoothAdminApproved && bluetoothScanApproved && bluetoothConnectApproved
+    }
 
-                    chatUtils?.write(message.toByteArray())
-                    chatUtils?.write("\n".toByteArray())
+    @SuppressLint("MissingPermission")
+    private fun chatRecyclerviewInit() {
+        messageList = binding.messagesList
+//        adapterPairedDevices = DeviceAdapter(viewModel.pairedDevices)
+        adapterMessages = ChatAdapter(this, ChatAdapter.ChatBubbleListener {
+            viewModel.messageSelected(it)
+        })
+        messageList.adapter = adapterMessages
+        messageList.layoutManager =
+            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        binding.btnSendMessage.setOnClickListener {
+            if (binding.edEnterMessage.text != null) {
+                var message: String = binding.edEnterMessage.text.toString()
+                c = Calendar.getInstance()
+
+                /**
+                 * https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat
+                 * */
+                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
+                formattedDate = df!!.format(c.time)
+                var bubble = ChatBubble(
+                    id = viewModel.id.value!!,
+                    chatMessage = message,
+                    messageDate = formattedDate,
+                    sender = deviceName
+                )
+
+                viewModel.updateChatList(bubble)
+                binding.edEnterMessage.text.clear()
+                viewModel.chatList.value?.size?.let {
+                    binding.messagesList.scrollToPosition(
+                        it.minus(
+                            1
+                        )
+                    )
+                }
+
+                chatUtils?.write(message.toByteArray())
+                chatUtils?.write("\n".toByteArray())
 
 //                    bluetoothKit.write(message.toByteArray())
 //                    bluetoothKit.write("\n".toByteArray())
 
 
-                    hideKeyboard(this, binding.root)
-                }
+                hideKeyboard(this, binding.root)
             }
         }
-
-        override fun onDestroy() {
-            super.onDestroy()
-            if (chatUtils != null) {
-                chatUtils?.stop()
-            }
-        }
-
     }
 
-            private const val REQUEST_ANDROID_S_PERMISSION_RESULT_CODE = 33
-    private const val REQUEST_LEGACY_PERMISSIONS_REQUEST_CODE = 31
-    private const val SELECT_DEVICE = 20
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (chatUtils != null) {
+            chatUtils?.stop()
+        }
+    }
+
+}
+
+private const val REQUEST_ANDROID_S_PERMISSION_RESULT_CODE = 33
+private const val REQUEST_LEGACY_PERMISSIONS_REQUEST_CODE = 31
+private const val SELECT_DEVICE = 20
