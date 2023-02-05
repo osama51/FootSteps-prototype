@@ -1,5 +1,6 @@
 package com.toddler.footsteps
 
+import android.util.Log
 import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap
 
@@ -128,6 +129,7 @@ class HeatMapUtil(
         pointRI = HeatMap.DataPoint(0.36F, 0.89F, 0 / 1.0)
         pointRK = HeatMap.DataPoint(0.44F, 0.91F, 0 / 1.0)
 
+//        val startTime = System.currentTimeMillis()
         rightHeatMap.apply {
             addData(pointRA)
             addData(pointRAA)
@@ -145,5 +147,8 @@ class HeatMapUtil(
             invalidate()
 //            postInvalidateOnAnimation()
         }
+//        val endTime = System.currentTimeMillis()
+//        val elapsedTime = endTime - startTime
+//        Log.d("___RENDERRRR___", "Elapsed time: $elapsedTime milliseconds")
     }
 }

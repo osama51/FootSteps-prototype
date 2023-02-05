@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -28,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
+import com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -39,6 +41,8 @@ import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatBubble
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
+import kotlinx.coroutines.*
+import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -53,7 +57,7 @@ enum class MessageEnum {
 }
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     companion object {
         val toast: String = "toast"
         var deviceName: String = "DeviceName"
@@ -80,6 +84,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var leftHeatMap: HeatMap
     private lateinit var rightHeatMap: HeatMap
+
+    private lateinit var rightMask: MaskableFrameLayout
+    private lateinit var leftMask: MaskableFrameLayout
+
     private lateinit var heatMapUtil: HeatMapUtil
 
     private lateinit var btActionBar: FloatingActionButton
@@ -105,17 +113,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var receivedMsg: String
     private var end by Delegates.notNull<Int>()
 
-    private var idIndex by Delegates.notNull<Int>()
-    private var f0Index by Delegates.notNull<Int>()
-    private var f1Index by Delegates.notNull<Int>()
-    private var a0Index by Delegates.notNull<Int>()
-    private var a1Index by Delegates.notNull<Int>()
-    private var a2Index by Delegates.notNull<Int>()
-    private var g0Index by Delegates.notNull<Int>()
-    private var g1Index by Delegates.notNull<Int>()
-    private var g2Index by Delegates.notNull<Int>()
-
-
     private var id: Int = 0
     private var f0: Int = 0
     private var f1: Int = 0
@@ -129,6 +126,8 @@ class MainActivity : AppCompatActivity() {
     private var strHolder: String = ""
 
     var onScreen = true
+
+    private lateinit var messageCopy: Message
 
 
     @Synchronized
@@ -186,156 +185,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             MessageEnum.MESSAGE_READ.ordinal -> {
-                buffer = message.obj as ByteArray
-//                val begin: Int = message.arg1
-                end = message.arg2
 
-                receivedMsg = String(buffer, 0, end)
-//                receivedMsg = receivedMsg.substring(begin, end)
+                extractData(message)
 
-//                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
-//                try{
-
-//                Log.i(TAG, "_________THIS THREAD_________" + Thread.currentThread().name)
-
-                // sensors: s t u v w x y z
-                // IMUs:
-                //      accelerometer: a b c
-                //      gyroscope:     d e f
-                if (receivedMsg.isEmpty()) {
-                } else {
-                    if (receivedMsg.last() != 'f') {
-                    } else {
-                        receivedMsg.forEachIndexed { _, value ->
-                            if ((value != '#') and (!value.isWhitespace()) and (value != ' ') and (value.toString()
-                                    .isNotEmpty()) and (!value.toString().isNullOrBlank())
-                            ) {
-                                when (value) {
-                                    'i' -> {
-                                        id = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    's' -> {
-                                        f0 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    't' -> {
-                                        f1 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'a' -> {
-                                        a0 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'b' -> {
-                                        a1 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'c' -> {
-                                        a2 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'd' -> {
-                                        g0 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'e' -> {
-                                        g1 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    'f' -> {
-                                        // sometimes this stores "" into g2 if I set strHolder to default ""
-                                        // I still have no idea why it only happens to g2
-                                        g2 = strHolder.toInt()
-                                        strHolder = "0"
-                                    }
-                                    else -> {
-                                        if (value.isDigit()) {
-                                            strHolder += value
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-//                idIndex = receivedMsg.indexOf('i', 0)
-//                f0Index = receivedMsg.indexOf("f0", 0)
-//                f1Index = receivedMsg.indexOf("f1", 0)
-//                a0Index = receivedMsg.indexOf("a0", 0)
-//                a1Index = receivedMsg.indexOf("a1", 0)
-//                a2Index = receivedMsg.indexOf("a2", 0)
-//                g0Index = receivedMsg.indexOf("g0", 0)
-//                g1Index = receivedMsg.indexOf("g1", 0)
-//                g2Index = receivedMsg.indexOf("g2", 0)
-//
-//                when (-1) {
-//                    idIndex, f0Index, f1Index, a0Index, a1Index, a2Index, g0Index, g1Index, g2Index -> {
-//
-//                    }
-//                    else -> {
-////                        for (c in receivedMsg.indices) {
-//
-//                        id = receivedMsg.slice(idIndex - 1 until idIndex).toInt()
-//                        f0 = receivedMsg.slice(idIndex + 1 until f0Index).toInt()
-//                        f1 = receivedMsg.slice(f0Index + 2 until f1Index).toInt()
-//                        a0 = receivedMsg.slice(f1Index + 2 until a0Index).toInt()
-//                        a1 = receivedMsg.slice(a0Index + 2 until a1Index).toInt()
-//                        a2 = receivedMsg.slice(a1Index + 2 until a2Index).toInt()
-//                        g0 = receivedMsg.slice(a2Index + 2 until g0Index).toInt()
-//                        g1 = receivedMsg.slice(g0Index + 2 until g1Index).toInt()
-//                        g2 = receivedMsg.slice(g1Index + 2 until g2Index).toInt()
-//
-//                    }
-//                }
-//
-                when (id) {
-                    LeftRight.RIGHT.ordinal -> {
-//                        f0 = (0..4095).random()
-//                        f1 = (0..4095).random()
-//                        f0 = (f0 + 1) % 60
-//                        f1 = (f1 + 1) % 60
-                        if(onScreen){ heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble()) }
-                    }
-
-                    LeftRight.LEFT.ordinal -> {
-//                        f0 = (0..4095).random()
-//                        f1 = (0..4095).random()
-//                        f0 = (f0 + 1) % 60
-//                        f1 = (f1 + 1) % 60
-                        if(onScreen){ heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble()) }
-
-                    }
-                }
-
-//                c = Calendar.getInstance()
-//                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
-//                formattedDate = df!!.format(c.time)
-//                var bubble = ChatBubble(
-//                    id = viewModel.id.value!!,
-//                    chatMessage = "i: $id f0: $f0 f1: $f1 a0: $a0 a1: $a1 a2: $a2 g0: $g0 g1: $g1 g2: $g2",
-////                    chatMessage = "${viewModel.leftf0List.value}",
-//                    messageDate = formattedDate,
-//                    sender = deviceName
-//                )
-//
-//                viewModel.updateRightPointsList(f0, f1)
-//                viewModel.updateLeftPointsList(f0, f1)
-
-//                updateLeftGraphs(viewModel.leftf0List.value!!, viewModel.leftf1List.value!!)
-//                updateRightGraphs(viewModel.rightf0List.value!!, viewModel.rightf0List.value!!)
-
-//                arrayOfPoints.addAll(mutableListOf(id, f0, f1, a0, a1, a2, g0, g1, g2))
-
-//                viewModel.updateChatList(bubble)
-//                viewModel.chatList.value?.size?.let {
-//                    binding.messagesList.scrollToPosition(
-//                        it.minus(
-//                            1
-//                        )
-//                    )
-//                }
             }
             MessageEnum.MESSAGE_WRITE.ordinal -> return@Callback true
             MessageEnum.MESSAGE_DEVICE_NAME.ordinal -> {
@@ -352,6 +204,119 @@ class MainActivity : AppCompatActivity() {
 
         return@Callback false
     })
+
+    fun extractData(message: Message) {
+//        messageCopy = Message.obtain(message)
+//        launch {
+//            withContext(Dispatchers.Default) {
+
+//        GlobalScope.launch(Dispatchers.Default) {
+
+
+        //            Log.i("O7ADESKOM MN EXTRACTDATA", message.obj.toString())
+        buffer = message.obj as ByteArray
+//                val begin: Int = message.arg1
+        end = message.arg2
+
+        receivedMsg = String(buffer, 0, end)
+        strHolder = "0"
+//                receivedMsg = receivedMsg.substring(begin, end)
+
+//                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
+//                try{
+
+//        Log.i(TAG, "_________THIS THREAD_________" + Thread.currentThread().name)
+//                Log.i(TAG, "_________STRING HOLDER_________" + strHolder.toString())
+
+        // sensors: s t u v w x y z
+        // IMUs:
+        //      accelerometer: a b c
+        //      gyroscope:     d e f
+        if (receivedMsg.isEmpty()) {
+        } else {
+            if (receivedMsg.last() != 'f') {
+            } else {
+                receivedMsg.forEachIndexed { _, value ->
+                    if ((value != '#') and (!value.isWhitespace()) and (value != ' ') and (value.toString()
+                            .isNotEmpty()) and (!value.toString().isNullOrBlank())
+                    ) {
+                        when (value) {
+                            'i' -> {
+                                id = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            's' -> {
+                                f0 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            't' -> {
+                                f1 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'a' -> {
+                                a0 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'b' -> {
+                                a1 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'c' -> {
+                                a2 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'd' -> {
+                                g0 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'e' -> {
+                                g1 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            'f' -> {
+                                // sometimes this stores "" into g2 if I set strHolder to default ""
+                                // I still have no idea why it only happens to g2
+                                g2 = strHolder.toInt()
+                                strHolder = "0"
+                            }
+                            else -> {
+                                if (value.isDigit()) {
+                                    strHolder += value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+//            withContext(Dispatchers.Main) {
+        when (id) {
+            LeftRight.RIGHT.ordinal -> {
+//                        f0 = (0..4095).random()
+//                        f1 = (0..4095).random()
+//                        f0 = (f0 + 1) % 60
+//                        f1 = (f1 + 1) % 60
+                if (onScreen) {
+                    heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
+                }
+            }
+
+            LeftRight.LEFT.ordinal -> {
+//                        f0 = (0..4095).random()
+//                        f1 = (0..4095).random()
+//                        f0 = (f0 + 1) % 60
+//                        f1 = (f1 + 1) % 60
+                if (onScreen) {
+                    heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+                }
+
+            }
+        }
+//          }
+//      }
+//  }
+
+    }
 
     private fun setState(subTitle: CharSequence) {
         supportActionBar?.subtitle = subTitle
@@ -370,36 +335,43 @@ class MainActivity : AppCompatActivity() {
         chatUtils = ChatUtils(context, handler)
         rightHeatMap = binding.heatmapRight
         leftHeatMap = binding.heatmapLeft
+
+        rightMask = binding.rightMask
+        leftMask = binding.leftMask
         btActionBar = binding.floatingActionButton
-        leftLineChart = binding.leftLineChart
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        rightMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        leftMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
 //            scheduleMemoryClearing()
 
-//        leftf0LineDataSet.lineWidth = 3F
-//        leftf0LineDataSet.formLineWidth = 3F
-//        leftf1LineDataSet.lineWidth = 3F
-//        leftf1LineDataSet.formLineWidth = 3F
 
-        rightLineChart = binding.rightLineChart
-//        rightf0LineDataSet.lineWidth = 3F
-//        rightf0LineDataSet.formLineWidth = 3F
-//        rightf1LineDataSet.lineWidth = 3F
-//        rightf1LineDataSet.formLineWidth = 3F
-
-        chartStyle = LineChartStyle(this)
-        chartStyle.styleChart(binding.leftLineChart)
-        chartStyle.styleChart(binding.rightLineChart)
-
-//        chartStyle.drawLineGraph(binding.tempChart)
-//        chartStyle.drawLineGraph(binding.ecgChart)
-
-        chartStyle.styleLineDataSet(leftf0LineDataSet)
-        chartStyle.styleLineDataSet(leftf1LineDataSet)
-        chartStyle.styleLineDataSet(rightf0LineDataSet)
-        chartStyle.styleLineDataSet(rightf1LineDataSet)
+//        leftLineChart = binding.leftLineChart
+//
+////        leftf0LineDataSet.lineWidth = 3F
+////        leftf0LineDataSet.formLineWidth = 3F
+////        leftf1LineDataSet.lineWidth = 3F
+////        leftf1LineDataSet.formLineWidth = 3F
+//
+//        rightLineChart = binding.rightLineChart
+////        rightf0LineDataSet.lineWidth = 3F
+////        rightf0LineDataSet.formLineWidth = 3F
+////        rightf1LineDataSet.lineWidth = 3F
+////        rightf1LineDataSet.formLineWidth = 3F
+//
+//        chartStyle = LineChartStyle(this)
+//        chartStyle.styleChart(binding.leftLineChart)
+//        chartStyle.styleChart(binding.rightLineChart)
+//
+////        chartStyle.drawLineGraph(binding.tempChart)
+////        chartStyle.drawLineGraph(binding.ecgChart)
+//
+//        chartStyle.styleLineDataSet(leftf0LineDataSet)
+//        chartStyle.styleLineDataSet(leftf1LineDataSet)
+//        chartStyle.styleLineDataSet(rightf0LineDataSet)
+//        chartStyle.styleLineDataSet(rightf1LineDataSet)
 
         heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
 
@@ -410,13 +382,13 @@ class MainActivity : AppCompatActivity() {
 //        testingStringSlicing()
 
         requestMultiplePermissionsLauncher()
-        chatRecyclerviewInit()
+//        chatRecyclerviewInit()
 
-        viewModel.chatList.observe(this) {
-            it?.let {
-                adapterMessages.submitList(it)
-            }
-        }
+//        viewModel.chatList.observe(this) {
+//            it?.let {
+//                adapterMessages.submitList(it)
+//            }
+//        }
 //            viewModel.leftf0List.observe(this) {
 //                it?.let {
 //                    Log.i("leftF0List", "$f0")
@@ -435,12 +407,6 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        , viewModel.rightf1List.value!!
-        binding.messagesList.apply {
-            layoutManager = LinearLayoutManager(context).apply {
-                stackFromEnd = true
-                reverseLayout = false
-            }
-        }
     }
 
     fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {
@@ -723,54 +689,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun chatRecyclerviewInit() {
-        messageList = binding.messagesList
-//        adapterPairedDevices = DeviceAdapter(viewModel.pairedDevices)
-        adapterMessages = ChatAdapter(this, ChatAdapter.ChatBubbleListener {
-            viewModel.messageSelected(it)
-        })
-        messageList.adapter = adapterMessages
-        messageList.layoutManager =
-            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
-        binding.btnSendMessage.setOnClickListener {
-            if (binding.edEnterMessage.text != null) {
-                var message: String = binding.edEnterMessage.text.toString()
-                c = Calendar.getInstance()
-
-                /**
-                 * https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat
-                 * */
-                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
-                formattedDate = df!!.format(c.time)
-                var bubble = ChatBubble(
-                    id = viewModel.id.value!!,
-                    chatMessage = message,
-                    messageDate = formattedDate,
-                    sender = deviceName
-                )
-
-                viewModel.updateChatList(bubble)
-                binding.edEnterMessage.text.clear()
-                viewModel.chatList.value?.size?.let {
-                    binding.messagesList.scrollToPosition(
-                        it.minus(
-                            1
-                        )
-                    )
-                }
-
-                chatUtils?.write(message.toByteArray())
-                chatUtils?.write("\n".toByteArray())
-
-//                    bluetoothKit.write(message.toByteArray())
-//                    bluetoothKit.write("\n".toByteArray())
-
-
-                hideKeyboard(this, binding.root)
-            }
-        }
-    }
+//    private fun chatRecyclerviewInit() {
+//        messageList = binding.messagesList
+////        adapterPairedDevices = DeviceAdapter(viewModel.pairedDevices)
+//        adapterMessages = ChatAdapter(this, ChatAdapter.ChatBubbleListener {
+//            viewModel.messageSelected(it)
+//        })
+//        messageList.adapter = adapterMessages
+//        messageList.layoutManager =
+//            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+//
+//        binding.btnSendMessage.setOnClickListener {
+//            if (binding.edEnterMessage.text != null) {
+//                var message: String = binding.edEnterMessage.text.toString()
+//                c = Calendar.getInstance()
+//
+//                /*
+//                 * https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat
+//                 * /
+//                df = SimpleDateFormat("E HH:mm a", Locale.ENGLISH)
+//                formattedDate = df!!.format(c.time)
+//                var bubble = ChatBubble(
+//                    id = viewModel.id.value!!,
+//                    chatMessage = message,
+//                    messageDate = formattedDate,
+//                    sender = deviceName
+//                )
+//
+//                viewModel.updateChatList(bubble)
+//                binding.edEnterMessage.text.clear()
+//                viewModel.chatList.value?.size?.let {
+//                    binding.messagesList.scrollToPosition(
+//                        it.minus(
+//                            1
+//                        )
+//                    )
+//                }
+//
+//                chatUtils?.write(message.toByteArray())
+//                chatUtils?.write("\n".toByteArray())
+//
+////                    bluetoothKit.write(message.toByteArray())
+////                    bluetoothKit.write("\n".toByteArray())
+//
+//
+//                hideKeyboard(this, binding.root)
+//            }
+//        }
+//    }
 
 
     override fun onDestroy() {
@@ -778,6 +744,7 @@ class MainActivity : AppCompatActivity() {
         if (chatUtils != null) {
             chatUtils?.stop()
         }
+        cancel()
     }
 
 }
