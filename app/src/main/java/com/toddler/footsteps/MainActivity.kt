@@ -57,7 +57,7 @@ enum class MessageEnum {
 }
 
 
-class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity(){
     companion object {
         val toast: String = "toast"
         var deviceName: String = "DeviceName"
@@ -219,7 +219,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         end = message.arg2
 
         receivedMsg = String(buffer, 0, end)
-        strHolder = "0"
+//        strHolder = "0"
 //                receivedMsg = receivedMsg.substring(begin, end)
 
 //                Toast.makeText(context, receivedMsg, Toast.LENGTH_SHORT).show()
@@ -336,14 +336,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         rightHeatMap = binding.heatmapRight
         leftHeatMap = binding.heatmapLeft
 
-        rightMask = binding.rightMask
-        leftMask = binding.leftMask
+//        rightMask = binding.rightMask
+//        leftMask = binding.leftMask
         btActionBar = binding.floatingActionButton
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        rightMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        leftMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//        rightMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//        leftMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
 //            scheduleMemoryClearing()
 
@@ -744,7 +744,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         if (chatUtils != null) {
             chatUtils?.stop()
         }
-        cancel()
     }
 
 }
