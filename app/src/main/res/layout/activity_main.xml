@@ -7,19 +7,22 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/feet_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp">
+        android:background="@color/offWhite">
 
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
             android:id="@+id/left_mask"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="96dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="140dp"
-            android:layout_marginStart="24dp"
+            android:shadowColor="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:2.4"
             app:layout_constraintEnd_toStartOf="@+id/right_mask"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -41,12 +44,13 @@
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
             android:id="@+id/right_mask"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="96dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginBottom="140dp"
-            android:layout_marginEnd="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:2.4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/left_mask"
@@ -68,11 +72,27 @@
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:elevation="24dp"
+            android:layout_margin="24dp"
             android:src="@drawable/ic_enabled_bluetooth"
+            app:backgroundTint="@color/white"
+            app:elevation="8dp"
+            app:fabCustomSize="72dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:maxImageSize="36dp" />
+
+
+<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--            android:id="@+id/bottomNavigationView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/white"-->
+<!--            app:elevation="8dp"-->
+<!--            android:layout_margin="20dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

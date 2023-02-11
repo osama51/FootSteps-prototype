@@ -11,7 +11,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.os.Message
 import android.util.Log
 import android.view.Menu
@@ -23,10 +22,10 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
 import com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
@@ -38,15 +37,20 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
-import com.toddler.footsteps.chat.ChatBubble
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
-import kotlinx.coroutines.*
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
+//if (bluetoothUtils != null) {
+//    // Only if the state is STATE_NONE, do we know that we haven't started already
+//    if (bluetoothUtils?.getState() == StateEnum.STATE_NONE.ordinal) {
+//        // Start the Bluetooth chat services
+//        bluetoothUtils?.start()
+//    }
+//}
 
 enum class MessageEnum {
     MESSAGE_STATE_CHANGED,
@@ -57,7 +61,7 @@ enum class MessageEnum {
 }
 
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
     companion object {
         val toast: String = "toast"
         var deviceName: String = "DeviceName"
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity(){
     private val runningSOrLater =
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
     private lateinit var connectedDevice: String
-    private var chatUtils: ChatUtils? = null
+    private var bluetoothUtils: BluetoothUtils? = null
     var FLAG_ON = 0
     private lateinit var device: BluetoothDevice
     var c: Calendar = Calendar.getInstance()
@@ -84,6 +88,7 @@ class MainActivity : AppCompatActivity(){
 
     private lateinit var leftHeatMap: HeatMap
     private lateinit var rightHeatMap: HeatMap
+    private lateinit var feetContainer: ConstraintLayout
 
     private lateinit var rightMask: MaskableFrameLayout
     private lateinit var leftMask: MaskableFrameLayout
@@ -125,6 +130,8 @@ class MainActivity : AppCompatActivity(){
 
     private var strHolder: String = ""
 
+    private var startTime by Delegates.notNull<Long>()
+
     var onScreen = true
 
     private lateinit var messageCopy: Message
@@ -157,12 +164,13 @@ class MainActivity : AppCompatActivity(){
             connectedDevice = data?.getStringExtra("deviceAddress")!!
             deviceName = data?.getStringExtra("deviceName")!!
             device = data?.getParcelableExtra<BluetoothDevice>("device")!!
-            chatUtils?.connectAndStartThread(bluetoothAdapter!!.getRemoteDevice(connectedDevice))
-
+            bluetoothUtils?.connect(bluetoothAdapter!!.getRemoteDevice(connectedDevice))
         }
     }
 
     private var handler: Handler = Handler(Handler.Callback { message ->
+//        startTime = System.currentTimeMillis()
+//        Log.d("___CALL___", "Current time: $startTime milliseconds")
 
         when (message.what) {
             MessageEnum.MESSAGE_STATE_CHANGED.ordinal -> {
@@ -185,7 +193,8 @@ class MainActivity : AppCompatActivity(){
             }
 
             MessageEnum.MESSAGE_READ.ordinal -> {
-
+//                startTime = System.currentTimeMillis()
+//                Log.d("___REENDERR___", "Current time: $startTime milliseconds")
                 extractData(message)
 
             }
@@ -298,6 +307,7 @@ class MainActivity : AppCompatActivity(){
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
                     heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
+//                    rightHeatMap.forceRefresh()
                 }
             }
 
@@ -308,6 +318,7 @@ class MainActivity : AppCompatActivity(){
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
                     heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+//                    leftHeatMap.forceRefresh()
                 }
 
             }
@@ -315,7 +326,7 @@ class MainActivity : AppCompatActivity(){
 //          }
 //      }
 //  }
-
+//            feetContainer.invalidate()
     }
 
     private fun setState(subTitle: CharSequence) {
@@ -332,9 +343,10 @@ class MainActivity : AppCompatActivity(){
 //        setContentView(R.layout.activity_main)
         context = this
 
-        chatUtils = ChatUtils(context, handler)
+        bluetoothUtils = BluetoothUtils(context, handler)
         rightHeatMap = binding.heatmapRight
         leftHeatMap = binding.heatmapLeft
+        feetContainer = binding.feetContainer
 
 //        rightMask = binding.rightMask
 //        leftMask = binding.leftMask
@@ -373,7 +385,7 @@ class MainActivity : AppCompatActivity(){
 //        chartStyle.styleLineDataSet(rightf0LineDataSet)
 //        chartStyle.styleLineDataSet(rightf1LineDataSet)
 
-        heatMapUtil = HeatMapUtil(rightHeatMap, leftHeatMap)
+        heatMapUtil = HeatMapUtil(this, rightHeatMap, leftHeatMap)
 
         btActionBar.setOnClickListener {
             initBluetooth()
@@ -726,8 +738,8 @@ class MainActivity : AppCompatActivity(){
 //                    )
 //                }
 //
-//                chatUtils?.write(message.toByteArray())
-//                chatUtils?.write("\n".toByteArray())
+//                bluetoothUtils?.write(message.toByteArray())
+//                bluetoothUtils?.write("\n".toByteArray())
 //
 ////                    bluetoothKit.write(message.toByteArray())
 ////                    bluetoothKit.write("\n".toByteArray())
@@ -741,8 +753,8 @@ class MainActivity : AppCompatActivity(){
 
     override fun onDestroy() {
         super.onDestroy()
-        if (chatUtils != null) {
-            chatUtils?.stop()
+        if (bluetoothUtils != null) {
+            bluetoothUtils?.stop()
         }
     }
 

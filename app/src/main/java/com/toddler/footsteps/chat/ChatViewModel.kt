@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.github.mikephil.charting.data.Entry
+//import com.github.mikephil.charting.data.Entry
 
 
 /**
@@ -24,11 +24,11 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     val chatList = MutableLiveData<MutableList<ChatBubble?>>()
 
-    val leftf0List = MutableLiveData<MutableList<Entry?>>()
-    val leftf1List = MutableLiveData<MutableList<Entry?>>()
-
-    val rightf0List = MutableLiveData<MutableList<Entry?>>()
-    val rightf1List = MutableLiveData<MutableList<Entry?>>()
+//    val leftf0List = MutableLiveData<MutableList<Entry?>>()
+//    val leftf1List = MutableLiveData<MutableList<Entry?>>()
+//
+//    val rightf0List = MutableLiveData<MutableList<Entry?>>()
+//    val rightf1List = MutableLiveData<MutableList<Entry?>>()
     val id = MutableLiveData<Long>()
     var leftTimer = 0
     var rightTimer = 0
@@ -46,10 +46,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     init {
         Log.i("ChatViewModel", "ChatViewModel Created")
         chatList.value = mutableListOf()
-        leftf0List.value = mutableListOf()
-        leftf1List.value = mutableListOf()
-        rightf0List.value = mutableListOf()
-        rightf0List.value = mutableListOf()
+//        leftf0List.value = mutableListOf()
+//        leftf1List.value = mutableListOf()
+//        rightf0List.value = mutableListOf()
+//        rightf0List.value = mutableListOf()
         _seen.value = false
         id.value = 0
         _selectedMessage.value = null
@@ -66,19 +66,19 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 //        Log.i("updateChatList", "ChatViewModel UPDATING")
 //        chatList.value?.add(message)
         leftTimer++
-        leftf0List.value?.add(Entry(leftTimer.toFloat(), f0.toFloat()))
-        leftf1List.value?.add(Entry(leftTimer.toFloat(), f1.toFloat()))
+//        leftf0List.value?.add(Entry(leftTimer.toFloat(), f0.toFloat()))
+//        leftf1List.value?.add(Entry(leftTimer.toFloat(), f1.toFloat()))
 //        Log.i("Update Left List", "${leftf1List.value}")
     }
 
-    fun updateRightPointsList( f0: Int, f1: Int) {
-//        Log.i("updateChatList", "ChatViewModel UPDATING")
-//        chatList.value?.add(message)
-        rightTimer++
-//        Log.i("Update Right List", "$f0")
-        rightf0List.value?.add(Entry(rightTimer.toFloat(), f0.toFloat()))
-        rightf1List.value?.add(Entry(rightTimer.toFloat(), f1.toFloat()))
-    }
+//    fun updateRightPointsList( f0: Int, f1: Int) {
+////        Log.i("updateChatList", "ChatViewModel UPDATING")
+////        chatList.value?.add(message)
+//        rightTimer++
+////        Log.i("Update Right List", "$f0")
+//        rightf0List.value?.add(Entry(rightTimer.toFloat(), f0.toFloat()))
+//        rightf1List.value?.add(Entry(rightTimer.toFloat(), f1.toFloat()))
+//    }
 
     fun messageSelected(message: ChatBubble) {
         _selectedMessage.value = message
