@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -39,6 +40,7 @@ import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
+import com.toddler.footsteps.navbar.CustomBottomNavBar
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -110,6 +112,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lineData: LineData
 
     private lateinit var chartStyle: LineChartStyle
+
+    private lateinit var customBottomBar: CustomBottomNavBar
 
     //    val bluetoothKit = BluetoothKit()
     private var stateEnum: StateEnum = StateEnum.STATE_NONE
@@ -337,6 +341,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+//        customBottomBar.inflateMenu(R.menu.bottom_menu)
+
+        val drawable = GradientDrawable().apply {
+            colors = intArrayOf(
+                R.color.lightBlue,
+                R.color.white,
+                R.color.white,
+            )
+            orientation = GradientDrawable.Orientation.TOP_BOTTOM
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+            shape = GradientDrawable.RECTANGLE
+        }
+
+//        customBottomBar = binding.customBottomNavBar
+//        customBottomBar.setBackgroundDrawable(drawable)
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         supportActionBar?.hide()

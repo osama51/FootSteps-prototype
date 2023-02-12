@@ -16,13 +16,13 @@ BluetoothSerial SerialBT;
 int counter = 0;
 String str= "";
 unsigned long currentMillis;
-#define interval 34
+#define interval 30
 unsigned long previousMillis = 0;
 
 
 void setup() {
   Serial.begin(9600);
-  SerialBT.begin("ESP32_Medhat"); //Bluetooth device name
+  SerialBT.begin("ESP32_Osama"); //Bluetooth device name
   // Serial.println("The device started, now you can pair it with bluetooth!");
 }
 
