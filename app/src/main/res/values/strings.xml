@@ -12,6 +12,9 @@
     <string name="cancel">Cancel</string>
     <string name="grant">Grant</string>
     <string name="deny">Deny</string>
+    <string name="device_key">Footsteps_Prototype-Preference_File</string>
+    <string name="device_address_key">bt_address</string>
+    <string name="default_address">NONE</string>
 
 <!--    Error Messages    -->
     <string name="permissions_needed_snackbar_msg">Permission needed for the app to work properly</string>

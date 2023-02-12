@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -39,7 +38,6 @@ import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.navbar.CustomBottomNavBar
-import com.toddler.footsteps.navbar.setShadow
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -363,7 +361,7 @@ class MainActivity : AppCompatActivity() {
 //        setContentView(R.layout.activity_main)
         context = this
 
-        bluetoothUtils = BluetoothUtils(context, handler)
+        bluetoothUtils = BluetoothUtils(this, context, handler)
         rightHeatMap = binding.heatmapRight
         leftHeatMap = binding.heatmapLeft
         feetContainer = binding.feetContainer
@@ -409,13 +407,22 @@ class MainActivity : AppCompatActivity() {
         heatMapUtil = HeatMapUtil(this, rightHeatMap, leftHeatMap)
 
         flActionBtn.setOnClickListener {
-            initBluetooth()
+            enableBluetooth()
             requestBluetoothPermissions()
         }
 //        testingStringSlicing()
 
         requestMultiplePermissionsLauncher()
 //        chatRecyclerviewInit()
+
+        initBluetooth()
+        if (bluetoothAdapter!!.isEnabled){
+//            requestBluetoothPermissions()
+            val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+            val defaultAddress = resources.getString(R.string.default_address)
+            val deviceAddress = sharedPref.getString(getString(R.string.device_address_key), defaultAddress)
+            bluetoothUtils?.connect(bluetoothAdapter!!.getRemoteDevice(deviceAddress))
+        }
 
 //        viewModel.chatList.observe(this) {
 //            it?.let {
@@ -440,6 +447,11 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        , viewModel.rightf1List.value!!
+    }
+
+    override fun onStart() {
+
+        super.onStart()
     }
 
     override fun onBackPressed() {
@@ -573,7 +585,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_search_devices -> {
 //                Toast.makeText(context, "Searching", Toast.LENGTH_SHORT).show()
-                initBluetooth()
+                enableBluetooth()
                 requestBluetoothPermissions()
             }
         }
@@ -583,12 +595,14 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @SuppressLint("MissingPermission")
-    fun initBluetooth() {
+    private fun initBluetooth() {
         val bluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
-
+    }
+    @SuppressLint("MissingPermission")
+    fun enableBluetooth() {
+        initBluetooth()
 
         // tells if the device supports bluetooth or not
         // actually useless if I set bluetooth to be required in manifest

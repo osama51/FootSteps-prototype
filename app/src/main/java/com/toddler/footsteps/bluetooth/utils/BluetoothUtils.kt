@@ -1,6 +1,7 @@
 package com.toddler.footsteps
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
@@ -24,8 +25,9 @@ enum class StateEnum {
     STATE_CONNECTED
 }
 
-class BluetoothUtils(context: Context, handler: Handler) {
+class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 
+    private var activity: Activity = activity
     private var context: Context = context
     private var handler: Handler = handler
     private var connectThread: ConnectThread? = null
@@ -407,6 +409,14 @@ class BluetoothUtils(context: Context, handler: Handler) {
             connectedThread = null
         }
 
+//        val sharedPref = activity.getSharedPreferences(
+//            activity.getString(R.string.device_key), Context.MODE_PRIVATE)
+
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString(activity.getString(R.string.device_address_key), device.address)
+            apply()
+        }
         connectedThread = ConnectedThread(socket!!)
         connectedThread!!.start()
 
