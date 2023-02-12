@@ -4,7 +4,7 @@
 
 ## TODO
 
-- [ ] Add curved-in/out bottom nav view 
+- [x] Add curved-in/out bottom nav view 
 - [ ] Add connected Bluetooth device to SharedPreferences
 - [ ] Show available devices
 - [x] Press back again to exit
