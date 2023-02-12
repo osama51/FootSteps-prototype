@@ -9,15 +9,13 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -41,6 +39,7 @@ import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.navbar.CustomBottomNavBar
+import com.toddler.footsteps.navbar.setShadow
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -354,7 +353,8 @@ class MainActivity : AppCompatActivity() {
             shape = GradientDrawable.RECTANGLE
         }
 
-//        customBottomBar = binding.customBottomNavBar
+        customBottomBar = binding.customBottomNavBar
+//        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
@@ -368,8 +368,9 @@ class MainActivity : AppCompatActivity() {
         leftHeatMap = binding.heatmapLeft
         feetContainer = binding.feetContainer
 
-//        rightMask = binding.rightMask
-//        leftMask = binding.leftMask
+        rightMask = binding.rightMask
+        leftMask = binding.leftMask
+
         flActionBtn = binding.floatingActionButton
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
