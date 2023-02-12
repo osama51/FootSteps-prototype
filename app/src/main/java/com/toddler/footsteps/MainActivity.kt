@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var heatMapUtil: HeatMapUtil
 
-    private lateinit var btActionBar: FloatingActionButton
+    private lateinit var flActionBtn: FloatingActionButton
 
     private lateinit var leftRight: LeftRight
 
@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
     private var startTime by Delegates.notNull<Long>()
 
     var onScreen = true
+    private var pressedTime: Long = 0L
 
     private lateinit var messageCopy: Message
 
@@ -350,7 +351,7 @@ class MainActivity : AppCompatActivity() {
 
 //        rightMask = binding.rightMask
 //        leftMask = binding.leftMask
-        btActionBar = binding.floatingActionButton
+        flActionBtn = binding.floatingActionButton
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -387,7 +388,7 @@ class MainActivity : AppCompatActivity() {
 
         heatMapUtil = HeatMapUtil(this, rightHeatMap, leftHeatMap)
 
-        btActionBar.setOnClickListener {
+        flActionBtn.setOnClickListener {
             initBluetooth()
             requestBluetoothPermissions()
         }
@@ -419,6 +420,16 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        , viewModel.rightf1List.value!!
+    }
+
+    override fun onBackPressed() {
+        if (pressedTime + 1500 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        }
+        pressedTime = System.currentTimeMillis()
     }
 
     fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {

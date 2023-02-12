@@ -219,6 +219,7 @@ class BluetoothUtils(context: Context, handler: Handler) {
 
         init {
             var tmp: BluetoothSocket? = null
+
             try {
                 tmp = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(UUID_STRING))
 //                tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_STRING));
