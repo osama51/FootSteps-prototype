@@ -47,7 +47,7 @@ class CustomBottomNavBar @JvmOverloads constructor(
     init {
 
         // radius of fab button
-        radius = 220 / 2
+        radius = 180 / 2
         mPath = Path()
         mPathBack = Path()
         mPaint = Paint()
@@ -70,12 +70,12 @@ class CustomBottomNavBar @JvmOverloads constructor(
         mNavigationBarWidth = width
         mNavigationBarHeight = height
         // the coordinates (x,y) of the start point before curve
-        mFirstCurveStartPoint.set(mNavigationBarWidth / 2 - radius * 2 - radius / 10, 0)
+        mFirstCurveStartPoint.set(mNavigationBarWidth / 2 - radius * 2 - radius / 3, 0)
         // the coordinates (x,y) of the end point after curve
         mFirstCurveEndPoint.set(mNavigationBarWidth / 2, radius + radius / 4)
         // same thing for the second curve
         mSecondCurveStartPoint = mFirstCurveEndPoint
-        mSecondCurveEndPoint.set(mNavigationBarWidth / 2 + radius * 2 + radius / 10, 0)
+        mSecondCurveEndPoint.set(mNavigationBarWidth / 2 + radius * 2 + radius / 3, 0)
 
         // the coordinates (x,y)  of the 1st control point on a cubic curve
         mFirstCurveControlPoint1.set(

@@ -3,41 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.toddler.footsteps">
 
-<!--    &lt;!&ndash; Request legacy Bluetooth permissions on older devices. &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.BLUETOOTH"-->
-<!--        android:maxSdkVersion="30" />-->
-<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"-->
-<!--        android:maxSdkVersion="30" />-->
+    <!-- Request legacy Bluetooth permissions on older devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
 
-<!--&lt;!&ndash;        Android 12 and above (sdk 31)&ndash;&gt;-->
-<!--    &lt;!&ndash; Needed only if your app looks for Bluetooth devices.-->
-<!--         If your app doesn't use Bluetooth scan results to derive physical-->
-<!--         location information, you can strongly assert that your app-->
-<!--         doesn't derive physical location. &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />-->
+<!--        Android 12 and above (sdk 31)-->
+    <!-- Needed only if your app looks for Bluetooth devices.
+         If your app doesn't use Bluetooth scan results to derive physical
+         location information, you can strongly assert that your app
+         doesn't derive physical location. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
-<!--    &lt;!&ndash; Needed only if your app makes the device discoverable to Bluetooth-->
-<!--         devices. &ndash;&gt;-->
-<!--&lt;!&ndash;    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />&ndash;&gt;-->
+    <!-- Needed only if your app makes the device discoverable to Bluetooth
+         devices. -->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />-->
 
-<!--    &lt;!&ndash; Needed only if your app communicates with already-paired Bluetooth-->
-<!--         devices. &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
-
-<!--    &lt;!&ndash; Needed only if your app uses Bluetooth scan results to derive physical location. &ndash;&gt;-->
-<!--&lt;!&ndash;    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />&ndash;&gt;-->
-
-<!--    &lt;!&ndash;    Necessary because, on Android 11 and lower, a Bluetooth scan could-->
-<!--    potentially be used to gather information about the location of the user&ndash;&gt;-->
-<!--&lt;!&ndash;    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />&ndash;&gt;-->
-
-
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <!-- Needed only if your app communicates with already-paired Bluetooth
+         devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Needed only if your app uses Bluetooth scan results to derive physical location. -->
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+
+    <!--    Necessary because, on Android 11 and lower, a Bluetooth scan could
+    potentially be used to gather information about the location of the user-->
+<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+
+
+<!--    <uses-permission android:name="android.permission.BLUETOOTH" />-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
 
     <application
         android:hardwareAccelerated="true"
