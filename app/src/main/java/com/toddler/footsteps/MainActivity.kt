@@ -16,6 +16,7 @@ import android.os.Message
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +39,7 @@ import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.navbar.CustomBottomNavBar
+import soup.neumorphism.ShapeType
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,7 +71,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var context: Context
-    private lateinit var viewModel: ChatViewModel
+    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var heatmapViewModel: HeatMapViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -89,12 +92,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rightHeatMap: HeatMap
     private lateinit var feetContainer: ConstraintLayout
 
+
     private lateinit var rightMask: MaskableFrameLayout
     private lateinit var leftMask: MaskableFrameLayout
 
     private lateinit var heatMapUtil: HeatMapUtil
 
     private lateinit var flActionBtn: FloatingActionButton
+    private lateinit var scientificBtn: ImageButton
 
     private lateinit var leftRight: LeftRight
 
@@ -354,7 +359,8 @@ class MainActivity : AppCompatActivity() {
         customBottomBar = binding.customBottomNavBar
 //        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
-        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        heatmapViewModel = ViewModelProvider(this)[HeatMapViewModel::class.java]
 
         supportActionBar?.hide()
 
@@ -370,6 +376,7 @@ class MainActivity : AppCompatActivity() {
         leftMask = binding.leftMask
 
         flActionBtn = binding.floatingActionButton
+        scientificBtn = binding.scientificBtn
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -377,6 +384,31 @@ class MainActivity : AppCompatActivity() {
 //        leftMask.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
 //            scheduleMemoryClearing()
+
+        val lifecycleOwner = this
+
+        scientificBtn.setOnClickListener {
+            if(heatmapViewModel.isScientific()) {
+                heatmapViewModel.turnOffScientific()
+                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
+                binding.scientificBtn.setShapeType(ShapeType.Companion.DEFAULT)
+            } else {
+                heatmapViewModel.setScientific()
+                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.offWhite))
+                binding.scientificBtn.setShapeType(ShapeType.BASIN)
+            }
+        }
+
+        heatmapViewModel.heatMapMode.observe(lifecycleOwner) { mode ->
+            when(mode) {
+                HeatMapMode.SCIENTIFIC -> {
+                    heatMapUtil.scientificTheme()
+                    Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT).show()}
+                HeatMapMode.USER_FRIENDLY -> {
+                    heatMapUtil.userFriendlyTheme()
+                    Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT).show()}
+            }
+        }
 
 
 //        leftLineChart = binding.leftLineChart

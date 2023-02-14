@@ -25,7 +25,7 @@
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45"
+            app:layout_constraintVertical_bias="0.55"
             app:mask="@drawable/left"
             app:porterduffxfermode="DST_IN">
 
@@ -34,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:maxOpacity="220"
-                app:minOpacity="0"
+                app:maxOpacity="250"
+                app:minOpacity="30"
                 app:radius="400dp" />
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
@@ -59,8 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:maxOpacity="220"
-                app:minOpacity="0"
+                app:maxOpacity="250"
+                app:minOpacity="30"
                 app:radius="400dp" />
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
@@ -82,13 +82,31 @@
             android:id="@+id/customBottomNavBar"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            app:elevation="8dp"
             android:shadowColor="@color/gray"
+            app:elevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
+        <soup.neumorphism.NeumorphImageButton
+            android:id="@+id/scientific_btn"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@drawable/ic_scientific"
+            android:layout_margin="10dp"
+            android:padding="7dp"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            android:focusableInTouchMode="true"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            android:scaleType="center"
+            app:neumorph_shapeType="flat"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_strokeColor="@color/sweet"
+            app:neumorph_shadowElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </layout>

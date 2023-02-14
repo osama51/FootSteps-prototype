@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_pressed="true"
+        app:neumorph_shapeType="pressed" /> <!-- pressed -->
+    <item android:state_focused="true"
+        app:neumorph_shapeType="basin" /> <!-- focused -->
+    <item app:neumorph_shapeType="flat"
+        android:src="@drawable/button_background"/> <!-- default -->
+
+</selector>

@@ -3,6 +3,7 @@ package com.toddler.footsteps
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.provider.CalendarContract
 import android.util.Log
 import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap
@@ -13,6 +14,11 @@ enum class LeftRight {
     NONE,
     RIGHT,
     LEFT
+}
+
+enum class HeatMapMode {
+    USER_FRIENDLY,
+    SCIENTIFIC
 }
 
 class HeatMapUtil(private var activity: Activity,
@@ -52,6 +58,8 @@ class HeatMapUtil(private var activity: Activity,
     private lateinit var ExecutorRightFoot: Handler
     private lateinit var ExecutorLeftFoot: Handler
 
+    private var colorStops: ArrayMap<Float, Int> = ArrayMap()
+
     init {
         leftHeatMap.setMinimum(0.0)
         leftHeatMap.setMaximum(4095.0)
@@ -64,19 +72,81 @@ class HeatMapUtil(private var activity: Activity,
 //        //make the maximum opacity 50% transparent
 //        heatMap.setMaximumOpacity(255)
 
-        //make the colour gradient from pink to yellow
-        val colorStops: ArrayMap<Float, Int> = ArrayMap()
-        colorStops.put(0.0f, 0xff005af4.toInt()) // -0x11bd0c
-        colorStops.put(0.2f, 0x9900fff4.toInt()) //#4287f5 -0x110bbe
-        colorStops.put(1.0f, 0x9900fff4.toInt()) //#4287f5 -0x110bbe
-        leftHeatMap.setColorStops(colorStops)
-        rightHeatMap.setColorStops(colorStops)
+        userFriendlyTheme()
 
 //        val y = (y + 45.0) * 10.0
 //        Log.i("YYYYYYYYYYY", "$y")
 //        val point = HeatMap.DataPoint(0.5F, 0.5F, y )
 //        val point2 = HeatMap.DataPoint(0.2F, 0.5F, y / 2.0)
 //        val point3 = HeatMap.DataPoint(0.8F, 0.5F, y / 2.0)
+    }
+
+    fun scientificTheme() {
+
+        // ARGB --> 0xAARRGGBB
+        //make the colour gradient from pink to yellow
+        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
+
+        colorStops.put(0.05f, 0x6004ff00.toInt()) // greenish
+        colorStops.put(0.20f, 0xa004ff00.toInt()) // greenish
+        colorStops.put(0.25f, 0xa0d2eb34.toInt()) // greenish
+
+        colorStops.put(0.3f, 0xfffff600.toInt()) // yellowish
+        colorStops.put(0.6f, 0xfffff600.toInt()) // yellowish
+        colorStops.put(0.65f, 0xfff9c320.toInt()) // yellowish
+
+        colorStops.put(0.7f, 0xfff9aa20.toInt()) // reddish
+        colorStops.put(0.75f, 0xaaff2100.toInt()) // reddish
+        colorStops.put(1.0f, 0xaaff2100.toInt()) // reddish
+
+//        colorStops.put(0.0f, 0xffee42f4.toInt());
+//        colorStops.put(1.0f, 0xffeef442.toInt());
+        leftHeatMap.setMinimumOpacity(220)
+        leftHeatMap.setMaximumOpacity(250)
+
+        rightHeatMap.setMinimumOpacity(220)
+        rightHeatMap.setMaximumOpacity(250)
+
+//        leftHeatMap.setRadius(800.0)
+//        rightHeatMap.setRadius(800.0)
+
+        leftHeatMap.setColorStops(colorStops)
+        rightHeatMap.setColorStops(colorStops)
+
+    }
+
+    fun userFriendlyTheme() {
+
+        //make colour gradients of turquoise
+        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
+
+//        colorStops.put(0.05f, 0xff005af4.toInt()) // -0x11bd0c
+//        colorStops.put(0.25f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
+//        colorStops.put(1.0f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
+
+        colorStops.put(0.05f, 0xff82ecff.toInt()) // greenish
+        colorStops.put(0.20f, 0x9900fff4.toInt()) // greenish
+        colorStops.put(0.25f, 0xff00fff4.toInt()) // greenish
+
+        colorStops.put(0.3f, 0xaa00fff4.toInt()) // yellowish
+        colorStops.put(0.6f, 0xbb00fff4.toInt()) // yellowish
+        colorStops.put(0.65f, 0xc000fff4.toInt()) // yellowish
+
+        colorStops.put(0.7f, 0xdd00fff4.toInt()) // reddish
+        colorStops.put(0.75f, 0xe000fff4.toInt()) // reddish
+        colorStops.put(1.0f, 0xff00fff4.toInt()) // reddish
+
+        leftHeatMap.setMinimumOpacity(30)
+        leftHeatMap.setMaximumOpacity(250)
+
+        rightHeatMap.setMinimumOpacity(30)
+        rightHeatMap.setMaximumOpacity(250)
+
+        leftHeatMap.setRadius(800.0)
+        rightHeatMap.setRadius(800.0)
+
+        leftHeatMap.setColorStops(colorStops)
+        rightHeatMap.setColorStops(colorStops)
     }
 
     fun leftFootPoints(
@@ -91,16 +161,16 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorLeftFoot.post {
             // Perform task here with data
 
-            pointLA = HeatMap.DataPoint(0.56F, 0.08F, 0 / 1.0)
-            pointLAA = HeatMap.DataPoint(0.33F, 0.1F, 0 / 1.0)
-            pointLB = HeatMap.DataPoint(0.7F, 0.27F, y1 / 1.0)
-            pointLC = HeatMap.DataPoint(0.29F, 0.28F, 0 / 1.0)
+            pointLA = HeatMap.DataPoint(0.65F, 0.08F, y1 / 1.3)
+            pointLAA = HeatMap.DataPoint(0.33F, 0.17F, y1 / 2.5)
+            pointLB = HeatMap.DataPoint(0.8F, 0.27F, y1 / 1.0)
+            pointLC = HeatMap.DataPoint(0.29F, 0.28F, y1 / 1.0)
             pointLD = HeatMap.DataPoint(0.38F, 0.35F, 0 / 3.0)
             pointLE = HeatMap.DataPoint(0.28F, 0.45F, 0 / 1.0)
             pointLF = HeatMap.DataPoint(0.27F, 0.55F, 0 / 1.0)
             pointLG = HeatMap.DataPoint(0.44F, 0.65F, 0 / 3.0)
             pointLH = HeatMap.DataPoint(0.44F, 0.78F, y2 / 1.0)
-            pointLI = HeatMap.DataPoint(0.64F, 0.89F, 0 / 1.0)
+            pointLI = HeatMap.DataPoint(0.64F, 0.89F, y2 / 1.0)
             pointLK = HeatMap.DataPoint(0.56F, 0.91F, 0 / 1.0)
 
             leftHeatMap.apply {
@@ -142,16 +212,16 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorRightFoot.post {
             // Perform task here with data
 
-            pointRA = HeatMap.DataPoint(0.44F, 0.08F, 0 / 1.0)
-            pointRAA = HeatMap.DataPoint(0.67F, 0.1F, 0 / 1.0)
-            pointRB = HeatMap.DataPoint(0.3F, 0.27F, y1 / 1.0)
-            pointRC = HeatMap.DataPoint(0.71F, 0.28F, 0 / 1.0)
+            pointRA = HeatMap.DataPoint(0.35F, 0.08F, y1 / 1.3)
+            pointRAA = HeatMap.DataPoint(0.67F, 0.17F, y1 / 2.5)
+            pointRB = HeatMap.DataPoint(0.2F, 0.27F, y1 / 1.0)
+            pointRC = HeatMap.DataPoint(0.71F, 0.28F, y1 / 1.0)
             pointRD = HeatMap.DataPoint(0.62F, 0.35F, 0 / 3.0)
             pointRE = HeatMap.DataPoint(0.72F, 0.45F, 0 / 1.0)
             pointRF = HeatMap.DataPoint(0.73F, 0.55F, 0 / 1.0)
             pointRG = HeatMap.DataPoint(0.56F, 0.65F, 0 / 3.0)
             pointRH = HeatMap.DataPoint(0.56F, 0.78F, y2 / 1.0)
-            pointRI = HeatMap.DataPoint(0.36F, 0.89F, 0 / 1.0)
+            pointRI = HeatMap.DataPoint(0.36F, 0.89F, y2 / 1.0)
             pointRK = HeatMap.DataPoint(0.44F, 0.91F, 0 / 1.0)
 
 //        val startTime = System.currentTimeMillis()
@@ -167,7 +237,7 @@ class HeatMapUtil(private var activity: Activity,
                 addData(pointRH)
                 addData(pointRI)
                 addData(pointRK)
-//            forceRefresh()
+//            forceRefresh()                             // what I used the first time, Medhat's vid (smoother if given higher delays near 100ms)
                 forceRefreshOnWorkerThread()
                 invalidate()
 //            postInvalidateOnAnimation()

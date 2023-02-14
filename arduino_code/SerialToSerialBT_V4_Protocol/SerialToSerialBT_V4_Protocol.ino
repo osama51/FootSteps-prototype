@@ -16,7 +16,7 @@ BluetoothSerial SerialBT;
 int counter = 0;
 String str= "";
 unsigned long currentMillis;
-#define interval 30
+#define interval 25
 unsigned long previousMillis = 0;
 
 
