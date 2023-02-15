@@ -101,7 +101,8 @@
             android:scaleType="center"
             app:neumorph_shapeType="flat"
             app:neumorph_lightSource="rightTop"
-            app:neumorph_strokeColor="@color/sweet"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp"
             app:neumorph_shadowElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
