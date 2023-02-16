@@ -55,6 +55,8 @@ class HeatMapUtil(private var activity: Activity,
     private var y1Right: Double = 0.0
     private var y2Right: Double = 0.0
 
+    private var pixels: Double = 0.0
+
     private lateinit var ExecutorRightFoot: Handler
     private lateinit var ExecutorLeftFoot: Handler
 
@@ -66,6 +68,9 @@ class HeatMapUtil(private var activity: Activity,
 
         rightHeatMap.setMinimum(0.0)
         rightHeatMap.setMaximum(4095.0)
+
+        pixels = activity.resources.getDimensionPixelSize(R.dimen.heatmap_point).toDouble()
+
 
         //        //make the minimum opacity completely transparent
 //        heatMap.setMinimumOpacity(0)
@@ -107,8 +112,8 @@ class HeatMapUtil(private var activity: Activity,
         rightHeatMap.setMinimumOpacity(220)
         rightHeatMap.setMaximumOpacity(250)
 
-//        leftHeatMap.setRadius(800.0)
-//        rightHeatMap.setRadius(800.0)
+        leftHeatMap.setRadius(pixels)
+        rightHeatMap.setRadius(pixels)
 
         leftHeatMap.setColorStops(colorStops)
         rightHeatMap.setColorStops(colorStops)
@@ -117,6 +122,7 @@ class HeatMapUtil(private var activity: Activity,
 
     fun userFriendlyTheme() {
 
+        // ARGB --> 0xAARRGGBB
         //make colour gradients of turquoise
         colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
 
@@ -142,8 +148,8 @@ class HeatMapUtil(private var activity: Activity,
         rightHeatMap.setMinimumOpacity(30)
         rightHeatMap.setMaximumOpacity(250)
 
-        leftHeatMap.setRadius(800.0)
-        rightHeatMap.setRadius(800.0)
+        leftHeatMap.setRadius(pixels)
+        rightHeatMap.setRadius(pixels)
 
         leftHeatMap.setColorStops(colorStops)
         rightHeatMap.setColorStops(colorStops)

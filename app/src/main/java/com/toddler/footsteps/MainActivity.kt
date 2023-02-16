@@ -388,7 +388,7 @@ class MainActivity : AppCompatActivity() {
         val lifecycleOwner = this
 
         scientificBtn.setOnClickListener {
-            if(heatmapViewModel.isScientific()) {
+            if (heatmapViewModel.isScientific()) {
                 heatmapViewModel.turnOffScientific()
                 binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
                 binding.scientificBtn.setShapeType(ShapeType.Companion.DEFAULT)
@@ -400,13 +400,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         heatmapViewModel.heatMapMode.observe(lifecycleOwner) { mode ->
-            when(mode) {
+            when (mode) {
                 HeatMapMode.SCIENTIFIC -> {
                     heatMapUtil.scientificTheme()
-                    Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT).show()}
+                    Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT).show()
+                }
                 HeatMapMode.USER_FRIENDLY -> {
                     heatMapUtil.userFriendlyTheme()
-                    Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT).show()}
+                    Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -448,14 +450,15 @@ class MainActivity : AppCompatActivity() {
 //        chatRecyclerviewInit()
 
         initBluetooth()
-        if (bluetoothAdapter!!.isEnabled){
-            enableBluetooth()
-            requestBluetoothPermissions()
+        if (bluetoothAdapter!!.isEnabled) {
 //            requestBluetoothPermissions()
             val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
             val defaultAddress = resources.getString(R.string.default_address)
-            val deviceAddress = sharedPref.getString(getString(R.string.device_address_key), defaultAddress)
-            bluetoothUtils?.connect(bluetoothAdapter!!.getRemoteDevice(deviceAddress))
+            val deviceAddress =
+                sharedPref.getString(getString(R.string.device_address_key), defaultAddress)
+            if (deviceAddress != "NONE") {
+                bluetoothUtils?.connect(bluetoothAdapter!!.getRemoteDevice(deviceAddress))
+            }
         }
 
 //        viewModel.chatList.observe(this) {
@@ -634,6 +637,7 @@ class MainActivity : AppCompatActivity() {
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
     }
+
     @SuppressLint("MissingPermission")
     fun enableBluetooth() {
         initBluetooth()
