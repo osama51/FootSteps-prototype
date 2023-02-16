@@ -449,6 +449,8 @@ class MainActivity : AppCompatActivity() {
 
         initBluetooth()
         if (bluetoothAdapter!!.isEnabled){
+            enableBluetooth()
+            requestBluetoothPermissions()
 //            requestBluetoothPermissions()
             val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
             val defaultAddress = resources.getString(R.string.default_address)
