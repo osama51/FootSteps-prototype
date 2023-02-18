@@ -92,16 +92,18 @@ class HeatMapUtil(private var activity: Activity,
         //make the colour gradient from pink to yellow
         colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
 
-        colorStops.put(0.05f, 0x6004ff00.toInt()) // greenish
-        colorStops.put(0.20f, 0xa004ff00.toInt()) // greenish
-        colorStops.put(0.25f, 0xa0d2eb34.toInt()) // greenish
+        colorStops.put(0.1f, 0x604294ff.toInt()) // bluish
+        colorStops.put(0.15f, 0xa02684ff.toInt()) // bluish
+        colorStops.put(0.20f, 0xff60f52a.toInt()) // greenish
+        colorStops.put(0.35f, 0xff60f52a.toInt()) // greenish
 
-        colorStops.put(0.3f, 0xfffff600.toInt()) // yellowish
+        colorStops.put(0.4f, 0xfffff600.toInt()) // yellowish
         colorStops.put(0.6f, 0xfffff600.toInt()) // yellowish
         colorStops.put(0.65f, 0xfff9c320.toInt()) // yellowish
 
         colorStops.put(0.7f, 0xfff9aa20.toInt()) // reddish
         colorStops.put(0.75f, 0xaaff2100.toInt()) // reddish
+        colorStops.put(0.85f, 0xaaff2100.toInt()) // reddish
         colorStops.put(1.0f, 0xaaff2100.toInt()) // reddish
 
 //        colorStops.put(0.0f, 0xffee42f4.toInt());
@@ -130,17 +132,19 @@ class HeatMapUtil(private var activity: Activity,
 //        colorStops.put(0.25f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
 //        colorStops.put(1.0f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
 
-        colorStops.put(0.05f, 0xff82ecff.toInt()) // greenish
-        colorStops.put(0.20f, 0x9900fff4.toInt()) // greenish
-        colorStops.put(0.25f, 0xff00fff4.toInt()) // greenish
+        colorStops.put(0.1f, 0xff82ecff.toInt())  // turquoise
+        colorStops.put(0.15f, 0xff00fff4.toInt()) // turquoise
+        colorStops.put(0.20f, 0xff00fff4.toInt()) // turquoise
 
-        colorStops.put(0.3f, 0xaa00fff4.toInt()) // yellowish
-        colorStops.put(0.6f, 0xbb00fff4.toInt()) // yellowish
-        colorStops.put(0.65f, 0xc000fff4.toInt()) // yellowish
+        colorStops.put(0.35f, 0xff00fff4.toInt()) // turquoise
+        colorStops.put(0.4f, 0xff00fff4.toInt())  // turquoise
+        colorStops.put(0.6f, 0xff00fff4.toInt())  // turquoise
+        colorStops.put(0.65f, 0xff00fff4.toInt()) // turquoise
 
-        colorStops.put(0.7f, 0xdd00fff4.toInt()) // reddish
-        colorStops.put(0.75f, 0xe000fff4.toInt()) // reddish
-        colorStops.put(1.0f, 0xff00fff4.toInt()) // reddish
+        colorStops.put(0.7f, 0xff00fff4.toInt())  // turquoise
+        colorStops.put(0.75f, 0xff00fff4.toInt()) // turquoise
+        colorStops.put(0.85f, 0xfff72d63.toInt()) // reddish
+        colorStops.put(1.0f, 0xfff72d63.toInt())  // reddish
 
         leftHeatMap.setMinimumOpacity(30)
         leftHeatMap.setMaximumOpacity(250)
