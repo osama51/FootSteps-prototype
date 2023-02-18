@@ -10,9 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.os.*
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -67,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val toast: String = "toast"
         var deviceName: String = "DeviceName"
         const val TAG = "MAIN_ACTIVITY"
+        const val VIBRATION_TIME = 500L
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -142,6 +141,8 @@ class MainActivity : AppCompatActivity() {
     private var pressedTime: Long = 0L
 
     private lateinit var messageCopy: Message
+
+    private lateinit var vibrator: Vibrator
 
 
     @Synchronized
@@ -305,6 +306,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        /**
+         * for(i in setOf<Int>(f0, f1, a0, a1, a2, g0, g1, g2)){
+            // 3685 equals 90% of the peak pressure
+            // uncomment the vibrateWhenHigh() function to vibrate when the pressure is high
+            if(i > 3685){
+//                vibrateWhenHigh()
+            }
+        }*/
 //            withContext(Dispatchers.Main) {
         when (id) {
             LeftRight.RIGHT.ordinal -> {
@@ -413,6 +422,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        // get the VIBRATOR_SERVICE system service
+        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+
+
 //        leftLineChart = binding.leftLineChart
 //
 ////        leftf0LineDataSet.lineWidth = 3F
@@ -499,6 +512,26 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT).show()
         }
         pressedTime = System.currentTimeMillis()
+    }
+
+    private fun vibrateWhenHigh() {
+        if (vibrator != null && vibrator.hasVibrator()) {
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Vibrate for 500 milliseconds
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        VIBRATION_TIME,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+            } else {
+                //deprecated in API 26
+                vibrator.vibrate(VIBRATION_TIME)
+            }
+        } else {
+            Toast.makeText(this, "Device does not support vibration", Toast.LENGTH_SHORT).show();
+        }
     }
 
     fun updateLeftGraphs(leftF0Data: MutableList<Entry?>, leftF1Data: MutableList<Entry?>) {
