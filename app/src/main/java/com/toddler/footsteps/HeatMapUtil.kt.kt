@@ -21,7 +21,8 @@ enum class HeatMapMode {
     SCIENTIFIC
 }
 
-class HeatMapUtil(private var activity: Activity,
+class HeatMapUtil(
+    private var activity: Activity,
     private var rightHeatMap: HeatMap,
     private var leftHeatMap: HeatMap
 ) {
@@ -163,37 +164,49 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorLeftFoot = Handler(Looper.getMainLooper())
 //
 //        ExecutorLeftFoot.post {
-            // Perform task here with data
+        // Perform task here with data
 
-            pointLA = HeatMap.DataPoint(0.65F, 0.08F, (foot.sensor5 * 0.3) + (foot.sensor6 * 0.7))
-            pointLB = HeatMap.DataPoint(0.33F, 0.17F, (foot.sensor5 * 0.7) + (foot.sensor6 * 0.3))
-            pointLC = HeatMap.DataPoint(0.8F, 0.27F, foot.sensor6 / 1.0)
-            pointLD = HeatMap.DataPoint(0.29F, 0.28F, foot.sensor5 / 1.0)
-            pointLE = HeatMap.DataPoint(0.38F, 0.35F, foot.sensor4 / 1.0)
-            pointLF = HeatMap.DataPoint(0.28F, 0.45F, (foot.sensor4+foot.sensor3) / 2.0)
-            pointLG = HeatMap.DataPoint(0.27F, 0.55F, (foot.sensor4+foot.sensor3) / 2.0)
-            pointLH = HeatMap.DataPoint(0.44F, 0.65F, foot.sensor3 / 2.0)
-            pointLI = HeatMap.DataPoint(0.44F, 0.78F, foot.sensor3 / 1.0)
-            pointLJ = HeatMap.DataPoint(0.64F, 0.78F, foot.sensor2 / 1.0)
-            pointLK = HeatMap.DataPoint(0.56F, 0.91F, foot.sensor1 / 1.0)
+//        pointLA = HeatMap.DataPoint(0.65F, 0.08F, (foot.sensor5 * 0.3) + (foot.sensor6 * 0.7))
+//        pointLB = HeatMap.DataPoint(0.33F, 0.17F, (foot.sensor5 * 0.7) + (foot.sensor6 * 0.3))
+//        pointLC = HeatMap.DataPoint(0.8F, 0.27F, foot.sensor6 / 1.0)
+//        pointLD = HeatMap.DataPoint(0.29F, 0.28F, foot.sensor5 / 1.0)
+//        pointLE = HeatMap.DataPoint(0.38F, 0.35F, foot.sensor4 / 1.0)
+//        pointLF = HeatMap.DataPoint(0.28F, 0.45F, (foot.sensor4 + foot.sensor3) / 2.0)
+//        pointLG = HeatMap.DataPoint(0.27F, 0.55F, (foot.sensor4 + foot.sensor3) / 2.0)
+//        pointLH = HeatMap.DataPoint(0.44F, 0.65F, foot.sensor3 / 2.0)
+//        pointLI = HeatMap.DataPoint(0.44F, 0.78F, foot.sensor3 / 1.0)
+//        pointLJ = HeatMap.DataPoint(0.64F, 0.78F, foot.sensor2 / 1.0)
+//        pointLK = HeatMap.DataPoint(0.56F, 0.91F, foot.sensor1 / 1.0)
 
-            leftHeatMap.apply {
-                addData(pointLA)
-                addData(pointLB)
-                addData(pointLC)
-                addData(pointLD)
-                addData(pointLE)
-                addData(pointLF)
-                addData(pointLG)
-                addData(pointLH)
-                addData(pointLI)
-                addData(pointLJ)
-                addData(pointLK)
+//        pointLA = HeatMap.DataPoint(0.75F, 0.55F, ((foot.sensor5 * 0.5) + (foot.sensor3 * 0.5)) / 2.0)
+        pointLC = HeatMap.DataPoint(0.6F, 0.08F, foot.sensor6 / 1.0)
+        pointLB = HeatMap.DataPoint(0.3F, 0.25F, ((foot.sensor5 * 0.8) + (foot.sensor4 * 0.2)) / 1.0)
+        pointLD = HeatMap.DataPoint(0.75F, 0.25F, foot.sensor5 / 1.0)
+        pointLE = HeatMap.DataPoint(0.3F, 0.35F, foot.sensor4 / 1.0)
+        pointLF = HeatMap.DataPoint(0.27F, 0.45F, (foot.sensor4 + foot.sensor3) / 2.0)
+        pointLI = HeatMap.DataPoint(0.3F, 0.6F, foot.sensor3 / 1.0)
+        pointLH = HeatMap.DataPoint(0.3F, 0.7F, foot.sensor3 / 1.0) // Fake point
+        pointLG = HeatMap.DataPoint(0.65F, 0.79F, foot.sensor2 / 1.0) // fake point
+        pointLJ = HeatMap.DataPoint(0.35F, 0.78F, foot.sensor2 / 1.0)
+        pointLK = HeatMap.DataPoint(0.56F, 0.91F, foot.sensor1 / 1.0)
+
+        leftHeatMap.apply {
+//            addData(pointLA)
+            addData(pointLB)
+            addData(pointLC)
+            addData(pointLD)
+            addData(pointLE)
+            addData(pointLF)
+            addData(pointLG)
+            addData(pointLH)
+            addData(pointLI)
+            addData(pointLJ)
+            addData(pointLK)
 //            forceRefresh()
-                forceRefreshOnWorkerThread()
-                invalidate()
+            forceRefreshOnWorkerThread()
+            invalidate()
 //            postInvalidateOnAnimation()
-            }
+        }
 
 //            activity.runOnUiThread {
 //                // Call function to run on UI thread with result
@@ -212,38 +225,38 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorRightFoot = Handler(Looper.getMainLooper())
 
 //        ExecutorRightFoot.post {
-            // Perform task here with data
+        // Perform task here with data
 
-            pointRA = HeatMap.DataPoint(0.35F, 0.08F, ((foot.sensor5 * 0.3) + (foot.sensor6 * 0.7)) / 1.5)
-            pointRB = HeatMap.DataPoint(0.67F, 0.17F, ((foot.sensor5 * 0.7) + (foot.sensor6 * 0.3)) / 2.0)
-            pointRC = HeatMap.DataPoint(0.3F, 0.22F, foot.sensor6 / 1.0)
-            pointRD = HeatMap.DataPoint(0.65F, 0.23F, foot.sensor5 / 1.0)
-            pointRE = HeatMap.DataPoint(0.62F, 0.35F, foot.sensor4 / 1.0)
-            pointRF = HeatMap.DataPoint(0.70F, 0.4F, (foot.sensor4+foot.sensor3) / 2.0)
-            pointRG = HeatMap.DataPoint(0.65F, 0.5F, (foot.sensor4+foot.sensor3) / 2.0)
-            pointRH = HeatMap.DataPoint(0.56F, 0.6F, foot.sensor3 / 2.0)
-            pointRI = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor3 / 1.0)
-            pointRJ = HeatMap.DataPoint(0.3F, 0.78F, foot.sensor2 / 1.0)
-            pointRK = HeatMap.DataPoint(0.44F, 0.91F, foot.sensor1 / 1.0)
+//        pointRA = HeatMap.DataPoint(0.25F, 0.55F, ((foot.sensor5 * 0.5) + (foot.sensor3 * 0.5)) / 2.0)
+        pointRC = HeatMap.DataPoint(0.4F, 0.08F, foot.sensor6 / 1.0)
+        pointRB = HeatMap.DataPoint(0.7F, 0.25F, ((foot.sensor5 * 0.8) + (foot.sensor4 * 0.2)) / 1.0)
+        pointRD = HeatMap.DataPoint(0.25F, 0.25F, foot.sensor5 / 1.0)
+        pointRE = HeatMap.DataPoint(0.7F, 0.35F, foot.sensor4 / 1.0)
+        pointRF = HeatMap.DataPoint(0.73F, 0.45F, (foot.sensor4 + foot.sensor3) / 2.0)
+        pointRI = HeatMap.DataPoint(0.7F, 0.6F, foot.sensor3 / 1.0)
+        pointRH = HeatMap.DataPoint(0.7F, 0.7F, foot.sensor3 / 1.0) // Fake point
+        pointRG = HeatMap.DataPoint(0.35F, 0.79F, foot.sensor2 / 1.0) // fake point
+        pointRJ = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor2 / 1.0)
+        pointRK = HeatMap.DataPoint(0.44F, 0.91F, foot.sensor1 / 1.0)
 
 //        val startTime = System.currentTimeMillis()
-            rightHeatMap.apply {
-                addData(pointRA)
-                addData(pointRB)
-                addData(pointRC)
-                addData(pointRD)
-                addData(pointRE)
-                addData(pointRF)
-                addData(pointRG)
-                addData(pointRH)
-                addData(pointRI)
-                addData(pointRJ)
-                addData(pointRK)
+        rightHeatMap.apply {
+//            addData(pointRA)
+            addData(pointRB)
+            addData(pointRC)
+            addData(pointRD)
+            addData(pointRE)
+            addData(pointRF)
+            addData(pointRG)
+            addData(pointRH)
+            addData(pointRI)
+            addData(pointRJ)
+            addData(pointRK)
 //            forceRefresh()                  // what I used the first time, Medhat's vid (smoother if given higher delays near 100ms)
-                forceRefreshOnWorkerThread()
-                invalidate()
+            forceRefreshOnWorkerThread()
+            invalidate()
 //            postInvalidateOnAnimation()
-            }
+        }
 //        val endTime = System.currentTimeMillis()
 //        val elapsedTime = endTime - startTime
 //        Log.d("___RENDERRRR___", "Elapsed time: $elapsedTime milliseconds")
