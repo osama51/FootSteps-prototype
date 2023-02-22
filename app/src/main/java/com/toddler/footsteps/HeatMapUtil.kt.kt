@@ -27,7 +27,6 @@ class HeatMapUtil(private var activity: Activity,
 ) {
 
     private lateinit var pointLA: HeatMap.DataPoint
-    private lateinit var pointLAA: HeatMap.DataPoint
     private lateinit var pointLB: HeatMap.DataPoint
     private lateinit var pointLC: HeatMap.DataPoint
     private lateinit var pointLD: HeatMap.DataPoint
@@ -36,10 +35,10 @@ class HeatMapUtil(private var activity: Activity,
     private lateinit var pointLG: HeatMap.DataPoint
     private lateinit var pointLH: HeatMap.DataPoint
     private lateinit var pointLI: HeatMap.DataPoint
+    private lateinit var pointLJ: HeatMap.DataPoint
     private lateinit var pointLK: HeatMap.DataPoint
 
     private lateinit var pointRA: HeatMap.DataPoint
-    private lateinit var pointRAA: HeatMap.DataPoint
     private lateinit var pointRB: HeatMap.DataPoint
     private lateinit var pointRC: HeatMap.DataPoint
     private lateinit var pointRD: HeatMap.DataPoint
@@ -48,12 +47,8 @@ class HeatMapUtil(private var activity: Activity,
     private lateinit var pointRG: HeatMap.DataPoint
     private lateinit var pointRH: HeatMap.DataPoint
     private lateinit var pointRI: HeatMap.DataPoint
+    private lateinit var pointRJ: HeatMap.DataPoint
     private lateinit var pointRK: HeatMap.DataPoint
-
-    private var y1Left: Double = 0.0
-    private var y2Left: Double = 0.0
-    private var y1Right: Double = 0.0
-    private var y2Right: Double = 0.0
 
     private var pixels: Double = 0.0
 
@@ -160,8 +155,7 @@ class HeatMapUtil(private var activity: Activity,
     }
 
     fun leftFootPoints(
-        y1: Double,
-        y2: Double
+        foot: HeatmapPoints
     ) {
 //        y1Left = (y1 / 4095) * 100.0
 //        y2Left = (y2 / 4095) * 100.0
@@ -171,21 +165,20 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorLeftFoot.post {
             // Perform task here with data
 
-            pointLA = HeatMap.DataPoint(0.65F, 0.08F, y1 / 1.3)
-            pointLAA = HeatMap.DataPoint(0.33F, 0.17F, y1 / 2.5)
-            pointLB = HeatMap.DataPoint(0.8F, 0.27F, y1 / 1.0)
-            pointLC = HeatMap.DataPoint(0.29F, 0.28F, y1 / 1.0)
-            pointLD = HeatMap.DataPoint(0.38F, 0.35F, 0 / 3.0)
-            pointLE = HeatMap.DataPoint(0.28F, 0.45F, 0 / 1.0)
-            pointLF = HeatMap.DataPoint(0.27F, 0.55F, 0 / 1.0)
-            pointLG = HeatMap.DataPoint(0.44F, 0.65F, 0 / 3.0)
-            pointLH = HeatMap.DataPoint(0.44F, 0.78F, y2 / 1.0)
-            pointLI = HeatMap.DataPoint(0.64F, 0.89F, y2 / 1.0)
-            pointLK = HeatMap.DataPoint(0.56F, 0.91F, 0 / 1.0)
+            pointLA = HeatMap.DataPoint(0.65F, 0.08F, (foot.sensor5 * 0.3) + (foot.sensor6 * 0.7))
+            pointLB = HeatMap.DataPoint(0.33F, 0.17F, (foot.sensor5 * 0.7) + (foot.sensor6 * 0.3))
+            pointLC = HeatMap.DataPoint(0.8F, 0.27F, foot.sensor6 / 1.0)
+            pointLD = HeatMap.DataPoint(0.29F, 0.28F, foot.sensor5 / 1.0)
+            pointLE = HeatMap.DataPoint(0.38F, 0.35F, foot.sensor4 / 1.0)
+            pointLF = HeatMap.DataPoint(0.28F, 0.45F, (foot.sensor4+foot.sensor3) / 2.0)
+            pointLG = HeatMap.DataPoint(0.27F, 0.55F, (foot.sensor4+foot.sensor3) / 2.0)
+            pointLH = HeatMap.DataPoint(0.44F, 0.65F, foot.sensor3 / 2.0)
+            pointLI = HeatMap.DataPoint(0.44F, 0.78F, foot.sensor3 / 1.0)
+            pointLJ = HeatMap.DataPoint(0.64F, 0.78F, foot.sensor2 / 1.0)
+            pointLK = HeatMap.DataPoint(0.56F, 0.91F, foot.sensor1 / 1.0)
 
             leftHeatMap.apply {
                 addData(pointLA)
-                addData(pointLAA)
                 addData(pointLB)
                 addData(pointLC)
                 addData(pointLD)
@@ -194,6 +187,7 @@ class HeatMapUtil(private var activity: Activity,
                 addData(pointLG)
                 addData(pointLH)
                 addData(pointLI)
+                addData(pointLJ)
                 addData(pointLK)
 //            forceRefresh()
                 forceRefreshOnWorkerThread()
@@ -206,13 +200,11 @@ class HeatMapUtil(private var activity: Activity,
 //                leftHeatMap.invalidate()
 //            }
 //        }
-
     }
 
 
     fun rightFootPoints(
-        y1: Double,
-        y2: Double
+        foot: HeatmapPoints
     ) {
 //        y1Right = (y1 / 4095) * 100.0
 //        y2Right = (y2 / 4095) * 100.0
@@ -222,22 +214,21 @@ class HeatMapUtil(private var activity: Activity,
 //        ExecutorRightFoot.post {
             // Perform task here with data
 
-            pointRA = HeatMap.DataPoint(0.35F, 0.08F, y1 / 1.3)
-            pointRAA = HeatMap.DataPoint(0.67F, 0.17F, y1 / 2.5)
-            pointRB = HeatMap.DataPoint(0.2F, 0.27F, y1 / 1.0)
-            pointRC = HeatMap.DataPoint(0.71F, 0.28F, y1 / 1.0)
-            pointRD = HeatMap.DataPoint(0.62F, 0.35F, 0 / 3.0)
-            pointRE = HeatMap.DataPoint(0.72F, 0.45F, 0 / 1.0)
-            pointRF = HeatMap.DataPoint(0.73F, 0.55F, 0 / 1.0)
-            pointRG = HeatMap.DataPoint(0.56F, 0.65F, 0 / 3.0)
-            pointRH = HeatMap.DataPoint(0.56F, 0.78F, y2 / 1.0)
-            pointRI = HeatMap.DataPoint(0.36F, 0.89F, y2 / 1.0)
-            pointRK = HeatMap.DataPoint(0.44F, 0.91F, 0 / 1.0)
+            pointRA = HeatMap.DataPoint(0.35F, 0.08F, ((foot.sensor5 * 0.3) + (foot.sensor6 * 0.7)) / 1.5)
+            pointRB = HeatMap.DataPoint(0.67F, 0.17F, ((foot.sensor5 * 0.7) + (foot.sensor6 * 0.3)) / 2.0)
+            pointRC = HeatMap.DataPoint(0.3F, 0.22F, foot.sensor6 / 1.0)
+            pointRD = HeatMap.DataPoint(0.65F, 0.23F, foot.sensor5 / 1.0)
+            pointRE = HeatMap.DataPoint(0.62F, 0.35F, foot.sensor4 / 1.0)
+            pointRF = HeatMap.DataPoint(0.70F, 0.4F, (foot.sensor4+foot.sensor3) / 2.0)
+            pointRG = HeatMap.DataPoint(0.65F, 0.5F, (foot.sensor4+foot.sensor3) / 2.0)
+            pointRH = HeatMap.DataPoint(0.56F, 0.6F, foot.sensor3 / 2.0)
+            pointRI = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor3 / 1.0)
+            pointRJ = HeatMap.DataPoint(0.3F, 0.78F, foot.sensor2 / 1.0)
+            pointRK = HeatMap.DataPoint(0.44F, 0.91F, foot.sensor1 / 1.0)
 
 //        val startTime = System.currentTimeMillis()
             rightHeatMap.apply {
                 addData(pointRA)
-                addData(pointRAA)
                 addData(pointRB)
                 addData(pointRC)
                 addData(pointRD)
@@ -246,8 +237,9 @@ class HeatMapUtil(private var activity: Activity,
                 addData(pointRG)
                 addData(pointRH)
                 addData(pointRI)
+                addData(pointRJ)
                 addData(pointRK)
-//            forceRefresh()                             // what I used the first time, Medhat's vid (smoother if given higher delays near 100ms)
+//            forceRefresh()                  // what I used the first time, Medhat's vid (smoother if given higher delays near 100ms)
                 forceRefreshOnWorkerThread()
                 invalidate()
 //            postInvalidateOnAnimation()
@@ -261,6 +253,5 @@ class HeatMapUtil(private var activity: Activity,
 //                rightHeatMap.invalidate()
 //            }
 //        }
-
     }
 }

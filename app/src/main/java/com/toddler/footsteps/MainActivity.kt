@@ -126,12 +126,18 @@ class MainActivity : AppCompatActivity() {
     private var id: Int = 0
     private var f0: Int = 0
     private var f1: Int = 0
+    private var f2: Int = 0
+    private var f3: Int = 0
+    private var f4: Int = 0
+    private var f5: Int = 0
     private var a0: Int = 0
     private var a1: Int = 0
     private var a2: Int = 0
     private var g0: Int = 0
     private var g1: Int = 0
     private var g2: Int = 0
+
+    private var foot: HeatmapPoints = HeatmapPoints()
 
     private var strHolder: String = ""
 
@@ -186,13 +192,15 @@ class MainActivity : AppCompatActivity() {
                 when (message.arg1) {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
-                        heatMapUtil.leftFootPoints(0.0, 0.0)
-                        heatMapUtil.rightFootPoints(0.0, 0.0)
+                        foot = HeatmapPoints()
+                        heatMapUtil.leftFootPoints(foot)
+                        heatMapUtil.rightFootPoints(foot)
                     }
                     StateEnum.STATE_CONNECTING.ordinal -> {
                         setState("Connecting...")
-                        heatMapUtil.leftFootPoints(0.0, 0.0)
-                        heatMapUtil.rightFootPoints(0.0, 0.0)
+                        foot = HeatmapPoints()
+                        heatMapUtil.leftFootPoints(foot)
+                        heatMapUtil.rightFootPoints(foot)
                     }
                     StateEnum.STATE_CONNECTED.ordinal -> {
                         setState("Connected to: $connectedDevice")
@@ -214,11 +222,11 @@ class MainActivity : AppCompatActivity() {
             else -> {
                 Toast.makeText(context, message.data.getString(toast), Toast.LENGTH_SHORT)
                     .show()
-                heatMapUtil.leftFootPoints(0.0, 0.0)
-                heatMapUtil.rightFootPoints(0.0, 0.0)
+                foot = HeatmapPoints()
+                heatMapUtil.leftFootPoints(foot)
+                heatMapUtil.rightFootPoints(foot)
             }
         }
-
         return@Callback false
     })
 
@@ -263,11 +271,27 @@ class MainActivity : AppCompatActivity() {
                                 strHolder = "0"
                             }
                             's' -> {
-                                f0 = strHolder.toInt()
+                                foot.sensor1 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             't' -> {
-                                f1 = strHolder.toInt()
+                                foot.sensor2 = strHolder.toDouble()
+                                strHolder = "0"
+                            }
+                            'u' -> {
+                                foot.sensor3 = strHolder.toDouble()
+                                strHolder = "0"
+                            }
+                            'v' -> {
+                                foot.sensor4 = strHolder.toDouble()
+                                strHolder = "0"
+                            }
+                            'w' -> {
+                                foot.sensor5 = strHolder.toDouble()
+                                strHolder = "0"
+                            }
+                            'x' -> {
+                                foot.sensor6 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'a' -> {
@@ -308,11 +332,11 @@ class MainActivity : AppCompatActivity() {
         }
         /**
          * for(i in setOf<Int>(f0, f1, a0, a1, a2, g0, g1, g2)){
-            // 3685 equals 90% of the peak pressure
-            // uncomment the vibrateWhenHigh() function to vibrate when the pressure is high
-            if(i > 3685){
-//                vibrateWhenHigh()
-            }
+        // 3685 equals 90% of the peak pressure
+        // uncomment the vibrateWhenHigh() function to vibrate when the pressure is high
+        if(i > 3685){
+        //                vibrateWhenHigh()
+        }
         }*/
 //            withContext(Dispatchers.Main) {
         when (id) {
@@ -322,7 +346,7 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
-                    heatMapUtil.rightFootPoints(f0.toDouble(), f1.toDouble())
+                    heatMapUtil.rightFootPoints(foot)
 //                    rightHeatMap.forceRefresh()
                 }
             }
@@ -333,7 +357,7 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
-                    heatMapUtil.leftFootPoints(f0.toDouble(), f1.toDouble())
+                    heatMapUtil.leftFootPoints(foot)
 //                    leftHeatMap.forceRefresh()
                 }
 

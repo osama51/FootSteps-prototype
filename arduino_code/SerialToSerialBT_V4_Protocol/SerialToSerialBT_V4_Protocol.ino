@@ -1,4 +1,4 @@
-#include <dummy.h>
+//#include <dummy.h>
 
 //This example code is in the Public Domain (or CC0 licensed, at your option.)
 //By Evandro Copercini - 2018
@@ -15,6 +15,13 @@
 BluetoothSerial SerialBT;
 int counter = 0;
 String str= "";
+int id = 0;
+int s = 0;
+int t = 0;
+int u = 0;
+int v = 0;
+int w = 0;
+int x = 0;
 unsigned long currentMillis;
 #define interval 25
 unsigned long previousMillis = 0;
@@ -31,6 +38,13 @@ void loop() {
   if(currentMillis - previousMillis >= interval) {
     
     str = "";
+    id = 0;
+    s = 0;
+    t = 0;
+    u = 0;
+    v = 0;
+    w = 0;
+    x = 0;
     // if (Serial.available()) {
     //   SerialBT.write(Serial.read());
     // }
@@ -62,9 +76,35 @@ void loop() {
     //SerialBT.print("1543f");
     //SerialBT.print("#");
 
+//    str = "1i";
+//    str += String(counter);
+//    str += "s";
+//    str += String(counter - (counter * 0.2));
+//    str += "t";
+//    str += String(counter - (counter * 0.2));
+//    str += "u";
+//    str += String(counter - (counter * 0.6));
+//    str += "v";
+//    str += String(counter - (counter * 0.8));
+//    str += "w";
+//    str += String(counter - (counter * 1));
+//    str += "x1233a1543b1543c1543d1543e1543f#";
+
+    
     str = "1i";
     str += String(counter);
-    str += "s1233t1233a1543b1543c1543d1543e1543f#";
+    str += "s";
+    str += String(counter);
+    str += "t";
+    str += String(counter);
+    str += "u";
+    str += String(counter);
+    str += "v";
+    str += String(counter);
+    str += "w";
+    str += String(counter);
+    str += "x1233a1543b1543c1543d1543e1543f#";
+    
     SerialBT.println(str);
     Serial.println(str);
 
