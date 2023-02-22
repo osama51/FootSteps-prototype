@@ -50,7 +50,7 @@ class HeatMapUtil(private var activity: Activity,
     private lateinit var pointRJ: HeatMap.DataPoint
     private lateinit var pointRK: HeatMap.DataPoint
 
-    private var pixels: Double = 0.0
+    private var pixels: Double = 800.0
 
     private lateinit var ExecutorRightFoot: Handler
     private lateinit var ExecutorLeftFoot: Handler
@@ -64,7 +64,7 @@ class HeatMapUtil(private var activity: Activity,
         rightHeatMap.setMinimum(0.0)
         rightHeatMap.setMaximum(4095.0)
 
-        pixels = activity.resources.getDimensionPixelSize(R.dimen.heatmap_point).toDouble()
+//        pixels = activity.resources.getDimensionPixelSize(R.dimen.heatmap_point).toDouble()
 
 
         //        //make the minimum opacity completely transparent
