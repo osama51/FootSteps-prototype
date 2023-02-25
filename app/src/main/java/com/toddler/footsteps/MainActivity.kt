@@ -390,6 +390,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         customBottomBar = binding.customBottomNavBar
+        customBottomBar.inflateMenu(R.menu.bottom_menu)
 //        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]

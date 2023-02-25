@@ -14,6 +14,9 @@
 
 BluetoothSerial SerialBT;
 int counter = 0;
+int counter12346 = 0;
+int counter5 = 0;
+int sec = 0;
 String str= "";
 int id = 0;
 int s = 0;
@@ -23,7 +26,7 @@ int v = 0;
 int w = 0;
 int x = 0;
 unsigned long currentMillis;
-#define interval 25
+#define interval 10
 unsigned long previousMillis = 0;
 
 
@@ -38,13 +41,13 @@ void loop() {
   if(currentMillis - previousMillis >= interval) {
     
     str = "";
-    id = 0;
-    s = 0;
-    t = 0;
-    u = 0;
-    v = 0;
-    w = 0;
-    x = 0;
+//    id = 0;
+//    s = 0;
+//    t = 0;
+//    u = 0;
+//    v = 0;
+//    w = 0;
+//    x = 0;
     // if (Serial.available()) {
     //   SerialBT.write(Serial.read());
     // }
@@ -64,45 +67,60 @@ void loop() {
     //SerialBT.print("1543g2");
     //SerialBT.println("#");
 
-    counter = (counter + 68) % 4095;
-    //SerialBT.print("1i");
-    //SerialBT.print(counter+"s");
-    //SerialBT.print("1233t");
-    //SerialBT.print("1233a");
-    //SerialBT.print("1543b");
-    //SerialBT.print("1543c");
-    //SerialBT.print("1543d");
-    //SerialBT.print("1543e");
-    //SerialBT.print("1543f");
-    //SerialBT.print("#");
 
-//    str = "1i";
-//    str += String(counter);
-//    str += "s";
-//    str += String(counter - (counter * 0.2));
-//    str += "t";
-//    str += String(counter - (counter * 0.2));
-//    str += "u";
-//    str += String(counter - (counter * 0.6));
-//    str += "v";
-//    str += String(counter - (counter * 0.8));
-//    str += "w";
-//    str += String(counter - (counter * 1));
-//    str += "x1233a1543b1543c1543d1543e1543f#";
-
+    counter = (counter + 68);
     
-    str = "1i";
-    str += String(counter);
+    if (counter >= 4095) {
+
+    str = String(id);
+    str += "i";
+    str += String(0);
     str += "s";
-    str += String(counter);
+    str += String(0);
     str += "t";
-    str += String(counter);
+    str += String(0);
     str += "u";
-    str += String(counter);
+    str += String(0);
     str += "v";
-    str += String(counter);
+    str += String(0);
     str += "w";
-    str += String(counter);
+    str += String(0);
+    str += "x1233a1543b1543c1543d1543e1543f#";
+    
+    SerialBT.println(str);
+    Serial.println(str);
+
+    str = "";
+    
+//      id += 1;
+//      if(id = 1){
+        id = (id % 2) + 1;
+//      } else {
+//        id = 1;
+//      }
+      sec = 0;
+    }
+    counter = counter % 4095;
+    if (counter < 2200) {
+      counter12346 = counter;
+    } else {
+      counter12346 = 2200;
+    }
+    counter5 = counter;
+    
+    str = String(id);
+    str += "i";
+    str += String(counter12346);
+    str += "s";
+    str += String(counter12346);
+    str += "t";
+    str += String(counter12346);
+    str += "u";
+    str += String(counter12346);
+    str += "v";
+    str += String(counter5);
+    str += "w";
+    str += String(counter12346);
     str += "x1233a1543b1543c1543d1543e1543f#";
     
     SerialBT.println(str);
@@ -110,6 +128,6 @@ void loop() {
 
     previousMillis = currentMillis;
 
-    //    delay(100);
+//        delay(25);
   }
 }

@@ -34,9 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:maxOpacity="250"
-                app:minOpacity="30"
-                app:radius="400dp" />
+                app:radius="340dp" />
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
@@ -59,9 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:maxOpacity="250"
-                app:minOpacity="30"
-                app:radius="400dp" />
+                app:radius="340dp" />
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -84,6 +80,8 @@
             android:layout_height="72dp"
             android:shadowColor="@color/gray"
             app:elevation="8dp"
+            android:paddingTop="10dp"
+            app:menu="@menu/bottom_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
