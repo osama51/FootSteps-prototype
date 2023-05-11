@@ -1,4 +1,4 @@
-//#include <dummy.h>
+#include <dummy.h>
 
 //This example code is in the Public Domain (or CC0 licensed, at your option.)
 //By Evandro Copercini - 2018
@@ -14,17 +14,17 @@
 
 BluetoothSerial SerialBT;
 int counter = 0;
-int counter12346 = 0;
-int counter5 = 0;
-int sec = 0;
+//int counter12346 = 0;
+//int counter5 = 0;
+//int sec = 0;
 String str= "";
-int id = 1;
-int s = 0;
-int t = 0;
-int u = 0;
-int v = 0;
-int w = 0;
-int x = 0;
+//int id = 1;
+//int s = 0;
+//int t = 0;
+//int u = 0;
+//int v = 0;
+//int w = 0;
+//int x = 0;
 unsigned long currentMillis;
 #define interval 25
 unsigned long previousMillis = 0;
@@ -70,58 +70,58 @@ void loop() {
 
     counter = (counter + 68);
     
-//    if (counter >= 4095) {
-//
-//    str = String(id);
-//    str += "i";
-//    str += String(0);
-//    str += "s";
-//    str += String(0);
-//    str += "t";
-//    str += String(0);
-//    str += "u";
-//    str += String(0);
-//    str += "v";
-//    str += String(0);
-//    str += "w";
-//    str += String(0);
-//    str += "x1233a1543b1543c1543d1543e1543f#";
-//    
-//    SerialBT.println(str);
-//    Serial.println(str);
-//
-//    str = "";
-//    
-////      id += 1;
-////      if(id = 1){
-//        id = (id % 2) + 1;
-////      } else {
-////        id = 1;
-////      }
-//      sec = 0;
-//    }
+    if (counter >= 4095) {
+
+    str = String(id);
+    str += "i";
+    str += String(0);
+    str += "s";
+    str += String(0);
+    str += "t";
+    str += String(0);
+    str += "u";
+    str += String(0);
+    str += "v";
+    str += String(0);
+    str += "w";
+    str += String(0);
+    str += "x1233a1543b1543c1543d1543e1543f#";
+    
+    SerialBT.println(str);
+    Serial.println(str);
+
+    str = "";
+    
+//      id += 1;
+//      if(id = 1){
+        id = (id % 2) + 1;
+//      } else {
+//        id = 1;
+//      }
+      sec = 0;
+    }
     counter = counter % 4095;
-//    if (counter < 2200) {
-//      counter12346 = counter;
-//    } else {
-//      counter12346 = 2200;
-//    }
-//    counter5 = counter;
+    if (counter < 2200) {
+      counter12346 = counter;
+    } else {
+      counter12346 = 2200;
+    }
+    counter5 = counter;
 //    
     str = String(id);
     str += "i";
-//    str += String(counter);
-//    str += "s";
-//    str += String(counter);
-//    str += "t";
-//    str += String(counter);
-//    str += "u";
-//    str += String(counter);
-//    str += "v";
-//    str += String(counter);
-//    str += "w";
-//    str += String(counter);
-    str += "1233s1233t1233u1233v1233w1233x1233a1543b1543c1543d1543e1543f#";
+    str += String(counter12346);
+    str += "s";
+    str += String(counter12346);
+    str += "t";
+    str += String(counter12346);
+    str += "u";
+    str += String(counter12346);
+    str += "v";
+    str += String(counter5);
+    str += "w";
+    str += String(counter12346);
+    str = "x1233a1543b1543c1543d1543e1543f#";
     
     SerialBT.println(str);
     Serial.println(str);

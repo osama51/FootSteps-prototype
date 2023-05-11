@@ -7,10 +7,12 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.widget.Toast
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -33,7 +35,7 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
     private var connectThread: ConnectThread? = null
     private var acceptThread: AcceptThread? = null
     private var connectedThread: ConnectedThread? = null
-    private var bluetoothAdapter: BluetoothAdapter
+    private var bluetoothAdapter: BluetoothAdapter? = null
     private var appUuid: UUID = UUID.fromString(UUID_STRING)
     private var appName: String = "FootStepsApp"
     private var stateEnum: StateEnum = StateEnum.STATE_NONE
@@ -42,7 +44,14 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 
     init {
         stateEnum = StateEnum.STATE_NONE
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
+        // check if the device supports bluetooth
+        if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
+            Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
+        } else {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        }
+
     }
 
     fun getState(): StateEnum {
@@ -120,12 +129,21 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 
 
         init {
+            // Use a temporary object that is later assigned to serverSocket,
+            // note that this is a server socket! because we are listening for incoming connections
             var tmp: BluetoothServerSocket? = null
 
+            // Create a new listening server socket
             mSocketType = "Insecure"
 
             try {
-                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(appName, UUID.fromString(UUID_STRING))
+                // UUID_STRING is the app's UUID string, also used by the client code
+                // we're using the same UUID for both the client and the server
+                // we're listening for incoming connections on the server socket using RFCOMM protocol (SPP)
+                tmp = bluetoothAdapter?.listenUsingRfcommWithServiceRecord(
+                    appName,
+                    UUID.fromString(UUID_STRING)
+                )
             } catch (e: IOException) {
                 Log.e("Accept.Constructor", e.toString())
             }
@@ -223,6 +241,8 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
             var tmp: BluetoothSocket? = null
 
             try {
+                // Get a BluetoothSocket for a connection with the given BluetoothDevice
+                // UUID_STRING is the app's UUID string, also used by the server code
                 tmp = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(UUID_STRING))
 //                tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(UUID_STRING));
 
@@ -250,7 +270,6 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
         override fun run() {
 
 //            // Cancel discovery because it otherwise slows down the connection.
-//            // Cancel discovery because it otherwise slows down the connection.
 //            bluetoothAdapter.cancelDiscovery()
 //
 //            try {
@@ -266,7 +285,8 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 //                return
 //            }
 
-            bluetoothAdapter.cancelDiscovery()
+            // Cancel discovery because it otherwise slows down the connection.
+            bluetoothAdapter?.cancelDiscovery()
             try {
                 socket?.connect()
             } catch (e: IOException) {
@@ -280,6 +300,7 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
                 return
             }
 
+            // Reset the ConnectThread because we're done
             synchronized(this) {
                 connectThread = null
             }
@@ -332,7 +353,12 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
                     bytes += mmInStream.read(mmBuffer, bytes, mmBuffer.size - bytes)
                     for (i in begin until bytes) {
                         if (mmBuffer[i] == "#".toByteArray()[0]) {
-                            handler.obtainMessage(MessageEnum.MESSAGE_READ.ordinal, begin, i, mmBuffer).sendToTarget()
+                            handler.obtainMessage(
+                                MessageEnum.MESSAGE_READ.ordinal,
+                                begin,
+                                i,
+                                mmBuffer
+                            ).sendToTarget()
 //                            begin = i + 1
 //                            if (i == bytes - 1) {
 //                                bytes = 0
@@ -371,7 +397,8 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 
             // Share the sent message with the UI activity.
             val writtenMsg = handler.obtainMessage(
-                MessageEnum.MESSAGE_WRITE.ordinal, -1, -1, mmBuffer)
+                MessageEnum.MESSAGE_WRITE.ordinal, -1, -1, mmBuffer
+            )
             writtenMsg.sendToTarget()
         }
 
@@ -413,7 +440,7 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
 //            activity.getString(R.string.device_key), Context.MODE_PRIVATE)
 
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE) ?: return
-        with (sharedPref.edit()) {
+        with(sharedPref.edit()) {
             putString(activity.getString(R.string.device_address_key), device.address)
             apply()
         }
@@ -429,10 +456,10 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
         setState(StateEnum.STATE_CONNECTED)
     }
 
-    fun write(buffer: ByteArray){
+    fun write(buffer: ByteArray) {
         val connThread: ConnectedThread?
-        synchronized(this){
-            if(stateEnum != StateEnum.STATE_CONNECTED){
+        synchronized(this) {
+            if (stateEnum != StateEnum.STATE_CONNECTED) {
                 return
             }
 
@@ -443,7 +470,7 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
     }
 
     companion object {
-//        private const val UUID_STRING = "af7c1fe6-d669-414e-b066-e9733f0de7a8"
+        //        private const val UUID_STRING = "af7c1fe6-d669-414e-b066-e9733f0de7a8"
 //        private const val UUID_STRING = "a3edfc21-44d9-408d-b9c1-390e0f0890c2"
         private const val UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB"
     }

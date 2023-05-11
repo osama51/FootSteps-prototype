@@ -11,8 +11,8 @@ android {
         applicationId "com.toddler.footsteps"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -84,10 +84,10 @@ dependencies {
 
 //    implementation "androidx.fragment:fragment-ktx:1.3.0-alpha04"
 
-//    //Room dependencies
-//    implementation "androidx.room:room-ktx:$roomVersion"
-//    implementation "androidx.room:room-runtime:$roomVersion"
-//    kapt "androidx.room:room-compiler:$roomVersion"
+    //Room dependencies
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     //Coroutines Dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
@@ -116,6 +116,11 @@ dependencies {
 
     // Neumorphism
     implementation 'com.github.fornewid:neumorphism:0.3.2'
+
+//    // KorGe
+//    implementation("com.soywiz:korge:2.0.7")
+//    implementation("com.soywiz:korge-extensions:0.11.8")
+
 
     // BottomNavBar
 //    implementation 'np.com.susanthapa:curved_bottom_navigation:0.6.5'

@@ -9,6 +9,7 @@
     <string name="str_paired_devices">Paired Devices</string>
     <string name="available_devices">Available Devices</string>
     <string name="settings">Settings</string>
+    <string name="user_references">User References</string>
     <string name="cancel">Cancel</string>
     <string name="grant">Grant</string>
     <string name="deny">Deny</string>
@@ -24,4 +25,8 @@
     <string name="msg_sender">Metwally</string>
     <string name="description">Description</string>
     <string name="no_devices_msg">No nearby Bluetooth devices were found</string>
+    <string name="charts">Charts</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="profile">Profile</string>
+    <string name="home">Home</string>
 </resources>

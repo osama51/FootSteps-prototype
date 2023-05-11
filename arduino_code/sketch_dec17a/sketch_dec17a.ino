@@ -57,6 +57,7 @@ str = "1i";
 str += String(counter);
 str += "s1233t1233a1543b1543c1543d1543e1543f#";
     SerialBT.println(str);
+    SerialBT.println(str);
 //    delay(100);
 //  }
   delay(28);

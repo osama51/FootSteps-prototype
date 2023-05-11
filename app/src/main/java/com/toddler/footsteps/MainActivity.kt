@@ -35,10 +35,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
+import com.toddler.footsteps.database.rawdata.LeftFootFrame
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.navbar.CustomBottomNavBar
+import kotlinx.coroutines.*
 import soup.neumorphism.ShapeType
-import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var context: Context
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var heatmapViewModel: HeatMapViewModel
+    private lateinit var framesViewModel: FramesViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -89,6 +91,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var leftHeatMap: HeatMap
     private lateinit var rightHeatMap: HeatMap
+
+    private lateinit var heatMapTestRight: HeatMap
+    private lateinit var heatMapTestLeft: HeatMap
+
     private lateinit var feetContainer: ConstraintLayout
 
 
@@ -98,6 +104,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var heatMapUtil: HeatMapUtil
 
     private lateinit var flActionBtn: FloatingActionButton
+    private lateinit var bluetoothBtn: ImageButton
     private lateinit var scientificBtn: ImageButton
 
     private lateinit var leftRight: LeftRight
@@ -136,6 +143,19 @@ class MainActivity : AppCompatActivity() {
     private var g0: Int = 0
     private var g1: Int = 0
     private var g2: Int = 0
+    private var counter: Int = 0
+
+    private lateinit var pointX0: HeatMap.DataPoint
+    private lateinit var pointX1: HeatMap.DataPoint
+    private lateinit var pointX2: HeatMap.DataPoint
+    private lateinit var pointX3: HeatMap.DataPoint
+    private lateinit var pointX4: HeatMap.DataPoint
+    private lateinit var pointX5: HeatMap.DataPoint
+    private lateinit var pointX6: HeatMap.DataPoint
+    private lateinit var pointX7: HeatMap.DataPoint
+    private lateinit var pointX8: HeatMap.DataPoint
+
+    private lateinit var dataPoints: List<HeatMap.DataPoint>
 
     private var foot: HeatmapPoints = HeatmapPoints()
 
@@ -378,6 +398,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 //        customBottomBar.inflateMenu(R.menu.bottom_menu)
 
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.main_container, DashboardFragment())
+//            .commit()
+
         val drawable = GradientDrawable().apply {
             colors = intArrayOf(
                 R.color.lightBlue,
@@ -390,11 +414,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         customBottomBar = binding.customBottomNavBar
-        customBottomBar.inflateMenu(R.menu.bottom_menu)
+//        customBottomBar.inflateMenu(R.menu.bottom_menu)
 //        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         heatmapViewModel = ViewModelProvider(this)[HeatMapViewModel::class.java]
+        framesViewModel = ViewModelProvider(this)[FramesViewModel::class.java]
 
         supportActionBar?.hide()
 
@@ -406,10 +431,11 @@ class MainActivity : AppCompatActivity() {
         leftHeatMap = binding.heatmapLeft
         feetContainer = binding.feetContainer
 
-        rightMask = binding.rightMask
-        leftMask = binding.leftMask
+//        rightMask = binding.rightMask
+//        leftMask = binding.leftMask
 
         flActionBtn = binding.floatingActionButton
+        bluetoothBtn = binding.bluetoothButton
         scientificBtn = binding.scientificBtn
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -478,9 +504,14 @@ class MainActivity : AppCompatActivity() {
 
         heatMapUtil = HeatMapUtil(this, rightHeatMap, leftHeatMap)
 
-        flActionBtn.setOnClickListener {
-            enableBluetooth()
-            requestBluetoothPermissions()
+        bluetoothBtn.setOnClickListener {
+            // check if the device supports bluetooth
+            if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
+                Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
+            } else {
+                enableBluetooth()
+                requestBluetoothPermissions()
+            }
         }
 //        testingStringSlicing()
 
@@ -488,7 +519,7 @@ class MainActivity : AppCompatActivity() {
 //        chatRecyclerviewInit()
 
         initBluetooth()
-        if (bluetoothAdapter!!.isEnabled) {
+        if (bluetoothAdapter?.isEnabled == true) {
 //            requestBluetoothPermissions()
             val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
             val defaultAddress = resources.getString(R.string.default_address)
@@ -522,10 +553,253 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        , viewModel.rightf1List.value!!
+
+//        heatMapTestRight = binding.heatmapTestRight
+//        heatMapTestLeft = binding.heatmapTestLeft
+
+//        heatMapTestRight.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//        heatMapTestLeft.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+
+        leftHeatMap.setMinimum(0.0)
+        leftHeatMap.setMaximum(60.0)
+
+        rightHeatMap.setMinimum(0.0)
+        rightHeatMap.setMaximum(60.0)
+
+//        rightHeatMap.setRadius(750.0)
+//        rightHeatMap.setRadius(750.0)
+
+//        pointX0 = HeatMap.DataPoint(0.5F, 0.1F, 60.0)
+//        pointX1 = HeatMap.DataPoint(0.4F, 0.2F, 60.0)
+//        pointX2 = HeatMap.DataPoint(0.3F, 0.3F, 60.0)
+//        pointX3 = HeatMap.DataPoint(0.4F, 0.4F, 60.0)
+//        pointX4 = HeatMap.DataPoint(0.5F, 0.5F, 60.0)
+//        pointX5 = HeatMap.DataPoint(0.4F, 0.6F, 60.0)
+//        pointX6 = HeatMap.DataPoint(0.3F, 0.7F, 60.0)
+//        pointX7 = HeatMap.DataPoint(0.4F, 0.8F, 60.0)
+//        pointX8 = HeatMap.DataPoint(0.5F, 0.9F, 60.0)
+//        // create a list of all dataPoints
+//        dataPoints = listOf(
+//            pointX0,
+//            pointX1,
+//            pointX2,
+//            pointX3,
+//            pointX4,
+//            pointX5,
+//            pointX6,
+//            pointX7,
+//            pointX8
+//        )
+
+        testingHeatmap()
+        binding.addData.setOnClickListener {
+            addDataToDatabase()
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun testingHeatmap() {
+        var index = 0
+        var ten = 0
+        // create a background thread using async.task execute
+        AsyncTask.execute {
+            while (true) {
+                // update the heatmap in the background thread
+                index += 1
+                if (index > 60) {
+                    index = 0
+                }
+//                ten += 1
+//                if (ten > 10) {
+//                    ten = 0
+//                }
+
+                leftHeatMap.clearData()
+                rightHeatMap.clearData()
+
+                pointX0 = HeatMap.DataPoint(0.5F, 0.1F, index.toDouble())
+                pointX1 = HeatMap.DataPoint(0.4F, 0.2F, index.toDouble())
+                pointX2 = HeatMap.DataPoint(0.3F, 0.3F, index.toDouble())
+                pointX3 = HeatMap.DataPoint(0.4F, 0.4F, index.toDouble())
+                pointX4 = HeatMap.DataPoint(0.5F, 0.5F, index.toDouble())
+                pointX5 = HeatMap.DataPoint(0.4F, 0.6F, index.toDouble())
+                pointX6 = HeatMap.DataPoint(0.3F, 0.7F, index.toDouble())
+                pointX7 = HeatMap.DataPoint(0.4F, 0.8F, index.toDouble())
+                pointX8 = HeatMap.DataPoint(0.5F, 0.9F, index.toDouble())
+                // create a list of all dataPoints
+                dataPoints = listOf(
+                    pointX0,
+                    pointX1,
+                    pointX2,
+                    pointX3,
+                    pointX4,
+                    pointX5,
+                    pointX6,
+                    pointX7,
+                    pointX8
+                )
+
+                for(point in dataPoints){
+                    leftHeatMap.addData(point)
+                    rightHeatMap.addData(point)
+                }
+
+                leftHeatMap.postInvalidate()
+                rightHeatMap.postInvalidate()
+
+                // update the heatmap in the background thread
+                runOnUiThread {
+                    try {
+                        leftHeatMap.forceRefreshOnWorkerThread()
+                        rightHeatMap.forceRefreshOnWorkerThread()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        // clear the arrays
+                        leftHeatMap.clearData()
+                        rightHeatMap.clearData()
+                    }
+                }
+
+                try {
+                    Thread.sleep(20)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+
+
+/*        GlobalScope.launch(Dispatchers.Default) {
+            while (true) {
+//                if (index >= dataPoints.size){
+//                    index = 0
+//                }
+                // update the heatmap in the background thread
+                counter += 1
+                if (counter > 60) {
+                    counter = 0
+                }
+
+                pointX0 = HeatMap.DataPoint(0.5F, 0.1F, counter.toDouble())
+                pointX1 = HeatMap.DataPoint(0.4F, 0.2F, counter.toDouble())
+                pointX2 = HeatMap.DataPoint(0.3F, 0.3F, counter.toDouble())
+                pointX3 = HeatMap.DataPoint(0.4F, 0.4F, counter.toDouble())
+                pointX4 = HeatMap.DataPoint(0.5F, 0.5F, counter.toDouble())
+                pointX5 = HeatMap.DataPoint(0.4F, 0.6F, counter.toDouble())
+                pointX6 = HeatMap.DataPoint(0.3F, 0.7F, counter.toDouble())
+                pointX7 = HeatMap.DataPoint(0.4F, 0.8F, counter.toDouble())
+                pointX8 = HeatMap.DataPoint(0.5F, 0.9F, counter.toDouble())
+
+                pointX10 = HeatMap.DataPoint(0.7F, 0.1F, counter.toDouble())
+                pointX11 = HeatMap.DataPoint(0.7F, 0.2F, counter.toDouble())
+                pointX12 = HeatMap.DataPoint(0.7F, 0.3F, counter.toDouble())
+                pointX13 = HeatMap.DataPoint(0.7F, 0.4F, counter.toDouble())
+                pointX14 = HeatMap.DataPoint(0.7F, 0.5F, counter.toDouble())
+                pointX15 = HeatMap.DataPoint(0.7F, 0.6F, counter.toDouble())
+                pointX16 = HeatMap.DataPoint(0.7F, 0.7F, counter.toDouble())
+                pointX17 = HeatMap.DataPoint(0.7F, 0.8F, counter.toDouble())
+                pointX18 = HeatMap.DataPoint(0.7F, 0.9F, counter.toDouble())
+
+                val dataPoints = listOf<HeatMap.DataPoint>(
+                    pointX0,
+                    pointX1,
+                    pointX2,
+                    pointX3,
+                    pointX4,
+                    pointX5,
+                    pointX6,
+                    pointX7,
+                    pointX8,
+
+//                    pointX10,
+//                    pointX11,
+//                    pointX12,
+//                    pointX13,
+//                    pointX14,
+//                    pointX15,
+//                    pointX16,
+//                    pointX17,
+//                    pointX18
+                )
+//                rightHeatMap.clearData()
+                leftHeatMap.clearData()
+
+                for (element in dataPoints){
+//                    rightHeatMap.apply {
+//                        addData(element)
+////                        forceRefresh()
+////                        postInvalidate()
+//                    }
+
+                    leftHeatMap.apply {
+                        addData(element)
+////                        postInvalidate()
+                    }
+                }
+//                rightHeatMap.postInvalidate()
+                leftHeatMap.postInvalidate()
+
+//                heatMapTestRight.addData(dataPoints[index])
+//                heatMapTestRight.forceRefreshOnWorkerThread()
+//                index += 1
+
+                ten += 1
+                withContext(Dispatchers.Main) {
+//                    heatMapTestRight.forceRefreshOnWorkerThread()
+//                    heatMapTestRight.apply{
+//                        // stop the heatmap from clearing the previous data
+//                        heatMapTestRight.forceRefreshOnWorkerThread()
+//                        postInvalidate()
+//                    }
+                    if (ten == 10){
+                        ten = 0
+                        leftHeatMap.forceRefreshOnWorkerThread()
+
+                        // refresh the other foot after a delay
+//                        delay(2)
+//                        rightHeatMap.forceRefreshOnWorkerThread()
+
+                    }
+//                    Log.i("heatmap", "poinnt: $counter")
+//                    heatMapTestLeft.apply{
+//                        addData(pointX0)
+//                        addData(pointX1)
+//                        addData(pointX2)
+//                        addData(pointX3)
+//                        addData(pointX4)
+//                        addData(pointX5)
+//                        addData(pointX6)
+//                        addData(pointX7)
+//                        addData(pointX8)
+//                        forceRefreshOnWorkerThread()
+//                        invalidate()
+//                    }
+                }
+                delay(3) // wait for 20 milliseconds before the next update
+            }
+        }*/
+    }
+
+    fun addDataToDatabase() {
+        // add new LeftFootFrame data to room database
+        val leftFootFrame = LeftFootFrame(
+            sensor1 = 1.0,
+            sensor2 = 2.0,
+            sensor3 = 3.0,
+            sensor4 = 4.0,
+            sensor5 = 5.0,
+            sensor6 = 6.0,
+            acc0 = 0.0,
+            acc1 = 11.0,
+            acc2 = 22.0,
+            gyro0 = 0.0,
+            gyro1 = 111.0,
+            gyro2 = 222.0)
+        framesViewModel.insertLeftFootFrame(leftFootFrame)
     }
 
     override fun onStart() {
-
         super.onStart()
     }
 

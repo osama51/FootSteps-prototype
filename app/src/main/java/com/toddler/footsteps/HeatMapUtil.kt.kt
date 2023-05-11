@@ -66,17 +66,32 @@ class HeatMapUtil(
      * 1. Setting points next to each other will cause the intersection to add up their intensities
      * (which explains why it gets red no matter how low the intensity I receive from the ESP is,
      * currently reaches red at 2500/4095, which is 61% of the max value! clearly visible in the user friendly mode)
-     * 2. Low Opacity is my number one enemy, the lower the opacity the more processing power it takes!
-     * 3. I guess the blur would also be a factor, the higher the blur the more processing power it takes!
+     * 2. Low Opacity is my number one enemy, the lower the opacity the more processing power it takes! (proved wrong)
+     * 3. I guess the blur would also be a factor, the higher the blur the more processing power it takes! (proved wrong)
+     *
+     * 4. Actually it has nothing to do with the opacity or the blur, not even the number of points that are being added
+     *    at least for the number we have here, which is not that much, turns out there's that attribute called
+     *    "maxDrawingHeight" and "maxDrawingWidth" which seem to be the culprit, the higher the value the more processing power it takes
+     *    to draw the heat map, it also seems to be the reason why the heat map is not being drawn correctly, because it is being drawn
+     *    on a smaller scale than the actual view, so the points are being drawn on a smaller scale than the actual view,
+     *    so I guess the solution would be to set the maxDrawingHeight and maxDrawingWidth to the actual view's height and width,
+     *    it's about trial and error now tbh. It also seems to affect the radius of the points, the higher the value the smaller the radius
+     *    and vice versa. blurring the heat map also seems to be affected by this attribute, the higher the value the more blur it gets
+     *
+     *    UPDATE: I have set the maxDrawingHeight and maxDrawingWidth to numbers smaller than 100, and it seems to be working fine now,
+     *
+     * 5. Adding blur attribute gives the points nicer edges and doesn't affect the processing power that much, so I guess it's a win win
+     *
+     * 6. I have learned that the heat map library is not thread safe, so we need to use a single thread executor
      *
      *  */
 
     init {
         leftHeatMap.setMinimum(0.0)
-        leftHeatMap.setMaximum(4095.0)
+        leftHeatMap.setMaximum(60.0)
 
         rightHeatMap.setMinimum(0.0)
-        rightHeatMap.setMaximum(4095.0)
+        rightHeatMap.setMaximum(60.0) // 4095.0
 
 //        pixels = activity.resources.getDimensionPixelSize(R.dimen.heatmap_point).toDouble()
 
@@ -87,6 +102,12 @@ class HeatMapUtil(
     // Apparently, the heat map library is not thread safe, so we need to use a single thread executor
     // to ensure that the data points are added in the correct order.
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
+    // This single thread executor is used to ensure that the heat map is cleared in the correct order.
+    // and this is how it is used:
+    // executorService.execute {
+    //    heatMap.clearData()
+    // }
+
 
     fun addDataPoint(x: Float, y: Float, z: Double, leftRight: LeftRight) {
         executorService.execute {
@@ -164,11 +185,12 @@ class HeatMapUtil(
 
 //        colorStops.put(0.0f, 0xffee42f4.toInt());
 //        colorStops.put(1.0f, 0xffeef442.toInt());
-        leftHeatMap.setMinimumOpacity(255)
-        leftHeatMap.setMaximumOpacity(255)
 
-        rightHeatMap.setMinimumOpacity(255)
-        rightHeatMap.setMaximumOpacity(255)
+//        leftHeatMap.setMinimumOpacity(0)
+//        leftHeatMap.setMaximumOpacity(255)
+//
+//        rightHeatMap.setMinimumOpacity(0)
+//        rightHeatMap.setMaximumOpacity(255)
 
 //        leftHeatMap.setRadius(pixels)
 //        rightHeatMap.setRadius(pixels)
@@ -203,11 +225,14 @@ class HeatMapUtil(
         colorStops.put(0.85f, 0xfff72d63.toInt()) // reddish
         colorStops.put(1.0f, 0xfff72d63.toInt())  // reddish
 
-        leftHeatMap.setMinimumOpacity(255)
-        leftHeatMap.setMaximumOpacity(255)
-
-        rightHeatMap.setMinimumOpacity(255)
-        rightHeatMap.setMaximumOpacity(255)
+//        rightHeatMap.setOpacity(0)
+//        leftHeatMap.setOpacity(0)
+//
+//        leftHeatMap.setMinimumOpacity(0)
+//        leftHeatMap.setMaximumOpacity(255)
+//
+//        rightHeatMap.setMinimumOpacity(0)
+//        rightHeatMap.setMaximumOpacity(255)
 
 //        leftHeatMap.setRadius(pixels)
 //        rightHeatMap.setRadius(pixels)

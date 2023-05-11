@@ -6,11 +6,26 @@
     tools:context=".MainActivity">
 
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/feet_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/offWhite">
+
+        <!--        <androidx.fragment.app.FragmentContainerView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:id="@+id/main_container"/>-->
+
+        <Button
+            android:id="@+id/add_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Data"
+            app:layout_constraintBottom_toBottomOf="@+id/scientific_btn"
+            app:layout_constraintEnd_toStartOf="@+id/scientific_btn"
+            app:layout_constraintTop_toTopOf="@+id/scientific_btn" />
 
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
             android:id="@+id/left_mask"
@@ -33,8 +48,16 @@
                 android:id="@+id/heatmap_left"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:minOpacity="0"
+                app:maxOpacity="255"
+                app:blur="0.001"
+                app:maxDrawingHeight="50dp"
+                app:maxDrawingWidth="50dp"
+                app:radius="20dp"
                 android:background="@color/gray"
-                app:radius="340dp" />
+                app:transparentBackground="false"/>
+            <!--            android:background="@color/gray"-->
+            <!--            app:radius="340dp"-->
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
@@ -57,7 +80,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:radius="340dp" />
+                app:minOpacity="0"
+                app:maxOpacity="255"
+                app:blur="0.001"
+                app:maxDrawingHeight="50dp"
+                app:maxDrawingWidth="50dp"
+                app:radius="20dp"
+                app:transparentBackground="false"/>
+            <!--            android:background="@color/gray"-->
+            <!--            app:radius="340dp"-->
         </com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -65,7 +96,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="36dp"
-            android:src="@drawable/ic_enabled_bluetooth"
+            android:src="@drawable/ic_footsteps"
+            app:tint="@color/sweet"
             app:backgroundTint="@color/white"
             app:elevation="8dp"
             app:fabCustomSize="68dp"
@@ -73,6 +105,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="36dp" />
+
 
         <com.toddler.footsteps.navbar.CustomBottomNavBar
             android:id="@+id/customBottomNavBar"
@@ -104,6 +137,20 @@
             app:neumorph_shadowElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/bluetoothButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/offWhite"
+            android:src="@drawable/ic_enabled_bluetooth"
+            app:layout_constraintBottom_toBottomOf="@+id/scientific_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/scientific_btn"
+            app:tint="@color/gray" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
