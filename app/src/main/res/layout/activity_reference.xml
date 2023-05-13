@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ReferenceActivity">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -26,8 +27,11 @@
         android:id="@+id/usersGridView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="12dp"
-        android:columnCount="2"
+        android:horizontalSpacing="12dp"
+        android:numColumns="1"
+        android:padding="16dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +48,21 @@
         app:backgroundTint="@color/sweet"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/add_icon_to_add_a_new_user" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteUsersFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/trash_icon_to_delete_all_users"
+        android:src="@drawable/ic_delete"
+        android:tint="@color/white"
+        app:backgroundTint="@color/sweet"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 

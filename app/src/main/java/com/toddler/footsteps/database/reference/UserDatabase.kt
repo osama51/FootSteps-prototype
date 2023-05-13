@@ -8,7 +8,7 @@ import com.toddler.footsteps.database.rawdata.FrameDatabase
 
 @Database(
     entities = [User::class],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 

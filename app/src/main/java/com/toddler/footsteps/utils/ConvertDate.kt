@@ -17,8 +17,9 @@ class ConvertDate {
     // get time in hours, minutes from timestamp
     fun getTimeFromTimestamp(timestamp: Long): String {
         val date = java.sql.Date(timestamp)
-        val hours = date.hours
-        val minutes = date.minutes
+        // get hours, minutes from date in a non deprecated way
+        val hours = date.hours.toString().padStart(2, '0')
+        val minutes = date.minutes.toString().padStart(2, '0')
         return "$hours:$minutes"
     }
 }

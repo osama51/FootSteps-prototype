@@ -1,14 +1,18 @@
 package com.toddler.footsteps.database.reference
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.sql.Timestamp
 
-@Entity(tableName = "user_table", indices = [Index(value = ["title"], unique = true)])
+@Entity(
+    tableName = "user_table",
+)
 data class User(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    @ColumnInfo(name = "id")
+    var id: Long = 0,
     var title: String = "",
     var selected: Boolean = false,
 

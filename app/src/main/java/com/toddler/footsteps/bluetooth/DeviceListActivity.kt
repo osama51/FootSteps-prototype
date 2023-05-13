@@ -32,6 +32,12 @@ class DeviceListActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // we used to have this line here:
+        // binding = DataBindingUtil.setContentView(this, R.layout.activity_device_list)
+        // but now we have this instead:
+        // binding = ActivityDeviceListBinding.inflate(layoutInflater)
+        //
 //        binding = DataBindingUtil.setContentView(this, R.layout.activity_device_list)
         binding = ActivityDeviceListBinding.inflate(layoutInflater)
 

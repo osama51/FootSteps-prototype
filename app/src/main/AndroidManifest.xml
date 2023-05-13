@@ -47,7 +47,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.BlueComm"
         tools:targetApi="31">
@@ -66,6 +66,12 @@
 
         <activity
             android:name="com.toddler.footsteps.bluetooth.DeviceListActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name="com.toddler.footsteps.ReferenceActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
         </activity>
 <!--        <receiver android:name="com.toddler.bluecomm.BluetoothReceiver"-->

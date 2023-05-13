@@ -29,4 +29,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="profile">Profile</string>
     <string name="home">Home</string>
+    <string name="add_icon_to_add_a_new_user">Add icon to add a new user</string>
+    <string name="trash_icon_to_delete_all_users">Trash icon to delete all users</string>
 </resources>

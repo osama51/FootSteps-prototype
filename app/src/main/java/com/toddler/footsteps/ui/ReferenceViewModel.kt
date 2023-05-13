@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 // Instead, add DAO to init block
 // This is because the DAO is not available until the database is created?
 // and the the database is not available until the application is created?
+
+
 class ReferenceViewModel(
     application: Application
 ) : AndroidViewModel(application) {
@@ -33,9 +35,19 @@ class ReferenceViewModel(
     // not necessary to use getInstance, but it is good practice
     private val userDao: UserDao = UserDatabase.getInstance(application).userDao
 
-    val _users = MutableStateFlow<Flow<List<User>>>(userDao.getAllUsers())
+    private val _finished = MutableLiveData<Boolean>(false)
+    val finished: MutableLiveData<Boolean>
+        get() = _finished
 
-    private lateinit var  _user: MutableLiveData<User>
+    private val _users = MutableLiveData<List<User>>(ArrayList())
+    val users: MutableLiveData<List<User>>
+        get() = _users
+
+    private val _nonSelectedUsers = MutableLiveData<List<User>>(ArrayList())
+    val nonSelectedUsers: MutableLiveData<List<User>>
+        get() = _nonSelectedUsers
+
+    private var _user: MutableLiveData<User> = MutableLiveData()
     val user: MutableLiveData<User>
         get() = _user
 
@@ -44,21 +56,44 @@ class ReferenceViewModel(
     }
 
     init {
-        _user.value = User()
         Log.i("ReferenceViewModel", "ReferenceViewModel Created")
+        _user.value = User()
     }
 
     fun insertUser(user: User) {
         viewModelScope.launch {
-            if(userDao.getUserById(user.id) == null)
-                userDao.insertUser(user)
+            val id = userDao.insertUser(user)
+            setOtherUsersNotSelected(id)
         }
+    }
+
+    fun setOtherUsersNotSelected(exceptionUser: Long) {
+        _finished.value = false
+        viewModelScope.launch {
+            userDao.getUsersBySelected(true).forEach { user ->
+                Log.i("ReferenceViewModel", "USER: ${user.id} exceptionUser: ${exceptionUser}")
+                if(user.id != exceptionUser){
+                    user.selected = false
+                    userDao.updateUser(user)
+                    _nonSelectedUsers.value = _nonSelectedUsers.value?.plus(user)
+                    _finished.value = true
+                }
+            }
+        }
+//
+//        viewModelScope.launch {
+//            _nonSelectedUsers.value?.forEach { user ->
+//                userDao.updateUser(user)
+//                Log.i("ReferenceViewModel", "USER_SELECTED: $user")
+//            }
+//            _finished.value = true
+//        }
     }
 
     fun updateUser(user: User) {
         viewModelScope.launch {
-            if(userDao.getUserById(user.id) != null)
-                userDao.updateUser(user)
+            userDao.updateUser(user)
+            Log.i("ReferenceViewModel", "USER_UPDATED: ${user.selected}" )
         }
     }
 
@@ -68,10 +103,23 @@ class ReferenceViewModel(
         }
     }
 
-    fun getUsers(): Flow<List<User>> {
-        return _users.value
+    fun fetchUsersFromDB() {
+        viewModelScope.launch {
+            _users.value = userDao.getAllUsers().value ?: ArrayList()
+            Log.i("ReferenceViewModel", "users: ${_users.value}")
+        }
     }
 
+    fun deleteAllUsers() {
+        viewModelScope.launch {
+            userDao.deleteAllUsers()
+            _nonSelectedUsers.value = ArrayList()
+        }
+    }
+
+    fun setFinishedFalse() {
+        _finished.value = false
+    }
     override fun onCleared() {
         super.onCleared()
         Log.i("ReferenceViewModel", "ReferenceViewModel destroyed")

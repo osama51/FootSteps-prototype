@@ -1,5 +1,6 @@
 package com.toddler.footsteps.database.reference
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Insert
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(user: User): Long
 
     @Update
     suspend fun updateUser(user: User)
@@ -19,16 +20,22 @@ interface UserDao {
     @Delete
     suspend fun deleteUser(user: User)
 
+    @Query("DELETE FROM user_table")
+    suspend fun deleteAllUsers()
+
     @Query("SELECT * FROM user_table")
-    fun getAllUsers(): Flow<List<User>>
+    fun getAllUsers(): LiveData<List<User>>
 
     @Query("SELECT * FROM user_table ORDER BY timestamp ASC")
-    fun getUsersOrderedByTimestamp(): Flow<List<User>>
+    fun getUsersOrderedByTimestamp(): LiveData<List<User>>
 
     @Query("SELECT * FROM user_table WHERE title = :title")
-    fun getUserByTitle(title: String): List<User>
+    fun getUserByTitle(title: String): LiveData<List<User>>
 
     @Query("SELECT * FROM user_table WHERE id = :id")
-    fun getUserById(id: Int): User?
+    fun getUserById(id: Int): LiveData<User?>
+
+    @Query("SELECT * FROM user_table WHERE selected = :selected")
+    suspend fun getUsersBySelected(selected: Boolean): List<User>
 
 }

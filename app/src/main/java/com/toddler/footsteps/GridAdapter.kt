@@ -7,11 +7,20 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.toddler.footsteps.database.reference.User
+import com.toddler.footsteps.database.reference.UserDatabase
+import com.toddler.footsteps.ui.ReferenceViewModel
 import com.toddler.footsteps.utils.ConvertDate
 
-class GridAdapter(private val context: Context, private val gridView: GridView, private val items: List<User>) : BaseAdapter() {
+class GridAdapter(
+    private val context: Context,
+    private val gridView: GridView,
+    private val items: List<User>,
+    private val itemClickListener: GridItemClickListener
+    ) : BaseAdapter() {
 
     private var selectedItemPosition = -1
 
@@ -30,6 +39,8 @@ class GridAdapter(private val context: Context, private val gridView: GridView, 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: ViewHolder
+
+
 
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.reference_grid_item, parent, false)
@@ -52,9 +63,10 @@ class GridAdapter(private val context: Context, private val gridView: GridView, 
         // Populate the data from the data object via the viewHolder object
         viewHolder.titleTextView.text = item.title
         viewHolder.dateTextView.text = ConvertDate().getDateFromTimestamp(item.timestamp).toString()
-        viewHolder.timeTextView.text = ConvertDate().getTimeFromTimestamp(item.timestamp)
+//        viewHolder.timeTextView.text = ConvertDate().getTimeFromTimestamp(item.timestamp)
 
-        if (position == selectedItemPosition) {
+//        if (position == selectedItemPosition) {
+        if (item.selected) {
             // Customize the appearance or behavior of the selected item
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
         } else {
@@ -62,23 +74,22 @@ class GridAdapter(private val context: Context, private val gridView: GridView, 
             view.setBackgroundColor(context.resources.getColor(R.color.gray_opaque))
         }
 
+        view.setOnLongClickListener {
+            itemClickListener.onItemLongClicked(item, position)
+            true
+        }
+
         view.setOnClickListener {
-            if (selectedItemPosition == position) {
-                // Same item is already selected, do nothing
-                return@setOnClickListener
-            }
-
-            val previousSelectedView = gridView.getChildAt(selectedItemPosition)
-            previousSelectedView?.setBackgroundColor(context.resources.getColor(R.color.gray_opaque))
-
-            selectedItemPosition = position
-            view.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
-
-            // Handle the selected item
-            // You can access the selected item using `items[position]` and perform the desired action
+            itemClickListener.onItemClicked(item, position, selectedItemPosition)
         }
 
         return view
+    }
+
+    interface GridItemClickListener {
+        fun onItemLongClicked(item: User, position: Int)
+
+        fun onItemClicked(item: User, position: Int, selectedItemPosition: Int)
     }
 
     private class ViewHolder(view: View) {

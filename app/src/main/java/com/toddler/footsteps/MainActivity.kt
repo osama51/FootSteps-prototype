@@ -36,8 +36,10 @@ import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.database.rawdata.LeftFootFrame
+import com.toddler.footsteps.database.reference.User
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.navbar.CustomBottomNavBar
+import com.toddler.footsteps.ui.ReferenceViewModel
 import kotlinx.coroutines.*
 import soup.neumorphism.ShapeType
 import java.text.SimpleDateFormat
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var heatmapViewModel: HeatMapViewModel
     private lateinit var framesViewModel: FramesViewModel
+    private lateinit var referenceViewModel: ReferenceViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -420,6 +423,7 @@ class MainActivity : AppCompatActivity() {
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         heatmapViewModel = ViewModelProvider(this)[HeatMapViewModel::class.java]
         framesViewModel = ViewModelProvider(this)[FramesViewModel::class.java]
+        referenceViewModel = ViewModelProvider(this)[ReferenceViewModel::class.java]
 
         supportActionBar?.hide()
 
@@ -595,6 +599,12 @@ class MainActivity : AppCompatActivity() {
         binding.addData.setOnClickListener {
             addDataToDatabase()
         }
+        flActionBtn.setOnClickListener {
+            addUserToDatabase()
+            // navigate to the reference activity
+            val intent = Intent(this, ReferenceActivity::class.java)
+            activityResultLauncher.launch(intent)
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -639,7 +649,7 @@ class MainActivity : AppCompatActivity() {
                     pointX8
                 )
 
-                for(point in dataPoints){
+                for (point in dataPoints) {
                     leftHeatMap.addData(point)
                     rightHeatMap.addData(point)
                 }
@@ -661,13 +671,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 try {
-                    Thread.sleep(20)
+                    Thread.sleep(17)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
             }
         }
-
 
 
 /*        GlobalScope.launch(Dispatchers.Default) {
@@ -795,8 +804,18 @@ class MainActivity : AppCompatActivity() {
             acc2 = 22.0,
             gyro0 = 0.0,
             gyro1 = 111.0,
-            gyro2 = 222.0)
+            gyro2 = 222.0
+        )
         framesViewModel.insertLeftFootFrame(leftFootFrame)
+    }
+
+    fun addUserToDatabase() {
+        val user = User(
+            title = "Za8roof",
+            timestamp = System.currentTimeMillis(),
+            selected = true
+        )
+        referenceViewModel.insertUser(user)
     }
 
     override fun onStart() {
