@@ -42,6 +42,7 @@ import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.database.rawdata.LeftFootFrame
+import com.toddler.footsteps.database.rawdata.RightFootFrame
 import com.toddler.footsteps.database.reference.User
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.heatmap.HeatMapViewModel
@@ -161,15 +162,15 @@ class MainActivity : AppCompatActivity() {
     private var g2: Int = 0
     private var counter: Int = 0
 
-    private lateinit var pointX0: HeatMap.DataPoint
-    private lateinit var pointX1: HeatMap.DataPoint
-    private lateinit var pointX2: HeatMap.DataPoint
-    private lateinit var pointX3: HeatMap.DataPoint
-    private lateinit var pointX4: HeatMap.DataPoint
-    private lateinit var pointX5: HeatMap.DataPoint
-    private lateinit var pointX6: HeatMap.DataPoint
-    private lateinit var pointX7: HeatMap.DataPoint
-    private lateinit var pointX8: HeatMap.DataPoint
+    private var pointX0: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX1: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX2: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX3: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX4: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX5: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX6: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX7: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
+    private var pointX8: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
 
     private lateinit var dataPoints: List<HeatMap.DataPoint>
 
@@ -398,7 +399,6 @@ class MainActivity : AppCompatActivity() {
                     heatMapUtil.leftFootPoints(foot)
 //                    leftHeatMap.forceRefresh()
                 }
-
             }
         }
 //          }
@@ -533,7 +533,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 //        testingStringSlicing()
-
 
         requestMultiplePermissionsLauncher()
 //        chatRecyclerviewInit()
@@ -757,7 +756,7 @@ class MainActivity : AppCompatActivity() {
                 referenceSet = true
                 cancelPulsatingAnimation()
                 addUserToDatabase()
-                Toast.makeText(this, "New Reference has been added", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "New Reference Added", Toast.LENGTH_LONG).show()
             }
         }
         handler.postDelayed(longPressRunnable!!, 3000) // 3 seconds
@@ -834,7 +833,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 try {
-                    Thread.sleep(17)
+                    Thread.sleep(25)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
@@ -953,6 +952,7 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
+
     fun addDataToDatabase() {
         // add new LeftFootFrame data to room database
         val leftFootFrame = LeftFootFrame(
@@ -969,7 +969,23 @@ class MainActivity : AppCompatActivity() {
             gyro1 = 111.0,
             gyro2 = 222.0
         )
+
+        val rightFootFrame = RightFootFrame(
+            sensor1 = 1.0,
+            sensor2 = 2.0,
+            sensor3 = 3.0,
+            sensor4 = 4.0,
+            sensor5 = 5.0,
+            sensor6 = 6.0,
+            acc0 = 0.0,
+            acc1 = 11.0,
+            acc2 = 22.0,
+            gyro0 = 0.0,
+            gyro1 = 111.0,
+            gyro2 = 222.0
+        )
         framesViewModel.insertLeftFootFrame(leftFootFrame)
+        framesViewModel.insertRightFootFrame(rightFootFrame)
     }
 
     fun addUserToDatabase() {

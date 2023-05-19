@@ -24,8 +24,7 @@ class RingBuffer<T>(val maxSize: Int = 10) {
 
     fun clear() {
         head = 0
-        tail = 0
-    }
+        tail = 0 }
 
     fun enqueue(item: T): RingBuffer<T> {
         // Check if there's space before attempting to add the item

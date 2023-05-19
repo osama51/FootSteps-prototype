@@ -109,7 +109,7 @@ class ReferenceActivity : AppCompatActivity(), GridAdapter.GridItemClickListener
     }
 
     override fun onItemLongClicked(item: User, position: Int) {
-        TODO("Not yet implemented")
+        // delete the user from the database
     }
 
     override fun onItemClicked(item: User, position: Int) {

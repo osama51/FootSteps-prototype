@@ -361,7 +361,6 @@ class HeatMapUtil(
         colorStops.put(0.99f, 0xffff2100.toInt()) // reddish
 
 
-
 //        colorStops.put(0.7f, 0xfff9c320.toInt()) // reddish
 //        colorStops.put(0.75f, 0xfff9c320.toInt()) // reddish
 //        colorStops.put(0.85f, 0xfff9c320.toInt()) // reddish
@@ -375,7 +374,6 @@ class HeatMapUtil(
 
         leftHeatMap.setColorStops(colorStops)
         rightHeatMap.setColorStops(colorStops)
-
     }
 
     fun userFriendlyTheme() {
