@@ -89,6 +89,12 @@ class ReferenceActivity : AppCompatActivity(), GridAdapter.GridItemClickListener
             viewModel.deleteAllUsers()
         }
 
+        // set the toolbar
+        binding.referenceToolbar.setNavigationIcon(R.drawable.ic_back)
+        binding.referenceToolbar.setNavigationOnClickListener {
+            this.onBackPressed()
+        }
+
         setContentView(binding.root)
     }
 

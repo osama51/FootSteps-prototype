@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.os.*
 import android.util.Log
@@ -26,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -227,8 +229,9 @@ class MainActivity : AppCompatActivity() {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
                         foot = Insole()
-                        heatMapUtil.leftFootPoints(foot)
-                        heatMapUtil.rightFootPoints(foot)
+                        heatMapUtil.leftFootPoints(Insole())
+                        heatMapUtil.rightFootPoints(Insole())
+                        bluetoothBtn.clearColorFilter()
                     }
                     StateEnum.STATE_CONNECTING.ordinal -> {
                         setState("Connecting...")
@@ -238,6 +241,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     StateEnum.STATE_CONNECTED.ordinal -> {
                         setState("Connected to: $connectedDevice")
+                        bluetoothBtn.setColorFilter(ContextCompat.getColor(this, R.color.sweet), PorterDuff.Mode.SRC_IN)
                     }
                 }
             }
@@ -646,27 +650,27 @@ class MainActivity : AppCompatActivity() {
 
 
         flActionBtn.setOnLongClickListener {
-//            animatorScaleUp.start()
-            // Action to perform after the long press duration (5 seconds or more)
-            // Add your code here
-            f0 = (f0 + 10) % 60
-            f1 = (f0 + 10) % 60
-            f2 = (f1 + 10) % 60
-            f3 = (f2 + 10) % 60
-            f4 = (f3 + 10) % 60
-            f5 = (f4 + 10) % 60
-            foot = Insole(
-                f0.toDouble(),
-                f1.toDouble(),
-                f2.toDouble(),
-                f3.toDouble(),
-                f4.toDouble(),
-                f5.toDouble()
-            )
-            Log.i("fooooooot", "$foot")
-
-            heatMapUtil.leftFootPoints(foot)
-            heatMapUtil.rightFootPoints(foot)
+////            animatorScaleUp.start()
+//            // Action to perform after the long press duration (5 seconds or more)
+//            // Add your code here
+//            f0 = (f0 + 10) % 60
+//            f1 = (f0 + 10) % 60
+//            f2 = (f1 + 10) % 60
+//            f3 = (f2 + 10) % 60
+//            f4 = (f3 + 10) % 60
+//            f5 = (f4 + 10) % 60
+//            foot = Insole(
+//                f0.toDouble(),
+//                f1.toDouble(),
+//                f2.toDouble(),
+//                f3.toDouble(),
+//                f4.toDouble(),
+//                f5.toDouble()
+//            )
+//            Log.i("fooooooot", "$foot")
+//
+//            heatMapUtil.leftFootPoints(foot)
+//            heatMapUtil.rightFootPoints(foot)
 
             true
         }
@@ -723,7 +727,7 @@ class MainActivity : AppCompatActivity() {
                     animatorScaleDown.start()
                     stopLongPressRunnable()
                     if(!referenceSet){
-                        Toast.makeText(this, "No Reference has added", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Hold for 3 sec to add a reference", Toast.LENGTH_SHORT).show()
                         startPulsatingAnimation()
                     }
                 }
