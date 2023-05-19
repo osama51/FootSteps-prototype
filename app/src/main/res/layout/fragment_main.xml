@@ -3,7 +3,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    tools:context=".MainFragment">
 
 
 
@@ -48,7 +48,7 @@
                 android:id="@+id/heatmap_left"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:minOpacity="200"
+                app:minOpacity="0"
                 app:maxOpacity="255"
                 app:blur="0.001"
                 app:maxDrawingHeight="50dp"
@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                app:minOpacity="200"
+                app:minOpacity="0"
                 app:maxOpacity="255"
                 app:blur="0.001"
                 app:maxDrawingHeight="50dp"
@@ -99,7 +99,7 @@
             android:src="@drawable/ic_footsteps"
             app:tint="@color/sweet"
             app:backgroundTint="@color/white"
-            app:elevation="15dp"
+            app:elevation="8dp"
             app:fabCustomSize="68dp"
             app:layout_constraintBottom_toBottomOf="@+id/customBottomNavBar"
             app:layout_constraintEnd_toEndOf="parent"

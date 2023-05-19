@@ -1,6 +1,10 @@
 package com.toddler.footsteps
 
 import android.Manifest
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
@@ -13,6 +17,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.*
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.Toast
@@ -25,7 +30,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
-import com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -38,6 +42,8 @@ import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.database.rawdata.LeftFootFrame
 import com.toddler.footsteps.database.reference.User
 import com.toddler.footsteps.databinding.ActivityMainBinding
+import com.toddler.footsteps.heatmap.HeatMapViewModel
+import com.toddler.footsteps.heatmap.Insole
 import com.toddler.footsteps.navbar.CustomBottomNavBar
 import com.toddler.footsteps.ui.ReferenceViewModel
 import kotlinx.coroutines.*
@@ -101,9 +107,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var feetContainer: ConstraintLayout
 
 
-    private lateinit var rightMask: MaskableFrameLayout
-    private lateinit var leftMask: MaskableFrameLayout
-
     private lateinit var heatMapUtil: HeatMapUtil
 
     private lateinit var flActionBtn: FloatingActionButton
@@ -125,6 +128,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var chartStyle: LineChartStyle
 
     private lateinit var customBottomBar: CustomBottomNavBar
+
+    private lateinit var animator: ValueAnimator
+    private lateinit var animatorScaleDown: AnimatorSet
+    private lateinit var animatorScaleUp: AnimatorSet
+    private var isTouching = false
+    private var longPressRunnable: Runnable? = null
+    private var referenceSet: Boolean = false
+
 
     //    val bluetoothKit = BluetoothKit()
     private var stateEnum: StateEnum = StateEnum.STATE_NONE
@@ -160,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var dataPoints: List<HeatMap.DataPoint>
 
-    private var foot: HeatmapPoints = HeatmapPoints()
+    private var foot: Insole = Insole()
 
     private var strHolder: String = ""
 
@@ -215,13 +226,13 @@ class MainActivity : AppCompatActivity() {
                 when (message.arg1) {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
-                        foot = HeatmapPoints()
+                        foot = Insole()
                         heatMapUtil.leftFootPoints(foot)
                         heatMapUtil.rightFootPoints(foot)
                     }
                     StateEnum.STATE_CONNECTING.ordinal -> {
                         setState("Connecting...")
-                        foot = HeatmapPoints()
+                        foot = Insole()
                         heatMapUtil.leftFootPoints(foot)
                         heatMapUtil.rightFootPoints(foot)
                     }
@@ -245,7 +256,7 @@ class MainActivity : AppCompatActivity() {
             else -> {
                 Toast.makeText(context, message.data.getString(toast), Toast.LENGTH_SHORT)
                     .show()
-                foot = HeatmapPoints()
+                foot = Insole()
                 heatMapUtil.leftFootPoints(foot)
                 heatMapUtil.rightFootPoints(foot)
             }
@@ -253,7 +264,7 @@ class MainActivity : AppCompatActivity() {
         return@Callback false
     })
 
-    fun extractData(message: Message) {
+    private fun extractData(message: Message) {
 //        messageCopy = Message.obtain(message)
 //        launch {
 //            withContext(Dispatchers.Default) {
@@ -519,6 +530,7 @@ class MainActivity : AppCompatActivity() {
         }
 //        testingStringSlicing()
 
+
         requestMultiplePermissionsLauncher()
 //        chatRecyclerviewInit()
 
@@ -564,46 +576,193 @@ class MainActivity : AppCompatActivity() {
 //        heatMapTestRight.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 //        heatMapTestLeft.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-        leftHeatMap.setMinimum(0.0)
-        leftHeatMap.setMaximum(60.0)
-
-        rightHeatMap.setMinimum(0.0)
-        rightHeatMap.setMaximum(60.0)
+//        leftHeatMap.setMinimum(0.0)
+//        leftHeatMap.setMaximum(60.0)
+//
+//        rightHeatMap.setMinimum(0.0)
+//        rightHeatMap.setMaximum(60.0)
 
 //        rightHeatMap.setRadius(750.0)
 //        rightHeatMap.setRadius(750.0)
 
-//        pointX0 = HeatMap.DataPoint(0.5F, 0.1F, 60.0)
-//        pointX1 = HeatMap.DataPoint(0.4F, 0.2F, 60.0)
-//        pointX2 = HeatMap.DataPoint(0.3F, 0.3F, 60.0)
-//        pointX3 = HeatMap.DataPoint(0.4F, 0.4F, 60.0)
-//        pointX4 = HeatMap.DataPoint(0.5F, 0.5F, 60.0)
-//        pointX5 = HeatMap.DataPoint(0.4F, 0.6F, 60.0)
-//        pointX6 = HeatMap.DataPoint(0.3F, 0.7F, 60.0)
-//        pointX7 = HeatMap.DataPoint(0.4F, 0.8F, 60.0)
-//        pointX8 = HeatMap.DataPoint(0.5F, 0.9F, 60.0)
-//        // create a list of all dataPoints
-//        dataPoints = listOf(
-//            pointX0,
-//            pointX1,
-//            pointX2,
-//            pointX3,
-//            pointX4,
-//            pointX5,
-//            pointX6,
-//            pointX7,
-//            pointX8
-//        )
-
-        testingHeatmap()
+//        testingHeatmap()
         binding.addData.setOnClickListener {
             addDataToDatabase()
         }
-        flActionBtn.setOnClickListener {
-            addUserToDatabase()
-            // navigate to the reference activity
-            val intent = Intent(this, ReferenceActivity::class.java)
-            activityResultLauncher.launch(intent)
+//        flActionBtn.setOnClickListener {
+////            addUserToDatabase()
+////            // navigate to the reference activity
+////            val intent = Intent(this, ReferenceActivity::class.java)
+////            activityResultLauncher.launch(intent)
+//
+//        }
+
+
+        // Create the pulsating animation
+        animator = ValueAnimator.ofFloat(1.0f, 1.3f).apply {
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            duration = 2000
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener { animation ->
+                val scale = animation.animatedValue as Float
+                flActionBtn.scaleX = scale
+                flActionBtn.scaleY = scale
+            }
+        }
+
+
+        val scaleXAnimatorDown = ObjectAnimator.ofFloat(flActionBtn, "scaleX", 1.0f)
+        val scaleYAnimatorDown = ObjectAnimator.ofFloat(flActionBtn, "scaleY", 1.0f)
+        animatorScaleDown = AnimatorSet().apply {
+
+            playTogether(scaleXAnimatorDown, scaleYAnimatorDown)
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        val scaleXAnimatorUp = ObjectAnimator.ofFloat(flActionBtn, "scaleX", 1.3f)
+        val scaleYAnimatorUp = ObjectAnimator.ofFloat(flActionBtn, "scaleY", 1.3f)
+        animatorScaleUp = AnimatorSet().apply {
+
+            playTogether(scaleXAnimatorUp, scaleYAnimatorUp)
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        startPulsatingAnimation()
+
+//        animator = ObjectAnimator.ofPropertyValuesHolder(
+//            flActionBtn,
+//            PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.3f, 1.0f),
+//            PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.3f, 1.0f)
+//        ).apply {
+//            repeatCount = ValueAnimator.INFINITE // Repeat the animation indefinitely
+//            duration = 2000 // Animation duration in milliseconds
+//            interpolator = AccelerateDecelerateInterpolator() // Smoothly accelerate and decelerate the animation
+//            repeatMode = ValueAnimator.RESTART // Restart the animation when it reaches the end
+//        }
+//        animator.start()
+
+
+        flActionBtn.setOnLongClickListener {
+//            animatorScaleUp.start()
+            // Action to perform after the long press duration (5 seconds or more)
+            // Add your code here
+            f0 = (f0 + 10) % 60
+            f1 = (f0 + 10) % 60
+            f2 = (f1 + 10) % 60
+            f3 = (f2 + 10) % 60
+            f4 = (f3 + 10) % 60
+            f5 = (f4 + 10) % 60
+            foot = Insole(
+                f0.toDouble(),
+                f1.toDouble(),
+                f2.toDouble(),
+                f3.toDouble(),
+                f4.toDouble(),
+                f5.toDouble()
+            )
+            Log.i("fooooooot", "$foot")
+
+            heatMapUtil.leftFootPoints(foot)
+            heatMapUtil.rightFootPoints(foot)
+
+            true
+        }
+
+        customBottomBar.setOnItemSelectedListener { it ->
+            when (it.itemId) {
+//                R.id.action_home -> {
+//                    val intent = Intent(this, MainActivity::class.java)
+//                    startActivity(intent)
+//                }
+                R.id.action_profile -> {
+                    val intent = Intent(this, ReferenceActivity::class.java)
+                    startActivity(intent)
+                }
+//                R.id.action_charts -> {
+////                    val intent = Intent(this, ChartsActivity::class.java)
+////                    startActivity(intent)
+//            }
+                else -> false
+            }
+            true
+        }
+
+
+//        flActionBtn.setOnTouchListener(object : View.OnTouchListener {
+//            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                when (event?.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        animatorScaleUp.start()
+//                    }
+//                }
+//                return v?.onTouchEvent(event) ?: true
+//            }
+//        }
+//        )
+
+//        flActionBtn.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+//            if (hasFocus) {
+//                animatorScaleUp.start()
+//            } else {
+//                animatorScaleDown.start()
+//            }
+//        }
+        flActionBtn.setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    isTouching = true
+                    animator.cancel()
+                    animatorScaleUp.start()
+                    startLongPressRunnable()
+                }
+                MotionEvent.ACTION_UP -> {
+                    isTouching = false
+                    animatorScaleDown.start()
+                    stopLongPressRunnable()
+                    if(!referenceSet){
+                        Toast.makeText(this, "No Reference has added", Toast.LENGTH_SHORT).show()
+                        startPulsatingAnimation()
+                    }
+                }
+            }
+            false
+        }
+
+    }
+
+    private fun startPulsatingAnimation() {
+        if (!animator.isRunning) {
+            animator.start()
+        }
+    }
+
+    private fun cancelPulsatingAnimation() {
+        if (animator.isRunning) {
+            animator.cancel()
+            animatorScaleDown.start()
+        }
+    }
+
+    private fun startLongPressRunnable() {
+        stopLongPressRunnable() // Stop the previous runnable if any
+        longPressRunnable = Runnable {
+            if (isTouching) {
+                referenceSet = true
+                cancelPulsatingAnimation()
+                addUserToDatabase()
+                Toast.makeText(this, "New Reference has been added", Toast.LENGTH_LONG).show()
+            }
+        }
+        handler.postDelayed(longPressRunnable!!, 3000) // 3 seconds
+    }
+
+    private fun stopLongPressRunnable() {
+        longPressRunnable?.let {
+            handler.removeCallbacks(it)
+            longPressRunnable = null
         }
     }
 
@@ -811,7 +970,7 @@ class MainActivity : AppCompatActivity() {
 
     fun addUserToDatabase() {
         val user = User(
-            title = "Za8roof",
+            title = "Zeft",
             timestamp = System.currentTimeMillis(),
             selected = true
         )
@@ -819,6 +978,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        heatMapUtil.leftFootPoints(Insole())
+        heatMapUtil.rightFootPoints(Insole())
+        customBottomBar.selectedItemId = R.id.action_home
         super.onStart()
     }
 
@@ -1013,7 +1175,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestBluetoothPermissions() {
+    fun requestBluetoothPermissions() {
         if (isPermissionGranted()) {
             val intent = Intent(context, DeviceListActivity::class.java)
 //            startActivityForResult(intent, SELECT_DEVICE)
@@ -1187,6 +1349,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        animator.cancel()
         if (bluetoothUtils != null) {
             bluetoothUtils?.stop()
         }

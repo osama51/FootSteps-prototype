@@ -1,9 +1,10 @@
-package com.toddler.footsteps
+package com.toddler.footsteps.heatmap
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.toddler.footsteps.HeatMapMode
 
 class HeatMapViewModel(application: Application) : AndroidViewModel(application) {
 

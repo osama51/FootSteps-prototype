@@ -89,9 +89,6 @@ class ReferenceActivity : AppCompatActivity(), GridAdapter.GridItemClickListener
             viewModel.deleteAllUsers()
         }
 
-        // get the users list from the room database
-        val users = ArrayList<User>()
-
         setContentView(binding.root)
     }
 
@@ -109,18 +106,12 @@ class ReferenceActivity : AppCompatActivity(), GridAdapter.GridItemClickListener
         TODO("Not yet implemented")
     }
 
-    override fun onItemClicked(item: User, position: Int, selectedItemPosition: Int) {
-        if (selectedItemPosition == position) {
-            Log.i("ReferenceActivity", ":::::Same item is already selected, do nothing:::::")
-            // Same item is already selected, do nothing
-            return@onItemClicked
-        }
+    override fun onItemClicked(item: User, position: Int) {
 
         if(item.selected){ return@onItemClicked }
 
         item.selected = true
         viewModel.setOtherUsersNotSelected(item.id)
-
         viewModel.updateUser(item)
     }
 
@@ -134,18 +125,5 @@ class ReferenceActivity : AppCompatActivity(), GridAdapter.GridItemClickListener
         super.onRestoreInstanceState(savedInstanceState)
         gridViewScrollPosition = savedInstanceState.getInt("GRIDVIEW_SCROLL_POSITION", 0)
     }
-
-
-//        updateGridView()
-
-//        val previousSelectedView = gridView.getChildAt(selectedItemPosition)
-//        val view = gridView.getChildAt(position)
-//        previousSelectedView?.setBackgroundColor(context.resources.getColor(R.color.gray_opaque))
-//
-//        selectedItemPosition = position
-//        view.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
-//
-//        // Handle the selected item
-//        // You can access the selected item using `items[position]` and perform the desired action
 }
 

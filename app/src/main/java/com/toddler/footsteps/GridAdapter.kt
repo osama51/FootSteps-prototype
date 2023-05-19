@@ -80,7 +80,7 @@ class GridAdapter(
         }
 
         view.setOnClickListener {
-            itemClickListener.onItemClicked(item, position, selectedItemPosition)
+            itemClickListener.onItemClicked(item, position)
         }
 
         return view
@@ -89,7 +89,7 @@ class GridAdapter(
     interface GridItemClickListener {
         fun onItemLongClicked(item: User, position: Int)
 
-        fun onItemClicked(item: User, position: Int, selectedItemPosition: Int)
+        fun onItemClicked(item: User, position: Int)
     }
 
     private class ViewHolder(view: View) {

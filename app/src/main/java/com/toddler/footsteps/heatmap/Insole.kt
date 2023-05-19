@@ -1,10 +1,10 @@
-package com.toddler.footsteps
+package com.toddler.footsteps.heatmap
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class HeatmapPoints(
+data class Insole(
     var sensor1: Double = 0.0,
     var sensor2: Double = 0.0,
     var sensor3: Double = 0.0,

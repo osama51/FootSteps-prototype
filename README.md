@@ -13,7 +13,7 @@
 - [ ] Add Stop button
 - [ ] Create a custom view for the heatmap (mask + heatmap) (not necessary)
 
-## Changes Log
+## Changelog
 
 ### version-name: 1.0.1
 
@@ -75,16 +75,15 @@
       * postInvalidate() causes an invalidate to happen on a subsequent cycle through the event loop, meaning it will be executed on the next frame. It's used to invalidate the View from a non-UI thread, which is what we want.
       * forceRefreshOnWorkerThread() draws the heatmap from a background thread. This allows offloading some of the work, but we'd have to take care to invalidate the view on the UI thread afterwards, "but not before this call has finished". which is what we want.
       * for some reason while testing, forceRefreshOnWorkerThread() worked better when called from the UI thread, otherwise it would give un-finished/rendered (shadowy with no colors) points. And even more weirdly, it worked better when called from the UI thread and the postInvalidate() was called from a background thread, which is the opposite of what the documentation says.
-      * The best outcome was when forceRefreshOnWorkerThread() was called from the UI thread and postInvalidate() was called from a background thread, which is what I went with.
+      * The best outcome was, as I said, when forceRefreshOnWorkerThread() was called from the UI thread and postInvalidate() was called from a background thread, which is what I went with.
       * Until this point, the heatmap was being rendered with a frame rate of ~20fps, which is not that bad, but it can be better.
 
 * Only a few days ago I took a deeper dive into the heatmap library and discovered some more attributes that are not included in the documentation, and they were the ones that made the biggest difference in the frame rate.
-    * These points controlled how far the points borders are and how far the rendering goes (I think, apparently the rendering went beyond the view and that's why the frame rate was so low).
+    * These attributes controlled how far the points borders are and how far the rendering goes (I think, apparently the rendering went beyond the view and that's why the frame rate was so low).
     * Playing around with these attributes, I was able to get the frame rate to *~50fps*, with the same number of points but for both feet, which is the best outcome possible.
     * This is not for sure since the testing uses a dummy data and thread sleep function to simulate the fps, but it's a good indicator (as compared to the same fps simulation methodology when had ~20fps) of how things will go when the real data is used.
 
 * Currently, I'm reshaping the whole app, and shifting from activities to fragments which will affect how navigation is handled, and I'm trying to implement the MVVM architecture to the whole project (currently partially implemented), which is a big change and will take some time to finish.
-
 
 #### To be done
 

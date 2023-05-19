@@ -1,4 +1,4 @@
-package com.toddler.footsteps
+package com.toddler.footsteps.notused
 
 import android.graphics.Color
 import android.os.AsyncTask
@@ -11,7 +11,7 @@ import androidx.collection.ArrayMap
 import ca.hss.heatmaplib.HeatMap
 import ca.hss.heatmaplib.HeatMap.OnMapClickListener
 import ca.hss.heatmaplib.HeatMapMarkerCallback.CircleHeatMapMarker
-import kotlinx.coroutines.delay
+import com.toddler.footsteps.R
 import java.util.*
 
 /*

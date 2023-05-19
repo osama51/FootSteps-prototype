@@ -65,6 +65,4 @@ class FramesViewModel(
         super.onCleared()
         Log.i("FramesViewModel", "FramesViewModel destroyed")
     }
-
-
 }
