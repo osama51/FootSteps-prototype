@@ -416,7 +416,7 @@ class BluetoothUtils(activity: Activity, context: Context, handler: Handler) {
     private fun connectionFailed(e: String) {
         var message: Message = handler.obtainMessage(MessageEnum.MESSAGE_TOAST.ordinal)
         var bundle: Bundle = Bundle()
-        bundle.putString(MainActivity.toast, "Can't connect to device: $e")
+        bundle.putString(MainActivity.toastTag, "Can't connect to device: $e")
         message.data = bundle
         handler.sendMessage(message)
 

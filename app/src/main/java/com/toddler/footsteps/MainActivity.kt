@@ -3,7 +3,6 @@ package com.toddler.footsteps
 import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -74,7 +73,7 @@ enum class MessageEnum {
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        val toast: String = "toast"
+        val toastTag: String = "toast"
         var deviceName: String = "DeviceName"
         const val TAG = "MAIN_ACTIVITY"
         const val VIBRATION_TIME = 500L
@@ -138,6 +137,11 @@ class MainActivity : AppCompatActivity() {
     private var isTouching = false
     private var longPressRunnable: Runnable? = null
     private var referenceSet: Boolean = false
+
+    private lateinit var toast: Toast
+
+    private var screenHeight by Delegates.notNull<Int>()
+    private var yOffset by Delegates.notNull<Int>()
 
 
     //    val bluetoothKit = BluetoothKit()
@@ -207,11 +211,12 @@ class MainActivity : AppCompatActivity() {
             val data2 = intent.getStringExtra("deviceAddress")
             Log.i(TAG, "Result: ${data?.getStringExtra("deviceAddress")}")
             Log.i(TAG, "Result2: $data2")
-            Toast.makeText(
+            toast = Toast.makeText(
                 context,
                 "Address: ${data?.getStringExtra("deviceAddress")}",
                 Toast.LENGTH_SHORT
-            ).show()
+            )
+                toast.show()
             connectedDevice = data?.getStringExtra("deviceAddress")!!
             deviceName = data?.getStringExtra("deviceName")!!
             device = data?.getParcelableExtra<BluetoothDevice>("device")!!
@@ -256,11 +261,14 @@ class MainActivity : AppCompatActivity() {
             MessageEnum.MESSAGE_WRITE.ordinal -> return@Callback true
             MessageEnum.MESSAGE_DEVICE_NAME.ordinal -> {
                 connectedDevice = message.data.getString(deviceName).toString()
-                Toast.makeText(context, connectedDevice, Toast.LENGTH_SHORT).show()
+                toast= Toast.makeText(context, connectedDevice, Toast.LENGTH_SHORT)
+                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
             }
             else -> {
-                Toast.makeText(context, message.data.getString(toast), Toast.LENGTH_SHORT)
-                    .show()
+                toast= Toast.makeText(context, message.data.getString(toastTag), Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
                 foot = Insole()
                 heatMapUtil.leftFootPoints(foot)
                 heatMapUtil.rightFootPoints(foot)
@@ -420,6 +428,11 @@ class MainActivity : AppCompatActivity() {
 //            .replace(R.id.main_container, DashboardFragment())
 //            .commit()
 
+
+        screenHeight = resources.displayMetrics.heightPixels
+        yOffset = (screenHeight / 6)
+//        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+
         val drawable = GradientDrawable().apply {
             colors = intArrayOf(
                 R.color.lightBlue,
@@ -482,11 +495,15 @@ class MainActivity : AppCompatActivity() {
             when (mode) {
                 HeatMapMode.SCIENTIFIC -> {
                     heatMapUtil.scientificTheme()
-                    Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT).show()
+                    toast=Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
                 }
                 HeatMapMode.USER_FRIENDLY -> {
                     heatMapUtil.userFriendlyTheme()
-                    Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT).show()
+                    toast=Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
                 }
             }
         }
@@ -526,7 +543,9 @@ class MainActivity : AppCompatActivity() {
         bluetoothBtn.setOnClickListener {
             // check if the device supports bluetooth
             if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-                Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
+                toast =Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
             } else {
                 enableBluetooth()
                 requestBluetoothPermissions()
@@ -726,7 +745,9 @@ class MainActivity : AppCompatActivity() {
                     animatorScaleDown.start()
                     stopLongPressRunnable()
                     if(!referenceSet){
-                        Toast.makeText(this, "Hold for 3 sec to add a reference", Toast.LENGTH_SHORT).show()
+                        toast =Toast.makeText(this, "Hold for 3 sec to add a reference", Toast.LENGTH_SHORT)
+                        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                        toast.show()
                         startPulsatingAnimation()
                     }
                 }
@@ -756,7 +777,9 @@ class MainActivity : AppCompatActivity() {
                 referenceSet = true
                 cancelPulsatingAnimation()
                 addUserToDatabase()
-                Toast.makeText(this, "New Reference Added", Toast.LENGTH_LONG).show()
+                toast = Toast.makeText(this, "New Reference Added", Toast.LENGTH_LONG)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
             }
         }
         handler.postDelayed(longPressRunnable!!, 3000) // 3 seconds
@@ -1009,7 +1032,9 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
             finish()
         } else {
-            Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT).show()
+            toast = Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+            toast.show()
         }
         pressedTime = System.currentTimeMillis()
     }
@@ -1030,7 +1055,9 @@ class MainActivity : AppCompatActivity() {
                 vibrator.vibrate(VIBRATION_TIME)
             }
         } else {
-            Toast.makeText(this, "Device does not support vibration", Toast.LENGTH_SHORT).show();
+            toast = Toast.makeText(this, "Device does not support vibration", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+            toast.show()
         }
     }
 
@@ -1178,15 +1205,20 @@ class MainActivity : AppCompatActivity() {
         // tells if the device supports bluetooth or not
         // actually useless if I set bluetooth to be required in manifest
         if (bluetoothAdapter == null) {
-            Toast.makeText(this, "The device does not support bluetooth", Toast.LENGTH_LONG)
-                .show()
+            toast = Toast.makeText(this, "The device does not support bluetooth", Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+            toast.show()
         } else {
             if (isPermissionGranted()) {
 
                 if (bluetoothAdapter!!.isEnabled) {
-                    Toast.makeText(this, "Bluetooth already enabled", Toast.LENGTH_SHORT).show()
+                    toast = Toast.makeText(this, "Bluetooth already enabled", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
                 } else {
-                    Toast.makeText(this, "Turning on Bluetooth", Toast.LENGTH_SHORT).show()
+                    toast = Toast.makeText(this, "Turning on Bluetooth", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
                     bluetoothAdapter?.enable()
                 }
             } else {
@@ -1239,7 +1271,9 @@ class MainActivity : AppCompatActivity() {
                 val notGranted = permissions.values.contains(false)
                 if (notGranted) {
                     Log.i("DEBUG", "permission not granted")
-                    Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show()
+                    toast = Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
 
                     AlertDialog.Builder(context)
                         .setCancelable(false)
