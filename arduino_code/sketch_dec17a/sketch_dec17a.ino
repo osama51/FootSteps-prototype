@@ -44,15 +44,15 @@ void loop() {
 //SerialBT.println("#");
 
 
-  counter = (counter + 68) % 4095;
+//  counter = (counter + 68) % 4095;
 
 //counter = (counter + 1) % 60;
-//if(id == 1){
-//  id = 2;
-//  counter = (counter + 68) % 4095;
-//  } else {
-//    id = 1;  
-//  }
+if(id == 1){
+  id = 2;
+  counter = (counter + 68) % 4095;
+  } else {
+    id = 1;  
+  }
 //SerialBT.print("1i");
 //SerialBT.print(counter+"s");
 //SerialBT.print("1233t");
@@ -64,8 +64,8 @@ void loop() {
 //SerialBT.print("1543f");
 //SerialBT.print("#");
 
-//str = id;
-str = "1i";
+str = id;
+str += "i";
 str += String(counter);
 str += "s1233t";
 str += String(counter);
@@ -74,9 +74,11 @@ str += String(counter);
 str += "v";
 str += String(counter);
 str += "w";
+str += String(counter);
+str += "x";
 str += "1233a1543b1543c1543d1543e1543f#";
     SerialBT.println(str);
-    SerialBT.println(str);
+//    SerialBT.println(str);
 //    delay(100);
 //  }
   delay(17);
