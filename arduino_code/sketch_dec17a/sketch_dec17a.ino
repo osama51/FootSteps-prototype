@@ -14,6 +14,7 @@
 
 BluetoothSerial SerialBT;
 int counter = 0;
+int id = 1;
 String str= "";
 void setup() {
   Serial.begin(115200);
@@ -42,7 +43,16 @@ void loop() {
 //SerialBT.print("1543g2");
 //SerialBT.println("#");
 
-counter = (counter + 68) % 4095;
+
+  counter = (counter + 68) % 4095;
+
+//counter = (counter + 1) % 60;
+//if(id == 1){
+//  id = 2;
+//  counter = (counter + 68) % 4095;
+//  } else {
+//    id = 1;  
+//  }
 //SerialBT.print("1i");
 //SerialBT.print(counter+"s");
 //SerialBT.print("1233t");
@@ -53,12 +63,21 @@ counter = (counter + 68) % 4095;
 //SerialBT.print("1543e");
 //SerialBT.print("1543f");
 //SerialBT.print("#");
+
+//str = id;
 str = "1i";
 str += String(counter);
-str += "s1233t1233a1543b1543c1543d1543e1543f#";
+str += "s1233t";
+str += String(counter);
+str += "u";
+str += String(counter);
+str += "v";
+str += String(counter);
+str += "w";
+str += "1233a1543b1543c1543d1543e1543f#";
     SerialBT.println(str);
     SerialBT.println(str);
 //    delay(100);
 //  }
-  delay(28);
+  delay(17);
 }

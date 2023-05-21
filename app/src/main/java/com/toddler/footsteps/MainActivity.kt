@@ -211,8 +211,7 @@ class MainActivity : AppCompatActivity() {
             val data2 = intent.getStringExtra("deviceAddress")
             Log.i(TAG, "Result: ${data?.getStringExtra("deviceAddress")}")
             Log.i(TAG, "Result2: $data2")
-            toast = Toast.makeText(
-                context,
+            toast = Toast.makeText(context,
                 "Address: ${data?.getStringExtra("deviceAddress")}",
                 Toast.LENGTH_SHORT
             )

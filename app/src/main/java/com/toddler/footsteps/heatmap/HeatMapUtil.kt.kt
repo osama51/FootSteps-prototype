@@ -85,10 +85,10 @@ class HeatMapUtil(
 
     init {
         leftHeatMap.setMinimum(0.0)
-        leftHeatMap.setMaximum(60.0)
+        leftHeatMap.setMaximum(4095.0)
 
         rightHeatMap.setMinimum(0.0)
-        rightHeatMap.setMaximum(60.0) // 4095.0
+        rightHeatMap.setMaximum(4095.0) // 4095.0
 
 //        pixels = activity.resources.getDimensionPixelSize(R.dimen.heatmap_point).toDouble()
 

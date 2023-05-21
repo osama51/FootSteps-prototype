@@ -51,9 +51,9 @@
                 app:minOpacity="200"
                 app:maxOpacity="255"
                 app:blur="0.001"
-                app:maxDrawingHeight="50dp"
-                app:maxDrawingWidth="50dp"
-                app:radius="20dp"
+                app:maxDrawingHeight="40dp"
+                app:maxDrawingWidth="40dp"
+                app:radius="17dp"
                 android:background="@color/gray"
                 app:transparentBackground="false"/>
             <!--            android:background="@color/gray"-->
@@ -83,9 +83,9 @@
                 app:minOpacity="200"
                 app:maxOpacity="255"
                 app:blur="0.001"
-                app:maxDrawingHeight="50dp"
-                app:maxDrawingWidth="50dp"
-                app:radius="20dp"
+                app:maxDrawingHeight="40dp"
+                app:maxDrawingWidth="40dp"
+                app:radius="17dp"
                 app:transparentBackground="false"/>
             <!--            android:background="@color/gray"-->
             <!--            app:radius="340dp"-->
