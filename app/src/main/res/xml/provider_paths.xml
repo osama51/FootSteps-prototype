@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<paths name="provider_paths" xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <external-path name="external_files" path="." />-->
+<!--</paths>-->
+
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path
+        name="my_files"
+        path="." />
+    <files-path name="my_documents" path="Documents/AirFrier/" />
+</paths>

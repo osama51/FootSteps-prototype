@@ -3,13 +3,12 @@ package com.toddler.footsteps.ui
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.toddler.footsteps.database.reference.User
 import com.toddler.footsteps.database.reference.UserDao
 import com.toddler.footsteps.database.reference.UserDatabase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -39,8 +38,8 @@ class ReferenceViewModel(
     val finished: MutableLiveData<Boolean>
         get() = _finished
 
-    private val _users = MutableLiveData<List<User>>(ArrayList())
-    val users: MutableLiveData<List<User>>
+    private val _users: MutableLiveData<List<User>> = MutableLiveData()
+    val users: LiveData<List<User>>
         get() = _users
 
     private val _nonSelectedUsers = MutableLiveData<List<User>>(ArrayList())
@@ -90,6 +89,7 @@ class ReferenceViewModel(
 //        }
     }
 
+
     fun updateUser(user: User) {
         viewModelScope.launch {
             userDao.updateUser(user)
@@ -105,8 +105,10 @@ class ReferenceViewModel(
 
     fun fetchUsersFromDB() {
         viewModelScope.launch {
-            _users.value = userDao.getAllUsers().value ?: ArrayList()
-            Log.i("ReferenceViewModel", "users: ${_users.value}")
+//            val data  = userDao.getAllUsers().value ?: ArrayList()
+            val data  = userDao.getAllUsersSuspend()
+            _users.value = data
+//            Log.i("ReferenceViewModel", "users: ${_users.value}")
         }
     }
 

@@ -25,6 +25,10 @@ android {
     }
 
     configurations {
+        all {
+            // resolves conflicts of openCSV with platform common-logging
+//            exclude module: 'commons-logging'
+        }
         cleanedAnnotations
         implementation.exclude group: 'org.jetbrains' , module:'annotations'
     }
@@ -92,18 +96,6 @@ dependencies {
     //Coroutines Dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
-//    // Firebase
-//    implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
-//    implementation platform('com.google.firebase:firebase-bom:30.5.0')
-
-//    //Koin
-////    implementation "org.koin:koin-core:2.0.1"
-////    implementation "org.koin-androidx-viewmodel:2.0.1"
-//    implementation "io.insert-koin:koin-android:2.0.1"
-//    implementation "io.insert-koin:koin-androidx-viewmodel:2.0.1"
-
-//    //BluetoothKit
-//    implementation 'com.github.sirvar:bluetoothkit-android:v0.3'
 
     // AndroidHeatMap
     implementation 'ca.heartlandsoftware:androidheatmap:1.2.0'
@@ -116,6 +108,36 @@ dependencies {
 
     // Neumorphism
     implementation 'com.github.fornewid:neumorphism:0.3.2'
+
+    // OpenCsv            https://mvnrepository.com/artifact/com.opencsv/opencsv
+    implementation ('com.opencsv:opencsv:5.3')
+//            { exclude group: 'org.apache.commons', module: 'commons-lang3'}
+//    implementation 'org.apache.commons:commons-lang3:3.12.0'
+//    implementation 'org.apache.commons:commons-text:1.9'
+//    implementation 'org.apache.commons:commons-csv:1.9.0'
+
+//    implementation 'commons-logging:commons-logging:1.2' // https://mvnrepository.com/artifact/commons-logging/commons-logging
+
+//    // another csv library
+//    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0' // for JVM platform
+////    implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.9.0' // for Kotlin JS platform
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.28.3'
+    kapt 'com.google.dagger:dagger-compiler:2.28.3'
+
+//    // Firebase
+//    implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
+//    implementation platform('com.google.firebase:firebase-bom:30.5.0')
+
+//    //Koin
+////    implementation "org.koin:koin-core:2.0.1"
+////    implementation "org.koin-androidx-viewmodel:2.0.1"
+//    implementation "io.insert-koin:koin-android:2.0.1"
+//    implementation "io.insert-koin:koin-androidx-viewmodel:2.0.1"
+
+//    //BluetoothKit
+//    implementation 'com.github.sirvar:bluetoothkit-android:v0.3'
 
 //    // KorGe
 //    implementation("com.soywiz:korge:2.0.7")

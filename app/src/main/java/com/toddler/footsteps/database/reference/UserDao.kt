@@ -26,6 +26,9 @@ interface UserDao {
     @Query("SELECT * FROM user_table")
     fun getAllUsers(): LiveData<List<User>>
 
+    @Query("SELECT * FROM user_table")
+    suspend fun getAllUsersSuspend(): List<User>
+
     @Query("SELECT * FROM user_table ORDER BY timestamp ASC")
     fun getUsersOrderedByTimestamp(): LiveData<List<User>>
 

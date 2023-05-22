@@ -14,6 +14,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.*
 import android.util.Log
 import android.view.*
@@ -29,6 +30,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
 import com.github.mikephil.charting.charts.LineChart
@@ -47,8 +49,12 @@ import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.heatmap.HeatMapViewModel
 import com.toddler.footsteps.heatmap.Insole
 import com.toddler.footsteps.navbar.CustomBottomNavBar
+import com.toddler.footsteps.services.exportcsv.CsvConfig
+import com.toddler.footsteps.services.exportcsv.ExportCsvService
+import com.toddler.footsteps.services.exportcsv.adapters.toUserCSV
 import com.toddler.footsteps.ui.ReferenceViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.catch
 import soup.neumorphism.ShapeType
 import java.text.SimpleDateFormat
 import java.util.*
@@ -211,11 +217,12 @@ class MainActivity : AppCompatActivity() {
             val data2 = intent.getStringExtra("deviceAddress")
             Log.i(TAG, "Result: ${data?.getStringExtra("deviceAddress")}")
             Log.i(TAG, "Result2: $data2")
-            toast = Toast.makeText(context,
+            toast = Toast.makeText(
+                context,
                 "Address: ${data?.getStringExtra("deviceAddress")}",
                 Toast.LENGTH_SHORT
             )
-                toast.show()
+            toast.show()
             connectedDevice = data?.getStringExtra("deviceAddress")!!
             deviceName = data?.getStringExtra("deviceName")!!
             device = data?.getParcelableExtra<BluetoothDevice>("device")!!
@@ -246,7 +253,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     StateEnum.STATE_CONNECTED.ordinal -> {
                         setState("Connected to: $connectedDevice")
-                        bluetoothBtn.setColorFilter(ContextCompat.getColor(this, R.color.sweet), PorterDuff.Mode.SRC_IN)
+                        bluetoothBtn.setColorFilter(
+                            ContextCompat.getColor(this, R.color.sweet),
+                            PorterDuff.Mode.SRC_IN
+                        )
                     }
                 }
             }
@@ -260,12 +270,13 @@ class MainActivity : AppCompatActivity() {
             MessageEnum.MESSAGE_WRITE.ordinal -> return@Callback true
             MessageEnum.MESSAGE_DEVICE_NAME.ordinal -> {
                 connectedDevice = message.data.getString(deviceName).toString()
-                toast= Toast.makeText(context, connectedDevice, Toast.LENGTH_SHORT)
-                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast = Toast.makeText(context, connectedDevice, Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
             }
             else -> {
-                toast= Toast.makeText(context, message.data.getString(toastTag), Toast.LENGTH_SHORT)
+                toast =
+                    Toast.makeText(context, message.data.getString(toastTag), Toast.LENGTH_SHORT)
                 toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
                 foot = Insole()
@@ -442,6 +453,7 @@ class MainActivity : AppCompatActivity() {
             gradientType = GradientDrawable.LINEAR_GRADIENT
             shape = GradientDrawable.RECTANGLE
         }
+        val lifecycleOwner = this
 
         customBottomBar = binding.customBottomNavBar
 //        customBottomBar.inflateMenu(R.menu.bottom_menu)
@@ -456,7 +468,7 @@ class MainActivity : AppCompatActivity() {
 
 //        setContentView(R.layout.activity_main)
         context = this
-
+//        createPrivateFolder()
         bluetoothUtils = BluetoothUtils(this, context, handler)
         rightHeatMap = binding.heatmapRight
         leftHeatMap = binding.heatmapLeft
@@ -476,7 +488,6 @@ class MainActivity : AppCompatActivity() {
 
 //            scheduleMemoryClearing()
 
-        val lifecycleOwner = this
 
         scientificBtn.setOnClickListener {
             if (heatmapViewModel.isScientific()) {
@@ -494,13 +505,13 @@ class MainActivity : AppCompatActivity() {
             when (mode) {
                 HeatMapMode.SCIENTIFIC -> {
                     heatMapUtil.scientificTheme()
-                    toast=Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT)
+                    toast = Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                     toast.show()
                 }
                 HeatMapMode.USER_FRIENDLY -> {
                     heatMapUtil.userFriendlyTheme()
-                    toast=Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT)
+                    toast = Toast.makeText(context, "Normal Mode", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                     toast.show()
                 }
@@ -542,7 +553,7 @@ class MainActivity : AppCompatActivity() {
         bluetoothBtn.setOnClickListener {
             // check if the device supports bluetooth
             if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-                toast =Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT)
+                toast = Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT)
                 toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
             } else {
@@ -608,8 +619,54 @@ class MainActivity : AppCompatActivity() {
 
 //        testingHeatmap()
         binding.addData.setOnClickListener {
-            addDataToDatabase()
+
+            referenceViewModel. fetchUsersFromDB()
+////            addDataToDatabase()
         }
+
+        referenceViewModel.users.observe(this) {
+
+
+            lifecycleScope.launch{
+                it?.let {
+                    val csvConfig = CsvConfig()
+                    // set the Uri of the file from the csvConfig hostPath and fileName
+                    val uri = Uri.parse("${csvConfig.hostPath}/${csvConfig.fileName}")
+
+
+                    ExportCsvService(this@MainActivity).writeToCSV(csvConfig, uri, it.toUserCSV())
+                        .catch { error ->
+                            // 👇 handle error here
+                            Log.e("ReferenceViewModel", "Error: ${error.message}")
+                        }.collect { _ ->
+                            // 👇 do anything on success
+                            Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
+
+                        }
+//                    Log.i("ReferenceViewModel", "usersssssss: ${it.toUserCSV()}")
+//                    // 👇 call export function from Export serivce
+//                    val csvConfig = CsvConfig()
+//                    ExportService.export<UserCSV>(
+//                        type = Exports.CSV(csvConfig), // 👈 apply config + type of export
+//                        content = it.toUserCSV() // 👈 send transformed data of exportable type
+//                    ).catch { error ->
+//                        // 👇 handle error here
+//                        Log.e("ReferenceViewModel", "Error: ${error.message}")
+//                    }.collect { _ ->
+//                        // 👇 do anything on success
+//                        Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
+//                    }
+//
+////                    csvWriter().writeAll(
+////                        it.asSequence(),
+////                        "${csvConfig.hostPath}/${csvConfig.fileName}",
+////                        append = true
+////                    )
+                }
+            }
+        }
+
+
 //        flActionBtn.setOnClickListener {
 ////            addUserToDatabase()
 ////            // navigate to the reference activity
@@ -743,8 +800,12 @@ class MainActivity : AppCompatActivity() {
                     isTouching = false
                     animatorScaleDown.start()
                     stopLongPressRunnable()
-                    if(!referenceSet){
-                        toast =Toast.makeText(this, "Hold for 3 sec to add a reference", Toast.LENGTH_SHORT)
+                    if (!referenceSet) {
+                        toast = Toast.makeText(
+                            this,
+                            "Hold for 3 sec to add a reference",
+                            Toast.LENGTH_SHORT
+                        )
                         toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                         toast.show()
                         startPulsatingAnimation()
@@ -754,6 +815,27 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+    }
+
+    private fun createPrivateFolder() {
+        val folderName = "FootSteps"
+        val folder = getDir(folderName, Context.MODE_PRIVATE)
+
+        if (folder.exists()) {
+            // Folder already exists
+            // Perform necessary operations
+        } else {
+            // Folder doesn't exist, create it
+            val created = folder.mkdir()
+            if (created) {
+                // Folder created successfully
+                // Perform necessary operations
+
+            } else {
+                // Failed to create folder
+                // Handle the error
+            }
+        }
     }
 
     private fun startPulsatingAnimation() {
@@ -973,7 +1055,6 @@ class MainActivity : AppCompatActivity() {
             }
         }*/
     }
-
 
     fun addDataToDatabase() {
         // add new LeftFootFrame data to room database
