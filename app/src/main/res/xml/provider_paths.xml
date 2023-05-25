@@ -5,8 +5,10 @@
 <!--</paths>-->
 
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <files-path
-        name="my_files"
-        path="." />
+    <files-path name="my_files" path="." />
     <files-path name="my_documents" path="Documents/AirFrier/" />
+    <files-path name="my_documents2" path="/Documents/AirFrier/" />
+    <files-path name="my_documents3" path="Documents/AirFrier" />
+    <files-path name="my_documents4" path="/Documents/AirFrier" />
+    <files-path name="my_documents5" path="/" />
 </paths>

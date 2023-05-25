@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchDevices: MenuItem
     private lateinit var adapterMessages: ChatAdapter
     private lateinit var requestMultiplePermissions: ActivityResultLauncher<Array<String>>
+    private lateinit var requestMultipleStoragePermissions: ActivityResultLauncher<Array<String>>
     private val runningSOrLater =
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
     private lateinit var connectedDevice: String
@@ -456,6 +457,8 @@ class MainActivity : AppCompatActivity() {
         val lifecycleOwner = this
 
         customBottomBar = binding.customBottomNavBar
+        customBottomBar.bringToFront()
+
 //        customBottomBar.inflateMenu(R.menu.bottom_menu)
 //        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
@@ -562,7 +565,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 //        testingStringSlicing()
-
+        checkStoragePermission()
         requestMultiplePermissionsLauncher()
 //        chatRecyclerviewInit()
 
@@ -637,9 +640,16 @@ class MainActivity : AppCompatActivity() {
                     ExportCsvService(this@MainActivity).writeToCSV(csvConfig, uri, it.toUserCSV())
                         .catch { error ->
                             // 👇 handle error here
+                            toast = Toast.makeText(this@MainActivity, "Error: ${error.message}", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+
+                            toast.show()
                             Log.e("ReferenceViewModel", "Error: ${error.message}")
                         }.collect { _ ->
                             // 👇 do anything on success
+                            toast = Toast.makeText(this@MainActivity, "Data Successfully Exported to CSV", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                            toast.show()
                             Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
 
                         }
@@ -1306,6 +1316,71 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+//    // request storage permissions for saving files outside of the app directory
+//    private fun requestStoragePermissions() {
+//            if (isStoragePermissionGranted()) {
+//                // do nothing
+//            } else {
+//                var permissionsArray = arrayOf(
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                )
+//                Log.d(TAG, "Request storage permissions")
+//                requestMultiplePermissions.launch(permissionsArray)
+//            }
+//        }
+
+
+    // Check and request storage permission
+    private fun checkStoragePermission() {
+        // Check if the storage permission is already granted
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is already granted
+            // Perform your desired operations here
+        } else {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+    // Handle permission request result
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == STORAGE_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                // Perform your desired operations here
+            } else {
+                // Permission denied
+                // Handle permission denied scenario
+            }
+        }
+    }
+
+
+//    private fun isStoragePermissionGranted(): Boolean {
+//        val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
+//        return if (runningQOrLater) {
+//            ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            ) == PackageManager.PERMISSION_GRANTED
+//        } else {
+//            true
+//        }
+//    }
+
 
     fun requestBluetoothPermissions() {
         if (isPermissionGranted()) {
@@ -1344,6 +1419,41 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "Address: $address")
         }
     }
+
+//    private fun requestMultipleStoragePersmissionsLauncher() {
+//        requestMultipleStoragePermissions =
+//            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+//                val notGranted = permissions.values.contains(false)
+//                if (notGranted) {
+//                    Log.i("DEBUG", "permission not granted")
+//                    toast = Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT)
+//                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+//                    toast.show()
+//
+//                    AlertDialog.Builder(context)
+//                        .setCancelable(false)
+//                        .setMessage("Storage permission is required. \n Please grant")
+//                        .setPositiveButton(R.string.grant) { _, _ ->
+//                            requestStoragePermissions()
+//                        }
+//                        .setNegativeButton(R.string.deny) { _, _ ->
+//                            finish()
+//                        }
+//                        .show()
+//
+//                    /**
+//                     * Show a Snackbar instead of an AlertDialog if you wish,
+//                     * but here, we have a chat app with a lot of files to save,
+//                     * so I think it's better to show an AlertDialog
+//                     * */
+//                } else {
+//                    Log.i("DEBUG", "permission granted")
+//                    toast = Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT)
+//                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+//                    toast.show()
+//                }
+//            }
+//    }
 
     private fun requestMultiplePermissionsLauncher() {
         requestMultiplePermissions =
@@ -1493,4 +1603,5 @@ class MainActivity : AppCompatActivity() {
 
 private const val REQUEST_ANDROID_S_PERMISSION_RESULT_CODE = 33
 private const val REQUEST_LEGACY_PERMISSIONS_REQUEST_CODE = 31
+private val STORAGE_PERMISSION_REQUEST_CODE = 100
 private const val SELECT_DEVICE = 20

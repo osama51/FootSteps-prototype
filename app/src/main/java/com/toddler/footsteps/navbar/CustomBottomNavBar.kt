@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.view.MotionEvent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.toddler.footsteps.R
 import kotlin.properties.Delegates
@@ -43,6 +44,7 @@ class CustomBottomNavBar @JvmOverloads constructor(
     // Navigation bar bounds (width & height)
     private var mNavigationBarWidth: Int = 0
     private var mNavigationBarHeight: Int = 0
+
 
     init {
 
@@ -142,6 +144,29 @@ class CustomBottomNavBar @JvmOverloads constructor(
             lineTo(0f, mNavigationBarHeight.toFloat())
             close()
         }
+
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when(event?.action){
+            MotionEvent.ACTION_DOWN -> {
+                // display the press effect within the path (mPath)
+                mPaint.color = resources.getColor(R.color.sweet)
+                invalidate()
+            }
+            MotionEvent.ACTION_UP -> {
+                // display the normal state
+                mPaint.color = resources.getColor(R.color.white)
+                invalidate()
+
+            }
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
     }
 
     override fun onDraw(canvas: Canvas?) {

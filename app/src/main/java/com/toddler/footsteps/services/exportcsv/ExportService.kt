@@ -3,6 +3,8 @@ package com.toddler.footsteps.services.exportcsv
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import androidx.annotation.WorkerThread
 import com.opencsv.CSVWriter
 import com.opencsv.bean.StatefulBeanToCsvBuilder
@@ -83,6 +85,8 @@ class ExportCsvService @Inject constructor(
             .write(content)
 
         csvWriter.close()
+        // 👇 emit success
+        emit(csvFileUri)
 
 
 //        val fileDescriptor = appContext.contentResolver.openFileDescriptor(csvFileUri, "w")

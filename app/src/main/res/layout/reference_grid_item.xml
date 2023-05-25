@@ -16,7 +16,7 @@
         android:padding="40dp"
         android:gravity="center"
         android:elevation="12dp"
-        app:divider="@color/gray">
+        app:divider="@color/gray_teal">
 
 
         <TextView

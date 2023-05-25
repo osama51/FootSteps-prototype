@@ -41,12 +41,16 @@
 <!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
 
 
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"
+        android:requiredFeature="android.hardware.storage"
+        />
 
 
 
@@ -74,10 +78,10 @@
         </provider>
 
 
+<!--            android:screenOrientation="portrait"-->
         <activity
             android:name="com.toddler.footsteps.MainActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -87,14 +91,14 @@
         </activity>
 
 
+<!--            android:screenOrientation="portrait"-->
         <activity
             android:name="com.toddler.footsteps.bluetooth.DeviceListActivity"
-            android:screenOrientation="portrait"
             android:exported="true">
         </activity>
+<!--            android:screenOrientation="portrait"-->
         <activity
             android:name="com.toddler.footsteps.ReferenceActivity"
-            android:screenOrientation="portrait"
             android:exported="true">
         </activity>
 <!--        <receiver android:name="com.toddler.bluecomm.BluetoothReceiver"-->

@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.model.GradientColor
 
 
 class LineChartStyle (private val context: Context) {
@@ -69,7 +68,7 @@ class LineChartStyle (private val context: Context) {
         val width: Float = lineChart.width.toFloat()
         val linGrad = LinearGradient(
             0f, 0f, width, height,
-            ContextCompat.getColor(context, R.color.gray),
+            ContextCompat.getColor(context, R.color.gray_teal),
             ContextCompat.getColor(context, R.color.teal_700),
             Shader.TileMode.REPEAT
         )

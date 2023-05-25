@@ -54,7 +54,7 @@
                 app:maxDrawingHeight="50dp"
                 app:maxDrawingWidth="50dp"
                 app:radius="20dp"
-                android:background="@color/gray"
+                android:background="@color/gray_teal"
                 app:transparentBackground="false"/>
             <!--            android:background="@color/gray"-->
             <!--            app:radius="340dp"-->
@@ -79,7 +79,7 @@
                 android:id="@+id/heatmap_right"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/gray"
+                android:background="@color/gray_teal"
                 app:minOpacity="0"
                 app:maxOpacity="255"
                 app:blur="0.001"
@@ -111,7 +111,7 @@
             android:id="@+id/customBottomNavBar"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:shadowColor="@color/gray"
+            android:shadowColor="@color/gray_teal"
             app:elevation="8dp"
             android:paddingTop="10dp"
             app:menu="@menu/bottom_menu"
@@ -149,7 +149,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/scientific_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/scientific_btn"
-            app:tint="@color/gray" />
+            app:tint="@color/gray_teal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
