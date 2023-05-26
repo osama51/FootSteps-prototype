@@ -23,9 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Data"
-            app:layout_constraintBottom_toBottomOf="@+id/scientific_btn"
-            app:layout_constraintEnd_toStartOf="@+id/scientific_btn"
-            app:layout_constraintTop_toTopOf="@+id/scientific_btn" />
+            app:layout_constraintBottom_toBottomOf="@+id/analytic_btn"
+            app:layout_constraintEnd_toStartOf="@+id/analytic_btn"
+            app:layout_constraintTop_toTopOf="@+id/analytic_btn" />
 
         <com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout
             android:id="@+id/left_mask"
@@ -120,10 +120,10 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <soup.neumorphism.NeumorphImageButton
-            android:id="@+id/scientific_btn"
+            android:id="@+id/analytic_btn"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:src="@drawable/ic_scientific"
+            android:src="@drawable/ic_analytic"
             android:layout_margin="10dp"
             android:padding="7dp"
             app:neumorph_backgroundColor="@color/kindaWhite"
@@ -146,9 +146,9 @@
             android:padding="12dp"
             android:backgroundTint="@color/offWhite"
             android:src="@drawable/ic_enabled_bluetooth"
-            app:layout_constraintBottom_toBottomOf="@+id/scientific_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/analytic_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/scientific_btn"
+            app:layout_constraintTop_toTopOf="@+id/analytic_btn"
             app:tint="@color/gray_teal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

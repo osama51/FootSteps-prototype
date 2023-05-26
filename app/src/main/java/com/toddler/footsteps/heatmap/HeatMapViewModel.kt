@@ -8,30 +8,30 @@ import com.toddler.footsteps.HeatMapMode
 
 class HeatMapViewModel(application: Application) : AndroidViewModel(application) {
 
-//    private val _scientificEnabled = MutableLiveData<Boolean>()
-//    val scientificEnabled: MutableLiveData<Boolean>
-//        get() = _scientificEnabled
+//    private val _analyticEnabled = MutableLiveData<Boolean>()
+//    val analyticEnabled: MutableLiveData<Boolean>
+//        get() = _analyticEnabled
 
-    private val scientificEnabled = MutableLiveData<Boolean>()
+    private val analyticEnabled = MutableLiveData<Boolean>()
     var heatMapMode = MutableLiveData<HeatMapMode>()
 
     init {
-        scientificEnabled.value = false
+        analyticEnabled.value = false
         heatMapMode.value = HeatMapMode.USER_FRIENDLY
     }
 
-    fun setScientific() {
-        scientificEnabled.value = true
-        heatMapMode.value = HeatMapMode.SCIENTIFIC
+    fun setAnalytic() {
+        analyticEnabled.value = true
+        heatMapMode.value = HeatMapMode.ANALYTIC
     }
 
-    fun turnOffScientific() {
-        scientificEnabled.value = false
+    fun turnOffAnalytic() {
+        analyticEnabled.value = false
         heatMapMode.value = HeatMapMode.USER_FRIENDLY
     }
 
-    fun isScientific(): Boolean {
-        return scientificEnabled.value!!
+    fun isAnalytic(): Boolean {
+        return analyticEnabled.value!!
     }
 
     override fun onCleared() {

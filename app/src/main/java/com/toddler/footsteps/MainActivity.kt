@@ -16,6 +16,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -96,13 +97,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchDevices: MenuItem
     private lateinit var adapterMessages: ChatAdapter
     private lateinit var requestMultiplePermissions: ActivityResultLauncher<Array<String>>
-    private lateinit var requestMultipleStoragePermissions: ActivityResultLauncher<Array<String>>
     private val runningSOrLater =
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
     private lateinit var connectedDevice: String
     private var bluetoothUtils: BluetoothUtils? = null
     var FLAG_ON = 0
+    private var notGranted = false
     private lateinit var device: BluetoothDevice
+    private var dialog: AlertDialog? = null
     var c: Calendar = Calendar.getInstance()
     private var df: SimpleDateFormat? = null
     private var formattedDate = ""
@@ -115,12 +117,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var feetContainer: ConstraintLayout
 
-
     private lateinit var heatMapUtil: HeatMapUtil
 
     private lateinit var flActionBtn: FloatingActionButton
     private lateinit var bluetoothBtn: ImageButton
-    private lateinit var scientificBtn: ImageButton
+    private lateinit var analyticBtn: ImageButton
 
     private lateinit var leftRight: LeftRight
 
@@ -482,7 +483,7 @@ class MainActivity : AppCompatActivity() {
 
         flActionBtn = binding.floatingActionButton
         bluetoothBtn = binding.bluetoothButton
-        scientificBtn = binding.scientificBtn
+        analyticBtn = binding.analyticBtn
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -492,23 +493,23 @@ class MainActivity : AppCompatActivity() {
 //            scheduleMemoryClearing()
 
 
-        scientificBtn.setOnClickListener {
-            if (heatmapViewModel.isScientific()) {
-                heatmapViewModel.turnOffScientific()
-                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
-                binding.scientificBtn.setShapeType(ShapeType.Companion.DEFAULT)
+        analyticBtn.setOnClickListener {
+            if (heatmapViewModel.isAnalytic()) {
+                heatmapViewModel.turnOffAnalytic()
+                binding.analyticBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
+                binding.analyticBtn.setShapeType(ShapeType.Companion.DEFAULT)
             } else {
-                heatmapViewModel.setScientific()
-                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.offWhite))
-                binding.scientificBtn.setShapeType(ShapeType.BASIN)
+                heatmapViewModel.setAnalytic()
+                binding.analyticBtn.setBackgroundColor(resources.getColor(R.color.offWhite))
+                binding.analyticBtn.setShapeType(ShapeType.BASIN)
             }
         }
 
         heatmapViewModel.heatMapMode.observe(lifecycleOwner) { mode ->
             when (mode) {
-                HeatMapMode.SCIENTIFIC -> {
-                    heatMapUtil.scientificTheme()
-                    toast = Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT)
+                HeatMapMode.ANALYTIC -> {
+                    heatMapUtil.analyticTheme()
+                    toast = Toast.makeText(context, "Analytic Mode", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                     toast.show()
                 }
@@ -555,21 +556,52 @@ class MainActivity : AppCompatActivity() {
 
         bluetoothBtn.setOnClickListener {
             // check if the device supports bluetooth
-            if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
+            if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH) || bluetoothAdapter == null) {
                 toast = Toast.makeText(context, "Bluetooth not supported", Toast.LENGTH_SHORT)
                 toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
             } else {
-                enableBluetooth()
-                requestBluetoothPermissions()
+//                requestBluetoothPermissions()
+                if(!notGranted)
+                {
+                    if (bluetoothAdapter?.isEnabled == true) {
+                        Log.i("DEBUG", "permission granted")
+                        val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
+//                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
+                        activityResultLauncher.launch(selectDeviceIntent)
+                    } else {
+                       // show a dialog to enable bluetooth
+                        AlertDialog.Builder(context)
+                            .setTitle("Bluetooth")
+                            .setMessage("Turn on bluetooth to continue")
+                            .setPositiveButton("Turn on") { _, _ ->
+                                enableBluetooth()
+                                val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
+//                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
+                                activityResultLauncher.launch(selectDeviceIntent)
+                            }
+                            .setNegativeButton("Cancel") { _, _ ->
+                                Toast.makeText(
+                                    context,
+                                    "Bluetooth is required to continue",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            .show()
+                    }
+
+                }
             }
         }
 //        testingStringSlicing()
         checkStoragePermission()
+        initBluetooth()
         requestMultiplePermissionsLauncher()
+        requestBluetoothPermissions()
+
+//        enableBluetooth()
 //        chatRecyclerviewInit()
 
-        initBluetooth()
         if (bluetoothAdapter?.isEnabled == true) {
 //            requestBluetoothPermissions()
             val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
@@ -581,44 +613,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        viewModel.chatList.observe(this) {
-//            it?.let {
-//                adapterMessages.submitList(it)
-//            }
-//        }
-//            viewModel.leftf0List.observe(this) {
-//                it?.let {
-//                    Log.i("leftF0List", "$f0")
-////                updateLeftGraphs(it)
-//                }
-//            }
-//            viewModel.rightf0List.observe(this) {
-//                it?.let {
-//                    Log.i("rightF0List", "$f0")
-////                updateRightGraphs(it)
-//                }
-//            }
-
-//            viewModel.selectedMessage.observe(this) {
-//                it?.let {
-//                }
-//            }
-//        , viewModel.rightf1List.value!!
-
-//        heatMapTestRight = binding.heatmapTestRight
-//        heatMapTestLeft = binding.heatmapTestLeft
-
-//        heatMapTestRight.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-//        heatMapTestLeft.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-
-//        leftHeatMap.setMinimum(0.0)
-//        leftHeatMap.setMaximum(60.0)
-//
-//        rightHeatMap.setMinimum(0.0)
-//        rightHeatMap.setMaximum(60.0)
-
-//        rightHeatMap.setRadius(750.0)
-//        rightHeatMap.setRadius(750.0)
 
 //        testingHeatmap()
         binding.addData.setOnClickListener {
@@ -628,8 +622,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         referenceViewModel.users.observe(this) {
-
-
             lifecycleScope.launch{
                 it?.let {
                     val csvConfig = CsvConfig()
@@ -675,16 +667,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-//        flActionBtn.setOnClickListener {
-////            addUserToDatabase()
-////            // navigate to the reference activity
-////            val intent = Intent(this, ReferenceActivity::class.java)
-////            activityResultLauncher.launch(intent)
-//
-//        }
-
 
         // Create the pulsating animation
         animator = ValueAnimator.ofFloat(1.0f, 1.3f).apply {
@@ -734,28 +716,6 @@ class MainActivity : AppCompatActivity() {
 
 
         flActionBtn.setOnLongClickListener {
-////            animatorScaleUp.start()
-//            // Action to perform after the long press duration (5 seconds or more)
-//            // Add your code here
-//            f0 = (f0 + 10) % 60
-//            f1 = (f0 + 10) % 60
-//            f2 = (f1 + 10) % 60
-//            f3 = (f2 + 10) % 60
-//            f4 = (f3 + 10) % 60
-//            f5 = (f4 + 10) % 60
-//            foot = Insole(
-//                f0.toDouble(),
-//                f1.toDouble(),
-//                f2.toDouble(),
-//                f3.toDouble(),
-//                f4.toDouble(),
-//                f5.toDouble()
-//            )
-//            Log.i("fooooooot", "$foot")
-//
-//            heatMapUtil.leftFootPoints(foot)
-//            heatMapUtil.rightFootPoints(foot)
-
             true
         }
 
@@ -1265,6 +1225,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         onScreen = false
+        // dismiss the dialog if it is showing
+        if (dialog != null) {
+            dialog!!.dismiss()
+        }
+
         super.onPause()
     }
 
@@ -1361,6 +1326,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
                 // Perform your desired operations here
+                requestBluetoothPermissions()
             } else {
                 // Permission denied
                 // Handle permission denied scenario
@@ -1382,21 +1348,29 @@ class MainActivity : AppCompatActivity() {
 //    }
 
 
-    fun requestBluetoothPermissions() {
+    private fun requestBluetoothPermissions() {
         if (isPermissionGranted()) {
-            val intent = Intent(context, DeviceListActivity::class.java)
-//            startActivityForResult(intent, SELECT_DEVICE)
-            activityResultLauncher.launch(intent)
+//            val intent = Intent(context, DeviceListActivity::class.java)
+////            startActivityForResult(intent, SELECT_DEVICE)
+//            activityResultLauncher.launch(intent)
         } else {
-            var permissionsArray =
-                arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
-
+            var permissionsArray = emptyArray<String>()
+            // Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
             if (runningSOrLater) {
                 permissionsArray += arrayOf(
                     Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT
+                    Manifest.permission.BLUETOOTH_CONNECT,
                 )
             }
+
+//            val runningMOrLater =
+//                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M
+//            // request fine location in case of Android 6.0 and above
+//            if (runningMOrLater) {
+//                permissionsArray += arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+//            }
+
+
             Log.d(TAG, "Request legacy bluetooth permissions")
             requestMultiplePermissions.launch(permissionsArray)
         }
@@ -1420,69 +1394,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun requestMultipleStoragePersmissionsLauncher() {
-//        requestMultipleStoragePermissions =
-//            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-//                val notGranted = permissions.values.contains(false)
-//                if (notGranted) {
-//                    Log.i("DEBUG", "permission not granted")
-//                    toast = Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT)
-//                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-//                    toast.show()
-//
-//                    AlertDialog.Builder(context)
-//                        .setCancelable(false)
-//                        .setMessage("Storage permission is required. \n Please grant")
-//                        .setPositiveButton(R.string.grant) { _, _ ->
-//                            requestStoragePermissions()
-//                        }
-//                        .setNegativeButton(R.string.deny) { _, _ ->
-//                            finish()
-//                        }
-//                        .show()
-//
-//                    /**
-//                     * Show a Snackbar instead of an AlertDialog if you wish,
-//                     * but here, we have a chat app with a lot of files to save,
-//                     * so I think it's better to show an AlertDialog
-//                     * */
-//                } else {
-//                    Log.i("DEBUG", "permission granted")
-//                    toast = Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT)
-//                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-//                    toast.show()
-//                }
-//            }
-//    }
-
     private fun requestMultiplePermissionsLauncher() {
+        // set up the callback for the result of the permission request
+
+
+        // this is the callback for the result of the permission request (requestMultiplePermissions)
+        // it is called when the user responds to the permission request
+
         requestMultiplePermissions =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                val notGranted = permissions.values.contains(false)
+                Log.i("permission.entries", "${permissions.entries}")
+                Log.i("permission.values", "${permissions.values}")
+                notGranted = permissions.values.contains(false)
+//                if(notGranted){
+//                    Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT).show()
+//                }
+
                 if (notGranted) {
                     Log.i("DEBUG", "permission not granted")
                     toast = Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT)
                     toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                     toast.show()
 
-                    AlertDialog.Builder(context)
+                    dialog = AlertDialog.Builder(context)
                         .setCancelable(false)
-                        .setMessage("Bluetooth permission is required. \n Please grant")
+                        .setMessage("Bluetooth permission, or \"Nearby devices\" is required. \nPlease grant")
                         .setPositiveButton(R.string.grant) { _, _ ->
                             requestBluetoothPermissions()
+                            // open app permissions in settings if permission is denied permanently
+                            // https://stackoverflow.com/questions/32366649/how-to-open-app-permission-screen-programmatically
+                            var intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            intent.data = Uri.fromParts("package", packageName, null)
+                            startActivity(intent)
                         }
                         .setNegativeButton(R.string.deny) { _, _ ->
                             finish()
                         }
                         .show()
-
-                    /**
+                   /**
                      * Show a Snackbar instead of an AlertDialog if you wish,
                      * but here, we have a chat app with an input field at
                      * the bottom.. too risky to have a snackbar there
                      * (might lead to misclicks)
-                     * */
-
+                     */
 //                    Snackbar.make(
 //                        window.decorView.findViewById(android.R.id.content),
 //                        R.string.permissions_needed_snackbar_msg,
@@ -1498,9 +1455,11 @@ class MainActivity : AppCompatActivity() {
 
                 } else {
                     Log.i("DEBUG", "permission granted")
-                    val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
-//                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
-                    activityResultLauncher.launch(selectDeviceIntent)
+                    Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT).show()
+
+//                    val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
+////                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
+//                    activityResultLauncher.launch(selectDeviceIntent)
                 }
             }
     }
@@ -1603,5 +1562,5 @@ class MainActivity : AppCompatActivity() {
 
 private const val REQUEST_ANDROID_S_PERMISSION_RESULT_CODE = 33
 private const val REQUEST_LEGACY_PERMISSIONS_REQUEST_CODE = 31
-private val STORAGE_PERMISSION_REQUEST_CODE = 100
+private const val STORAGE_PERMISSION_REQUEST_CODE = 100
 private const val SELECT_DEVICE = 20

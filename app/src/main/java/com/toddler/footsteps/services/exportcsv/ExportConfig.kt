@@ -10,6 +10,7 @@ data class CsvConfig(
         .format(System.currentTimeMillis())
         .toString()
         .replace(",","")
+        .replace(":","")
         .replace(" ", "_"),
 
     val fileName: String = "$prefix-$suffix.csv",

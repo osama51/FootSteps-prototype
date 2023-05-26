@@ -15,7 +15,7 @@ enum class LeftRight {
 
 enum class HeatMapMode {
     USER_FRIENDLY,
-    SCIENTIFIC
+    ANALYTIC
 }
 
 class HeatMapUtil(
@@ -321,7 +321,7 @@ class HeatMapUtil(
 //            }
 //        }
 
-    fun scientificTheme() {
+    fun analyticTheme() {
 
         // ARGB --> 0xAARRGGBB
         //make the colour gradient from pink to yellow

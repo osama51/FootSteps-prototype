@@ -3,7 +3,7 @@
 ## TODO
 
 - [x] Add personalized reference stored with a dedicated screen
-- [x] Add a scientific mode to the heatmap
+- [x] Add an analytic mode to the heatmap
 - [x] Add curved-in/out bottom nav view
 - [x] Add connected Bluetooth device to SharedPreferences
 - [ ] Show available devices

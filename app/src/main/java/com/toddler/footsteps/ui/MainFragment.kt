@@ -69,7 +69,7 @@ class MainFragment: Fragment() {
 
     private lateinit var flActionBtn: FloatingActionButton
     private lateinit var bluetoothBtn: ImageButton
-    private lateinit var scientificBtn: ImageButton
+    private lateinit var analyticBtn: ImageButton
 
     private lateinit var leftRight: LeftRight
 
@@ -152,7 +152,7 @@ class MainFragment: Fragment() {
 
         flActionBtn = binding.floatingActionButton
         bluetoothBtn = binding.bluetoothButton
-        scientificBtn = binding.scientificBtn
+        analyticBtn = binding.analyticBtn
 
         rightHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         leftHeatMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -163,23 +163,23 @@ class MainFragment: Fragment() {
 
         val lifecycleOwner = this
 
-        scientificBtn.setOnClickListener {
-            if (heatmapViewModel.isScientific()) {
-                heatmapViewModel.turnOffScientific()
-                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
-                binding.scientificBtn.setShapeType(ShapeType.Companion.DEFAULT)
+        analyticBtn.setOnClickListener {
+            if (heatmapViewModel.isAnalytic()) {
+                heatmapViewModel.turnOffAnalytic()
+                binding.analyticBtn.setBackgroundColor(resources.getColor(R.color.kindaWhite))
+                binding.analyticBtn.setShapeType(ShapeType.Companion.DEFAULT)
             } else {
-                heatmapViewModel.setScientific()
-                binding.scientificBtn.setBackgroundColor(resources.getColor(R.color.offWhite))
-                binding.scientificBtn.setShapeType(ShapeType.BASIN)
+                heatmapViewModel.setAnalytic()
+                binding.analyticBtn.setBackgroundColor(resources.getColor(R.color.offWhite))
+                binding.analyticBtn.setShapeType(ShapeType.BASIN)
             }
         }
 
         heatmapViewModel.heatMapMode.observe(viewLifecycleOwner) { mode ->
             when (mode) {
-                HeatMapMode.SCIENTIFIC -> {
-                    heatMapUtil.scientificTheme()
-                    Toast.makeText(context, "Scientific Mode", Toast.LENGTH_SHORT).show()
+                HeatMapMode.ANALYTIC -> {
+                    heatMapUtil.analyticTheme()
+                    Toast.makeText(context, "Analytic Mode", Toast.LENGTH_SHORT).show()
                 }
                 HeatMapMode.USER_FRIENDLY -> {
                     heatMapUtil.userFriendlyTheme()

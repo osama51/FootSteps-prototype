@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FootSteps-prototype</string>
+    <string name="app_name">Foot Steps</string>
     <string name="refresh">Refresh</string>
     <string name="str_label_btn_send">send</string>
     <string name="str_menu_search_devices">Search Devices</string>
