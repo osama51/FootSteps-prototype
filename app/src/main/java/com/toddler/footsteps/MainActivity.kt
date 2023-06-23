@@ -53,6 +53,8 @@ import com.toddler.footsteps.navbar.CustomBottomNavBar
 import com.toddler.footsteps.services.exportcsv.CsvConfig
 import com.toddler.footsteps.services.exportcsv.ExportCsvService
 import com.toddler.footsteps.services.exportcsv.adapters.toUserCSV
+import com.toddler.footsteps.ui.ChartViewModel
+import com.toddler.footsteps.ui.ChartsFragment
 import com.toddler.footsteps.ui.ReferenceViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var heatmapViewModel: HeatMapViewModel
     private lateinit var framesViewModel: FramesViewModel
     private lateinit var referenceViewModel: ReferenceViewModel
+    private lateinit var chartsViewModel: ChartViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -259,6 +262,7 @@ class MainActivity : AppCompatActivity() {
                             ContextCompat.getColor(this, R.color.sweet),
                             PorterDuff.Mode.SRC_IN
                         )
+                        startPulsatingAnimation()
                     }
                 }
             }
@@ -408,6 +412,9 @@ class MainActivity : AppCompatActivity() {
                     heatMapUtil.rightFootPoints(foot)
 //                    rightHeatMap.forceRefresh()
                 }
+                if(chatViewModel.screen.value==Screens.CHART_SCREEN){
+                    chartsViewModel.addDataToRightQueue(foot)
+                }
             }
 
             LeftRight.LEFT.ordinal -> {
@@ -418,6 +425,9 @@ class MainActivity : AppCompatActivity() {
                 if (onScreen) {
                     heatMapUtil.leftFootPoints(foot)
 //                    leftHeatMap.forceRefresh()
+                }
+                if(chatViewModel.screen.value==Screens.CHART_SCREEN){
+                    chartsViewModel.addDataToLeftQueue(foot)
                 }
             }
         }
@@ -440,7 +450,14 @@ class MainActivity : AppCompatActivity() {
 //            .replace(R.id.main_container, DashboardFragment())
 //            .commit()
 
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        heatmapViewModel = ViewModelProvider(this)[HeatMapViewModel::class.java]
+        framesViewModel = ViewModelProvider(this)[FramesViewModel::class.java]
+        referenceViewModel = ViewModelProvider(this)[ReferenceViewModel::class.java]
+        chartsViewModel = ViewModelProvider(this)[ChartViewModel::class.java]
 
+
+        chatViewModel.setScreen(Screens.MAIN_SCREEN)
         screenHeight = resources.displayMetrics.heightPixels
         yOffset = (screenHeight / 6)
 //        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
@@ -463,10 +480,6 @@ class MainActivity : AppCompatActivity() {
 //        customBottomBar.inflateMenu(R.menu.bottom_menu)
 //        customBottomBar.setShadow(R.color.black, R.dimen.shadow_normal, R.dimen.elevation, Gravity.TOP)
 //        customBottomBar.setBackgroundDrawable(drawable)
-        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
-        heatmapViewModel = ViewModelProvider(this)[HeatMapViewModel::class.java]
-        framesViewModel = ViewModelProvider(this)[FramesViewModel::class.java]
-        referenceViewModel = ViewModelProvider(this)[ReferenceViewModel::class.java]
 
         supportActionBar?.hide()
 
@@ -562,21 +575,21 @@ class MainActivity : AppCompatActivity() {
                 toast.show()
             } else {
 //                requestBluetoothPermissions()
-                if(!notGranted)
-                {
+                if (!notGranted) {
                     if (bluetoothAdapter?.isEnabled == true) {
                         Log.i("DEBUG", "permission granted")
                         val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
 //                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
                         activityResultLauncher.launch(selectDeviceIntent)
                     } else {
-                       // show a dialog to enable bluetooth
+                        // show a dialog to enable bluetooth
                         AlertDialog.Builder(context)
                             .setTitle("Bluetooth")
                             .setMessage("Turn on bluetooth to continue")
                             .setPositiveButton("Turn on") { _, _ ->
                                 enableBluetooth()
-                                val selectDeviceIntent = Intent(context, DeviceListActivity::class.java)
+                                val selectDeviceIntent =
+                                    Intent(context, DeviceListActivity::class.java)
 //                    startActivityForResult(selectDeviceIntent, SELECT_DEVICE)
                                 activityResultLauncher.launch(selectDeviceIntent)
                             }
@@ -617,12 +630,12 @@ class MainActivity : AppCompatActivity() {
 //        testingHeatmap()
         binding.addData.setOnClickListener {
 
-            referenceViewModel. fetchUsersFromDB()
+            referenceViewModel.fetchUsersFromDB()
 ////            addDataToDatabase()
         }
 
         referenceViewModel.users.observe(this) {
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 it?.let {
                     val csvConfig = CsvConfig()
                     // set the Uri of the file from the csvConfig hostPath and fileName
@@ -632,14 +645,22 @@ class MainActivity : AppCompatActivity() {
                     ExportCsvService(this@MainActivity).writeToCSV(csvConfig, uri, it.toUserCSV())
                         .catch { error ->
                             // 👇 handle error here
-                            toast = Toast.makeText(this@MainActivity, "Error: ${error.message}", Toast.LENGTH_SHORT)
+                            toast = Toast.makeText(
+                                this@MainActivity,
+                                "Error: ${error.message}",
+                                Toast.LENGTH_SHORT
+                            )
                             toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
 
                             toast.show()
                             Log.e("ReferenceViewModel", "Error: ${error.message}")
                         }.collect { _ ->
                             // 👇 do anything on success
-                            toast = Toast.makeText(this@MainActivity, "Data Successfully Exported to CSV", Toast.LENGTH_SHORT)
+                            toast = Toast.makeText(
+                                this@MainActivity,
+                                "Data Successfully Exported to CSV",
+                                Toast.LENGTH_SHORT
+                            )
                             toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                             toast.show()
                             Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
@@ -700,7 +721,6 @@ class MainActivity : AppCompatActivity() {
             interpolator = AccelerateDecelerateInterpolator()
         }
 
-        startPulsatingAnimation()
 
 //        animator = ObjectAnimator.ofPropertyValuesHolder(
 //            flActionBtn,
@@ -719,6 +739,8 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        val fragment = ChartsFragment()
+        val fragmentManager = supportFragmentManager
         customBottomBar.setOnItemSelectedListener { it ->
             when (it.itemId) {
 //                R.id.action_home -> {
@@ -729,14 +751,34 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, ReferenceActivity::class.java)
                     startActivity(intent)
                 }
-//                R.id.action_charts -> {
-////                    val intent = Intent(this, ChartsActivity::class.java)
-////                    startActivity(intent)
-//            }
+                R.id.action_charts -> {
+//                    val intent = Intent(this, ChartsActivity::class.java)
+//                    startActivity(intent)
+                    // Inside your main Activity
+
+
+                    // Replace the current content of the FrameLayout with your Fragment
+                    val transaction = fragmentManager.beginTransaction()
+                    // Specify custom animations for enter and exit transitions
+                    transaction.setCustomAnimations(
+                        R.anim.slide_in_down, // Animation resource for enter transition
+                        R.anim.slide_out_down, // Animation resource for exit transition
+                        R.anim.slide_in_down, // Animation resource for pop enter transition
+                        R.anim.slide_out_down // Animation resource for pop exit transition
+                    )
+
+                    transaction.replace(R.id.frameLayout, fragment)
+                    transaction.addToBackStack(null) // Optional: Add to back stack if you want to navigate back
+                    transaction.commit()
+                    chatViewModel.setScreen(Screens.CHART_SCREEN)
+
+                }
                 else -> false
             }
             true
         }
+
+        manageScreenStates()
 
 
 //        flActionBtn.setOnTouchListener(object : View.OnTouchListener {
@@ -778,7 +820,9 @@ class MainActivity : AppCompatActivity() {
                         )
                         toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                         toast.show()
-                        startPulsatingAnimation()
+                        if (stateEnum == StateEnum.STATE_CONNECTED) {
+                            startPulsatingAnimation()
+                        }
                     }
                 }
             }
@@ -1078,15 +1122,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (pressedTime + 1500 > System.currentTimeMillis()) {
-            super.onBackPressed()
-            finish()
+        if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+            if (pressedTime + 1500 > System.currentTimeMillis()) {
+                super.onBackPressed()
+                finish()
+            } else {
+                toast = Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
+            }
+            pressedTime = System.currentTimeMillis()
         } else {
-            toast = Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-            toast.show()
+            super.onBackPressed()
+            chatViewModel.setScreen(Screens.MAIN_SCREEN)
         }
-        pressedTime = System.currentTimeMillis()
+    }
+
+    private fun manageScreenStates() {
+        chatViewModel.screen.observe(this) {
+            when (it) {
+                Screens.MAIN_SCREEN -> {
+                    customBottomBar.selectedItemId = R.id.action_home
+                }
+                Screens.CHART_SCREEN -> {
+
+                }
+                else -> {
+
+                }
+            }
+        }
     }
 
     private fun vibrateWhenHigh() {
@@ -1315,6 +1380,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
     // Handle permission request result
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -1434,7 +1500,7 @@ class MainActivity : AppCompatActivity() {
                             finish()
                         }
                         .show()
-                   /**
+                    /**
                      * Show a Snackbar instead of an AlertDialog if you wish,
                      * but here, we have a chat app with an input field at
                      * the bottom.. too risky to have a snackbar there

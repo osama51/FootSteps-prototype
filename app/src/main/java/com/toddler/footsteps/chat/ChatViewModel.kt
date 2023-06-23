@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.toddler.footsteps.Screens
+
 //import com.github.mikephil.charting.data.Entry
 
 
@@ -33,6 +35,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     var leftTimer = 0
     var rightTimer = 0
 
+    private val _screen: MutableLiveData<Screens> = MutableLiveData(Screens.MAIN_SCREEN)
+    val screen: LiveData<Screens>
+        get() = _screen
+
+    fun setScreen(screen: Screens) {
+        _screen.value = screen
+    }
 
     private val _selectedMessage = MutableLiveData<ChatBubble?>()
     val selectedMessage: LiveData<ChatBubble?>

@@ -13,4 +13,5 @@
     <dimen name="shadow_normal">16dp</dimen>
     <dimen name="elevation">6dp</dimen>
     <dimen name="heatmap_point">350dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

@@ -1,0 +1,11 @@
+package com.toddler.footsteps
+
+enum class Screens {
+    MAIN_SCREEN,
+    CHART_SCREEN,
+    STATISTICS_SCREEN,
+    SETTINGS_SCREEN,
+    DISCOVER_DEVICES_SCREEN,
+    CONNECTED_DEVICES_SCREEN,
+    PROFILE_SCREEN
+}

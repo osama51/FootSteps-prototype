@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.ChartsFragment">
+
+<!--    <eightbitlab.com.blurview.BlurView-->
+<!--        android:id="@+id/blurView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:blurOverlayColor="@color/white40"-->
+<!--        >-->
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/chartsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/charts_screen_background"
+        android:layout_margin="28dp"
+        android:paddingTop="32dp">
+
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="@dimen/text_margin"-->
+        <!--            android:text="@string/large_text" />-->
+        <!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_weight="0.7"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:visibility="visible">-->
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_6_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/sensor_5_Chart"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_5_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/sensor_6_Chart"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_4_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/sensor_3_Chart"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sensor_6_Chart" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_3_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/sensor_4_Chart"
+                app:layout_constraintTop_toBottomOf="@+id/sensor_5_Chart" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_2_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/sensor_1_Chart"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sensor_4_Chart" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sensor_1_Chart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/sensor_2_Chart"
+                app:layout_constraintTop_toBottomOf="@+id/sensor_3_Chart" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+<!--    </eightbitlab.com.blurview.BlurView>-->
+
+</layout>

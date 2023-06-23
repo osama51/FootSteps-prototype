@@ -11,6 +11,7 @@
     <color name="gray_opaque">#61838383</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white40">#66FFFFFF</color>
     <color name="kindaWhite">#F9F9F9</color>
     <color name="offWhite">#F2F0F0F0</color>
     <color name="gray_teal">#74898C</color>
