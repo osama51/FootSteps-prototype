@@ -767,7 +767,7 @@ class MainActivity : AppCompatActivity() {
                         R.anim.slide_out_down // Animation resource for pop exit transition
                     )
 
-                    transaction.replace(R.id.frameLayout, fragment)
+                    transaction.replace(R.id.frameLayout, fragment, "ChartsFragment")
                     transaction.addToBackStack(null) // Optional: Add to back stack if you want to navigate back
                     transaction.commit()
                     chatViewModel.setScreen(Screens.CHART_SCREEN)
@@ -1122,6 +1122,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        val fragmentTag = "ChartsFragment" // Replace with the actual tag of the fragment you want to check
+        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+
+        Log.i("backpresssssssssssssed", fragment.toString())
+        if (fragment != null && fragment.isVisible) {
+            // The fragment is open
+            super.onBackPressed()
+        } else {
+            // The fragment is not open or does not exist
+            chatViewModel.setScreen(Screens.MAIN_SCREEN)
+        }
+
         if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
             if (pressedTime + 1500 > System.currentTimeMillis()) {
                 super.onBackPressed()
@@ -1132,10 +1144,8 @@ class MainActivity : AppCompatActivity() {
                 toast.show()
             }
             pressedTime = System.currentTimeMillis()
-        } else {
-            super.onBackPressed()
-            chatViewModel.setScreen(Screens.MAIN_SCREEN)
         }
+
     }
 
     private fun manageScreenStates() {
