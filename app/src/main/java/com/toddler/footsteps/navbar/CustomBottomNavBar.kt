@@ -45,6 +45,8 @@ class CustomBottomNavBar @JvmOverloads constructor(
     private var mNavigationBarWidth: Int = 0
     private var mNavigationBarHeight: Int = 0
 
+    private val clickableBounds = RectF()
+
 
     init {
 
@@ -64,6 +66,8 @@ class CustomBottomNavBar @JvmOverloads constructor(
             color = resources.getColor(R.color.sweet)
         }
         setBackgroundColor(Color.TRANSPARENT)
+
+        mPath.computeBounds(clickableBounds, true)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -148,11 +152,18 @@ class CustomBottomNavBar @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val x = event?.x
+        val y = event?.y
+
+
         when(event?.action){
             MotionEvent.ACTION_DOWN -> {
-                // display the press effect within the path (mPath)
-                mPaint.color = resources.getColor(R.color.sweet)
-                invalidate()
+                if (clickableBounds.contains(x!!, y!!)) {
+                    // display the press effect within the path (mPath)
+                    mPaint.color = resources.getColor(R.color.sweet)
+                    invalidate()
+                    return true
+                }
             }
             MotionEvent.ACTION_UP -> {
                 // display the normal state
@@ -172,6 +183,8 @@ class CustomBottomNavBar @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawPath(mPathBack, mPaintBack)
+
+
         canvas?.drawPath(mPath, mPaint)
     }
 }

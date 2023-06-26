@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Instrumentation
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -204,10 +205,10 @@ class MainActivity : AppCompatActivity() {
 
 
     @Synchronized
-    fun setState2(state: StateEnum) {
+    fun setState(state: StateEnum) {
         stateEnum = state
-        handler.obtainMessage(MessageEnum.MESSAGE_STATE_CHANGED.ordinal, state.ordinal, -1)
-            .sendToTarget()
+//        handler.obtainMessage(MessageEnum.MESSAGE_STATE_CHANGED.ordinal, state.ordinal, -1)
+//            .sendToTarget()
     }
 
     @SuppressLint("MissingPermission")
@@ -242,6 +243,7 @@ class MainActivity : AppCompatActivity() {
         when (message.what) {
             MessageEnum.MESSAGE_STATE_CHANGED.ordinal -> {
 //                Log.i(TAG, "______________STATE CHANGED_____________")
+                setState(StateEnum.values()[message.arg1])
                 when (message.arg1) {
                     StateEnum.STATE_NONE.ordinal, StateEnum.STATE_LISTEN.ordinal -> {
                         setState("Not Connected")
@@ -409,11 +411,14 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
-                    heatMapUtil.rightFootPoints(foot)
-//                    rightHeatMap.forceRefresh()
-                }
-                if(chatViewModel.screen.value==Screens.CHART_SCREEN){
-                    chartsViewModel.addDataToRightQueue(foot)
+                    if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+//                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
+                    } else {
+                        heatMapUtil.rightFootPoints(foot)
+    //                    rightHeatMap.forceRefresh()
+    //                    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
+                    }
+                        chartsViewModel.addDataToRightQueue(foot)
                 }
             }
 
@@ -424,10 +429,12 @@ class MainActivity : AppCompatActivity() {
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
                     heatMapUtil.leftFootPoints(foot)
-//                    leftHeatMap.forceRefresh()
-                }
-                if(chatViewModel.screen.value==Screens.CHART_SCREEN){
-                    chartsViewModel.addDataToLeftQueue(foot)
+                    if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+                    } else {
+                        heatMapUtil.leftFootPoints(foot)
+//                        leftHeatMap.forceRefresh()
+                    }
+                        chartsViewModel.addDataToLeftQueue(foot)
                 }
             }
         }
@@ -752,26 +759,47 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.action_charts -> {
-//                    val intent = Intent(this, ChartsActivity::class.java)
-//                    startActivity(intent)
-                    // Inside your main Activity
+
+                    // check if the fragment is already in container and if it is close it and return to the home screen
+                    val currentFragment = fragmentManager.findFragmentByTag("ChartsFragment")
+
+                    if (currentFragment != null && currentFragment.isVisible) {
+////                        fragmentManager.popBackStack()
+//                        customBottomBar.selectedItemId = R.id.action_home
+//                        onBackPressed()
 
 
-                    // Replace the current content of the FrameLayout with your Fragment
-                    val transaction = fragmentManager.beginTransaction()
-                    // Specify custom animations for enter and exit transitions
-                    transaction.setCustomAnimations(
-                        R.anim.slide_in_down, // Animation resource for enter transition
-                        R.anim.slide_out_down, // Animation resource for exit transition
-                        R.anim.slide_in_down, // Animation resource for pop enter transition
-                        R.anim.slide_out_down // Animation resource for pop exit transition
-                    )
+//                         press a back button programmatically
+                        val mBackThread = object : Thread() {
+                            override fun run() {
+                                try {
+                                    Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
+                        mBackThread.start()
 
-                    transaction.replace(R.id.frameLayout, fragment, "ChartsFragment")
-                    transaction.addToBackStack(null) // Optional: Add to back stack if you want to navigate back
-                    transaction.commit()
-                    chatViewModel.setScreen(Screens.CHART_SCREEN)
 
+//                        chatViewModel.setScreen(Screens.MAIN_SCREEN)
+////                        return@setOnItemSelectedListener true
+                    } else {
+                        // Replace the current content of the FrameLayout with your Fragment
+                        val transaction = fragmentManager.beginTransaction()
+                        // Specify custom animations for enter and exit transitions
+                        transaction.setCustomAnimations(
+                            R.anim.slide_in_down,   // Animation resource for enter transition
+                            R.anim.slide_out_down,  // Animation resource for exit transition
+                            R.anim.slide_in_down,   // Animation resource for pop enter transition
+                            R.anim.slide_out_down
+                        )  // Animation resource for pop exit transition
+
+                        transaction.replace(R.id.frameLayout, fragment, "ChartsFragment")
+                        transaction.addToBackStack(null) // Optional: Add to back stack if you want to navigate back
+                        transaction.commit()
+                        chatViewModel.setScreen(Screens.CHART_SCREEN)
+                    }
                 }
                 else -> false
             }
@@ -820,6 +848,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                         toast.show()
+                        Log.i("CONNECTED", "stateEnum: $stateEnum")
                         if (stateEnum == StateEnum.STATE_CONNECTED) {
                             startPulsatingAnimation()
                         }
@@ -957,117 +986,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-/*        GlobalScope.launch(Dispatchers.Default) {
-            while (true) {
-//                if (index >= dataPoints.size){
-//                    index = 0
-//                }
-                // update the heatmap in the background thread
-                counter += 1
-                if (counter > 60) {
-                    counter = 0
-                }
-
-                pointX0 = HeatMap.DataPoint(0.5F, 0.1F, counter.toDouble())
-                pointX1 = HeatMap.DataPoint(0.4F, 0.2F, counter.toDouble())
-                pointX2 = HeatMap.DataPoint(0.3F, 0.3F, counter.toDouble())
-                pointX3 = HeatMap.DataPoint(0.4F, 0.4F, counter.toDouble())
-                pointX4 = HeatMap.DataPoint(0.5F, 0.5F, counter.toDouble())
-                pointX5 = HeatMap.DataPoint(0.4F, 0.6F, counter.toDouble())
-                pointX6 = HeatMap.DataPoint(0.3F, 0.7F, counter.toDouble())
-                pointX7 = HeatMap.DataPoint(0.4F, 0.8F, counter.toDouble())
-                pointX8 = HeatMap.DataPoint(0.5F, 0.9F, counter.toDouble())
-
-                pointX10 = HeatMap.DataPoint(0.7F, 0.1F, counter.toDouble())
-                pointX11 = HeatMap.DataPoint(0.7F, 0.2F, counter.toDouble())
-                pointX12 = HeatMap.DataPoint(0.7F, 0.3F, counter.toDouble())
-                pointX13 = HeatMap.DataPoint(0.7F, 0.4F, counter.toDouble())
-                pointX14 = HeatMap.DataPoint(0.7F, 0.5F, counter.toDouble())
-                pointX15 = HeatMap.DataPoint(0.7F, 0.6F, counter.toDouble())
-                pointX16 = HeatMap.DataPoint(0.7F, 0.7F, counter.toDouble())
-                pointX17 = HeatMap.DataPoint(0.7F, 0.8F, counter.toDouble())
-                pointX18 = HeatMap.DataPoint(0.7F, 0.9F, counter.toDouble())
-
-                val dataPoints = listOf<HeatMap.DataPoint>(
-                    pointX0,
-                    pointX1,
-                    pointX2,
-                    pointX3,
-                    pointX4,
-                    pointX5,
-                    pointX6,
-                    pointX7,
-                    pointX8,
-
-//                    pointX10,
-//                    pointX11,
-//                    pointX12,
-//                    pointX13,
-//                    pointX14,
-//                    pointX15,
-//                    pointX16,
-//                    pointX17,
-//                    pointX18
-                )
-//                rightHeatMap.clearData()
-                leftHeatMap.clearData()
-
-                for (element in dataPoints){
-//                    rightHeatMap.apply {
-//                        addData(element)
-////                        forceRefresh()
-////                        postInvalidate()
-//                    }
-
-                    leftHeatMap.apply {
-                        addData(element)
-////                        postInvalidate()
-                    }
-                }
-//                rightHeatMap.postInvalidate()
-                leftHeatMap.postInvalidate()
-
-//                heatMapTestRight.addData(dataPoints[index])
-//                heatMapTestRight.forceRefreshOnWorkerThread()
-//                index += 1
-
-                ten += 1
-                withContext(Dispatchers.Main) {
-//                    heatMapTestRight.forceRefreshOnWorkerThread()
-//                    heatMapTestRight.apply{
-//                        // stop the heatmap from clearing the previous data
-//                        heatMapTestRight.forceRefreshOnWorkerThread()
-//                        postInvalidate()
-//                    }
-                    if (ten == 10){
-                        ten = 0
-                        leftHeatMap.forceRefreshOnWorkerThread()
-
-                        // refresh the other foot after a delay
-//                        delay(2)
-//                        rightHeatMap.forceRefreshOnWorkerThread()
-
-                    }
-//                    Log.i("heatmap", "poinnt: $counter")
-//                    heatMapTestLeft.apply{
-//                        addData(pointX0)
-//                        addData(pointX1)
-//                        addData(pointX2)
-//                        addData(pointX3)
-//                        addData(pointX4)
-//                        addData(pointX5)
-//                        addData(pointX6)
-//                        addData(pointX7)
-//                        addData(pointX8)
-//                        forceRefreshOnWorkerThread()
-//                        invalidate()
-//                    }
-                }
-                delay(3) // wait for 20 milliseconds before the next update
-            }
-        }*/
     }
 
     fun addDataToDatabase() {
@@ -1122,29 +1040,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val fragmentTag = "ChartsFragment" // Replace with the actual tag of the fragment you want to check
+        val fragmentTag =
+            "ChartsFragment" // Replace with the actual tag of the fragment you want to check
         val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
 
         Log.i("backpresssssssssssssed", fragment.toString())
         if (fragment != null && fragment.isVisible) {
             // The fragment is open
             super.onBackPressed()
+            customBottomBar.selectedItemId = R.id.action_home
+            chatViewModel.setScreen(Screens.MAIN_SCREEN)
         } else {
             // The fragment is not open or does not exist
-            chatViewModel.setScreen(Screens.MAIN_SCREEN)
+            if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+                if (pressedTime + 1500 > System.currentTimeMillis()) {
+                    super.onBackPressed()
+                    finish()
+                } else {
+                    toast =
+                        Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                    toast.show()
+                }
+                pressedTime = System.currentTimeMillis()
+            }
         }
 
-        if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
-            if (pressedTime + 1500 > System.currentTimeMillis()) {
-                super.onBackPressed()
-                finish()
-            } else {
-                toast = Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
-                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-                toast.show()
-            }
-            pressedTime = System.currentTimeMillis()
-        }
 
     }
 
@@ -1155,7 +1076,7 @@ class MainActivity : AppCompatActivity() {
                     customBottomBar.selectedItemId = R.id.action_home
                 }
                 Screens.CHART_SCREEN -> {
-
+//                    customBottomBar.selectedItemId = R.id.action_charts
                 }
                 else -> {
 

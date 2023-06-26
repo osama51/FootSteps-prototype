@@ -16,8 +16,10 @@ class LineChartStyle (private val context: Context) {
     fun styleChart(lineChart: LineChart) = lineChart.apply {
         axisLeft.isEnabled = false
 
+        axisLeft.axisMaximum = 4100f
+
         axisRight.apply {
-            isEnabled = true
+            isEnabled = false
 //            axisMinimum = 40f
 //            axisMaximum = 60f
 //            isAutoScaleMinMaxEnabled = true // ruins the last-50-values monitoring and fore displays the whole graph
@@ -26,20 +28,21 @@ class LineChartStyle (private val context: Context) {
         }
 
         xAxis.apply {
-            isGranularityEnabled = true
+            isEnabled = false
+            isGranularityEnabled = false
             granularity = 10f
             setDrawGridLines(false)
             setDrawAxisLine(true)
             position = XAxis.XAxisPosition.BOTTOM
         }
 
-        setTouchEnabled(true)
-        isDragEnabled = true
-        setScaleEnabled(false)
+        setTouchEnabled(false)
+        isDragEnabled = false
+        setScaleEnabled(true)
         setPinchZoom(true)
 
         description = null
-        legend.isEnabled = false
+        legend.isEnabled = true
     }
 
     fun styleLineDataSet(lineDataSet: LineDataSet) = lineDataSet.apply {
@@ -55,7 +58,7 @@ class LineChartStyle (private val context: Context) {
 //        gradientColors = listOf(gradientColor)
 //        setGradientColor(ContextCompat.getColor(context, R.color.grey),ContextCompat.getColor(context, R.color.teal_500))
 
-        setDrawFilled(true)
+        setDrawFilled(false)
         fillDrawable = ContextCompat.getDrawable(context, R.drawable.linechart_background)
     }
 
