@@ -47,7 +47,6 @@ class CustomBottomNavBar @JvmOverloads constructor(
 
     private val clickableBounds = RectF()
 
-
     init {
 
         // radius of fab button
@@ -151,30 +150,30 @@ class CustomBottomNavBar @JvmOverloads constructor(
 
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val x = event?.x
-        val y = event?.y
-
-
-        when(event?.action){
-            MotionEvent.ACTION_DOWN -> {
-                if (clickableBounds.contains(x!!, y!!)) {
-                    // display the press effect within the path (mPath)
-                    mPaint.color = resources.getColor(R.color.sweet)
-                    invalidate()
-                    return true
-                }
-            }
-            MotionEvent.ACTION_UP -> {
-                // display the normal state
-                mPaint.color = resources.getColor(R.color.white)
-                invalidate()
-
-            }
-        }
-
-        return super.onTouchEvent(event)
-    }
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        val x = event?.x
+//        val y = event?.y
+//
+//
+//        when(event?.action){
+//            MotionEvent.ACTION_DOWN -> {
+//                if (clickableBounds.contains(x!!, y!!)) {
+//                    // display the press effect within the path (mPath)
+//                    mPaint.color = resources.getColor(R.color.sweet)
+//                    invalidate()
+//                    return true
+//                }
+//            }
+//            MotionEvent.ACTION_UP -> {
+//                // display the normal state
+//                mPaint.color = resources.getColor(R.color.white)
+//                invalidate()
+//
+//            }
+//        }
+//
+//        return super.onTouchEvent(event)
+//    }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)

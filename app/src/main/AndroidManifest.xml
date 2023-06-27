@@ -48,6 +48,7 @@
 
 
 
+
     <application
         android:hardwareAccelerated="true"
         android:allowBackup="true"
