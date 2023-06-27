@@ -73,14 +73,24 @@ class ChartViewModel(application: Application) : AndroidViewModel(application) {
     init {
         Log.i("ChartViewModel", "ChartViewModel Created")
 
-//        left0.value = mutableListOf()
-//        right0.value = mutableListOf()
-//
-//        left1.value = mutableListOf()
-//        right1.value = mutableListOf()
-//
-//        left2.value = mutableListOf()
-//        right2.value = mutableListOf()
+        left0.value = mutableListOf(Entry(0f, 0f))
+        right0.value = mutableListOf(Entry(0f, 0f))
+
+        left1.value = mutableListOf(Entry(0f, 0f))
+        right1.value = mutableListOf(Entry(0f, 0f))
+
+        left2.value = mutableListOf(Entry(0f, 0f))
+        right2.value = mutableListOf(Entry(0f, 0f))
+
+        left3.value = mutableListOf(Entry(0f, 0f))
+        right3.value = mutableListOf(Entry(0f, 0f))
+
+        left4.value = mutableListOf(Entry(0f, 0f))
+        right4.value = mutableListOf(Entry(0f, 0f))
+
+        left5.value = mutableListOf(Entry(0f, 0f))
+        right5.value = mutableListOf(Entry(0f, 0f))
+
 
         id.value = 0
         leftTimer = 0

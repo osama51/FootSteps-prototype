@@ -15,23 +15,23 @@
 
     <!--        android:centerColor="#B3AFAFAF"-->
     <gradient
-        android:startColor="@color/offWhite"
-        android:endColor="@color/white"
+        android:startColor="@color/white"
+        android:endColor="@color/offWhite"
         android:angle="270"
-        android:centerX="0.6"
-        android:type="linear"
-        android:centerY="0.3"
+        android:centerX="0.5"
+        android:type="radial"
+        android:centerY="0.5"
         android:gradientRadius="100%"
         />
 
     <corners
-        android:topLeftRadius="40dp"
-        android:topRightRadius="40dp"/>
+        android:topLeftRadius="20dp"
+        android:topRightRadius="20dp"/>
 
-    <stroke
-        android:width="4dp"
-        android:color="@color/white"
-        />
+<!--    <stroke-->
+<!--        android:width="4dp"-->
+<!--        android:color="@color/white"-->
+<!--        />-->
 
 
 
