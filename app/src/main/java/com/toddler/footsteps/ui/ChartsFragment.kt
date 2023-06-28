@@ -1,6 +1,7 @@
 package com.toddler.footsteps.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -129,6 +130,8 @@ class ChartsFragment : Fragment() {
 
 
         chartsViewModel.right5.observe(viewLifecycleOwner) {
+            Log.i("ChartsFragment", "right5: ${it[0]}")
+            Log.i("ChartsFragment", "left5 ${chartsViewModel.left5.value?.get(0)}")
             updateGraphRight(it, 5, rightf6LineDataSet, leftf6LineDataSet, iLineDataSet6, sensor6Chart, arrayListOf(lineData6))
         }
 
@@ -276,6 +279,7 @@ class ChartsFragment : Fragment() {
     }
 
     override fun onStop() {
+        chatViewModel.setScreen(Screens.MAIN_SCREEN)
         super.onStop()
 
     }

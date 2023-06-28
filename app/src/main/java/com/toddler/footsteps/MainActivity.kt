@@ -203,6 +203,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var vibrator: Vibrator
 
+    var jumpR = 0
+    var jumpL = 0
+
+
 
     @Synchronized
     fun setState(state: StateEnum) {
@@ -418,7 +422,12 @@ class MainActivity : AppCompatActivity() {
     //                    rightHeatMap.forceRefresh()
     //                    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
                     }
+                    jumpR = if(jumpR == 0){
                         chartsViewModel.addDataToRightQueue(foot)
+                        1
+                    } else{
+                        0
+                    }
                 }
             }
 
@@ -428,13 +437,19 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
                 if (onScreen) {
-                    heatMapUtil.leftFootPoints(foot)
+//                    heatMapUtil.leftFootPoints(foot)
                     if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
                     } else {
                         heatMapUtil.leftFootPoints(foot)
 //                        leftHeatMap.forceRefresh()
                     }
+                    jumpL = if(jumpL == 0){
                         chartsViewModel.addDataToLeftQueue(foot)
+                        1
+                    } else{
+                        0
+                    }
+
                 }
             }
         }
@@ -1214,6 +1229,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         onScreen = true
+        chatViewModel.setScreen(Screens.MAIN_SCREEN)
         super.onResume()
     }
 
