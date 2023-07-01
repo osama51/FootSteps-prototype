@@ -1,6 +1,7 @@
 package com.toddler.footsteps
 
 enum class Screens {
+    NO_SCREEN,
     MAIN_SCREEN,
     CHART_SCREEN,
     STATISTICS_SCREEN,

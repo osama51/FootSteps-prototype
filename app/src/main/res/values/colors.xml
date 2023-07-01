@@ -20,7 +20,9 @@
     <color name="transparent">#00E6E6E6</color>
 
     <color name="lightGreen">#A7F3D0</color>
+    <color name="lightGreen40">#66A7F3D0</color>
     <color name="lightRed">#FF96EE</color>
+    <color name="lightRed40">#66FF96EE</color>
 
     <color name="lightBlue">#57D3FA</color>
 

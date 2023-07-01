@@ -107,8 +107,8 @@ dependencies {
     // Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    // Glassmorphism / Blur
-    implementation 'com.github.Dimezis:BlurView:version-2.0.3'
+//    // Glassmorphism / Blur
+//    implementation 'com.github.Dimezis:BlurView:version-2.0.3'
 
     // AWFULLY SLOW BLUR AND .. AWWWFUL
 //    implementation 'com.github.CameraKit:blurkit-android:v1.1.1'

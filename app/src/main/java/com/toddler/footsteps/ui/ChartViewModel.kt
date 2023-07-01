@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class ChartViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val queueSize = 300 // the maximum size of the queue
+    private val queueSize = 50 // the maximum size of the queue
 
     // Vessels for the data, only intermediate role
     private val dataQueue0R = ArrayDeque<Entry?>(queueSize)
@@ -65,8 +65,8 @@ class ChartViewModel(application: Application) : AndroidViewModel(application) {
         left3, left4, left5
     )
     val id = MutableLiveData<Long>()
-    var leftTimer = 0
-    var rightTimer = 0
+    var leftTimer: Long = 0
+    var rightTimer: Long = 0
     private var timer: Long = 0
 
 
@@ -101,44 +101,73 @@ class ChartViewModel(application: Application) : AndroidViewModel(application) {
 
     // Whenever new data arrives, add it to the queue and update the LiveData
     fun addDataToRightQueue(foot: Insole) {
-        timer++
-//        rightTimer++
+//        timer++
+        rightTimer++
         viewModelScope.launch {
-            rightQueueList.forEachIndexed { index, queue ->
-//            Log.i("ChartViewModel", "Adding to queue: ${foot[index].toFloat()}")
-                queue.addLast(
+            rightSensorsList.forEachIndexed { index, sensor ->
+                sensor.value?.add(
                     Entry(
-                        timer.toFloat(),
+                        rightTimer.toFloat(),
                         foot[index].toFloat()
                     )
                 )
-                if (queue.size > queueSize) {
-                    queue.removeFirst()
+                if (sensor.value?.size!! > queueSize) {
+                    sensor.value?.removeFirst()
                 }
-                rightSensorsList[index].value = ArrayList(queue)
-//            Log.i("ChartViewModel", "Adding to rightSensorsList: ${rightSensorsList[index].value}")
-//            Log.i("rightSensorsList[0]", "${rightSensorsList[0].value}")
-//            Log.i("Right0_Queue", "${right0.value}")
+
+                sensor.value = sensor.value
             }
+
+
+//            rightQueueList.forEachIndexed { index, queue ->
+////            Log.i("ChartViewModel", "Adding to queue: ${foot[index].toFloat()}")
+//                queue.addLast(
+//                    Entry(
+//                        timer.toFloat(),
+//                        foot[index].toFloat()
+//                    )
+//                )
+//                if (queue.size > queueSize) {
+//                    queue.removeFirst()
+//                }
+//                rightSensorsList[index].value = queue.toMutableList()
+////            Log.i("ChartViewModel", "Adding to rightSensorsList: ${rightSensorsList[index].value}")
+////            Log.i("rightSensorsList[0]", "${rightSensorsList[0].value}")
+////            Log.i("Right0_Queue", "${right0.value}")
+//            }
         }
     }
 
     fun addDataToLeftQueue(foot: Insole) {
 //        Timer++
-//        leftTimer++
+        leftTimer++
         viewModelScope.launch {
-            leftQueueList.forEachIndexed { index, queue ->
-                queue.addLast(
+            leftSensorsList.forEachIndexed { index, sensor ->
+                sensor.value?.add(
                     Entry(
-                        timer.toFloat(),
+                        leftTimer.toFloat(),
                         foot[index].toFloat()
                     )
                 )
-                if (queue.size > queueSize) {
-                    queue.removeFirst()
+                if (sensor.value?.size!! > queueSize) {
+                    sensor.value?.removeFirst()
                 }
-                leftSensorsList[index].value = ArrayList(queue)
+
+                sensor.value = sensor.value
             }
+
+//            leftQueueList.forEachIndexed { index, queue ->
+//                queue.addLast(
+//                    Entry(
+//                        timer.toFloat(),
+//                        foot[index].toFloat()
+//                    )
+//                )
+//                if (queue.size > queueSize) {
+//                    queue.removeFirst()
+//                }
+//                leftSensorsList[index].value = queue.toMutableList()
+//            }
         }
     }
 

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="40dp">
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView5"
+            app:layout_constraintEnd_toStartOf="@+id/neumorphCardView2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView2"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/neumorphCardView"
+            app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView3"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView5"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView4"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+
+            app:layout_constraintBottom_toTopOf="@+id/imageButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView5"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="40dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView3"
+            app:layout_constraintEnd_toStartOf="@+id/neumorphCardView6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView6"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:focusableInTouchMode="true"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/neumorphCardView5"
+            app:layout_constraintTop_toTopOf="@+id/neumorphCardView5"
+            app:neumorph_backgroundColor="@color/kindaWhite"
+            app:neumorph_lightSource="rightTop"
+            app:neumorph_shadowColorDark="@color/gray"
+            app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowElevation="8dp"
+            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+            app:neumorph_shapeType="flat"
+            app:neumorph_strokeColor="@color/white"
+            app:neumorph_strokeWidth="0dp" />
+
+        <soup.neumorphism.NeumorphImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_test"
+            android:padding="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>
+
+</layout>

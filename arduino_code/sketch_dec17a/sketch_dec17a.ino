@@ -49,10 +49,12 @@ void loop() {
 //counter = (counter + 1) % 60;
 if(id == 1){
   id = 2;
-  counter = (counter + 68) % 4095;
   } else {
     id = 1;  
   }
+counter = (counter + 100) % 4095;
+
+
 //SerialBT.print("1i");
 //SerialBT.print(counter+"s");
 //SerialBT.print("1233t");
@@ -81,5 +83,5 @@ str += "1233a1543b1543c1543d1543e1543f#";
 //    SerialBT.println(str);
 //    delay(100);
 //  }
-  delay(17);
+  delay(25);
 }

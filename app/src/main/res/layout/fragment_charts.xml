@@ -51,8 +51,8 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="10dp"
-
-                app:cardCornerRadius="24dp"
+android:visibility=""
+                app:cardCornerRadius="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/sensor_5_Card"
                 app:layout_constraintEnd_toStartOf="@+id/sensor_6_Button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -63,7 +63,7 @@
                     android:id="@+id/sensor_6_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
 
             </androidx.cardview.widget.CardView>
@@ -73,6 +73,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/sensor6"
+
                 app:layout_constraintBottom_toBottomOf="@+id/sensor_6_Card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/sensor_6_Card" />
@@ -83,7 +84,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="10dp"
 
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="12dp"
 
                 app:layout_constraintBottom_toTopOf="@+id/sensor_4_Card"
 
@@ -96,7 +97,7 @@
                     android:id="@+id/sensor_5_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
             </androidx.cardview.widget.CardView>
 
@@ -116,7 +117,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="10dp"
 
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="12dp"
 
                 app:layout_constraintBottom_toTopOf="@+id/sensor_3_Card"
 
@@ -129,7 +130,7 @@
                     android:id="@+id/sensor_4_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
 
             </androidx.cardview.widget.CardView>
@@ -149,7 +150,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="10dp"
 
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="12dp"
 
                 app:layout_constraintBottom_toTopOf="@+id/sensor_2_Card"
 
@@ -162,7 +163,7 @@
                     android:id="@+id/sensor_3_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
 
             </androidx.cardview.widget.CardView>
@@ -182,7 +183,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="10dp"
 
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="12dp"
 
                 app:layout_constraintBottom_toTopOf="@+id/sensor_1_Card"
 
@@ -195,7 +196,7 @@
                     android:id="@+id/sensor_2_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
 
             </androidx.cardview.widget.CardView>
@@ -215,7 +216,7 @@
                 android:layout_height="120dp"
                 android:layout_margin="10dp"
 
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="12dp"
 
                 app:layout_constraintBottom_toTopOf="@+id/dummyLinearLayout"
 
@@ -227,7 +228,7 @@
                     android:id="@+id/sensor_1_Chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="15dp" />
 
             </androidx.cardview.widget.CardView>

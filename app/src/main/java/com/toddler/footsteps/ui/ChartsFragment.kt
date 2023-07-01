@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.toddler.footsteps.LeftRight
 import com.toddler.footsteps.LineChartStyle
 import com.toddler.footsteps.R
 import com.toddler.footsteps.Screens
@@ -110,28 +111,29 @@ class ChartsFragment : Fragment() {
 //        chartStyle.drawLineGraph(binding.sensor5Chart)
 //        chartStyle.drawLineGraph(binding.sensor6Chart)
 
-        chartStyle.styleLineDataSet(leftf6LineDataSet)
-        chartStyle.styleLineDataSet(rightf6LineDataSet)
+        chartStyle.styleLineDataSet(leftf6LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf6LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf5LineDataSet)
-        chartStyle.styleLineDataSet(rightf5LineDataSet)
+        chartStyle.styleLineDataSet(leftf5LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf5LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf4LineDataSet)
-        chartStyle.styleLineDataSet(rightf4LineDataSet)
+        chartStyle.styleLineDataSet(leftf4LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf4LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf3LineDataSet)
-        chartStyle.styleLineDataSet(rightf3LineDataSet)
+        chartStyle.styleLineDataSet(leftf3LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf3LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf2LineDataSet)
-        chartStyle.styleLineDataSet(rightf2LineDataSet)
+        chartStyle.styleLineDataSet(leftf2LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf2LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf1LineDataSet)
-        chartStyle.styleLineDataSet(rightf1LineDataSet)
+        chartStyle.styleLineDataSet(leftf1LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(rightf1LineDataSet, LeftRight.RIGHT)
 
 
+//        test()
         chartsViewModel.right5.observe(viewLifecycleOwner) {
-            Log.i("ChartsFragment", "right5: ${it[0]}")
-            Log.i("ChartsFragment", "left5 ${chartsViewModel.left5.value?.get(0)}")
+//            Log.i("ChartsFragment", "right5: ${it}")
+//            Log.i("ChartsFragment", "left5 ${chartsViewModel.left5.value?.get(0)}")
             updateGraphRight(it, 5, rightf6LineDataSet, leftf6LineDataSet, iLineDataSet6, sensor6Chart, arrayListOf(lineData6))
         }
 
@@ -182,7 +184,6 @@ class ChartsFragment : Fragment() {
 
 
 
-
         return binding.root
     }
 
@@ -225,6 +226,12 @@ class ChartsFragment : Fragment() {
 //        leftLineDataSet.label = "Left"
 //        leftLineDataSet.color = resources.getColor(R.color.lightRed)
 
+////
+////            exampleData.addEntry(...);
+//            rightf6LineDataSet.addEntry(chartsViewModel.right5.value?.last()!!)
+//            chart.notifyDataSetChanged(); // let the chart know it's data changed
+//            chart.invalidate(); // refresh
+
             rightLineDataSet.values = rightData
 
 
@@ -237,6 +244,32 @@ class ChartsFragment : Fragment() {
             chart.clear()
             chart.data = lineData[0]
             chart.invalidate()
+        }
+    }
+
+    fun test(){
+        if (chatViewModel.screen.value == Screens.CHART_SCREEN){
+            leftf6LineDataSet.values = chartsViewModel.leftSensorsList[5].value
+//        leftLineDataSet.label = "Left"
+//        leftLineDataSet.color = resources.getColor(R.color.lightRed)
+
+//
+//            exampleData.addEntry(...);
+//            chart.notifyDataSetChanged(); // let the chart know it's data changed
+//            chart.invalidate(); // refresh
+
+            rightf6LineDataSet.values = chartsViewModel.right5.value
+
+
+//            iLineDataSet.clear()
+//            iLineDataSet.add(leftLineDataSet)
+            iLineDataSet6.add(rightf6LineDataSet)
+
+            lineData6 = LineData(iLineDataSet6)
+
+//            chart.clear()
+            sensor6Chart.data = lineData6
+            sensor6Chart.invalidate()
         }
     }
 
@@ -282,6 +315,16 @@ class ChartsFragment : Fragment() {
         chatViewModel.setScreen(Screens.MAIN_SCREEN)
         super.onStop()
 
+    }
+
+    override fun onPause() {
+        chatViewModel.setScreen(Screens.NO_SCREEN)
+        super.onPause()
+    }
+
+    override fun onResume() {
+        chatViewModel.setScreen(Screens.CHART_SCREEN)
+        super.onResume()
     }
 
     override fun onStart() {

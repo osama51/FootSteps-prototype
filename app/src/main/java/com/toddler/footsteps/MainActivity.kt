@@ -197,6 +197,8 @@ class MainActivity : AppCompatActivity() {
     private var startTime by Delegates.notNull<Long>()
 
     var onScreen = true
+    var readLeft = false
+    var readRight = true
     private var pressedTime: Long = 0L
 
     private lateinit var messageCopy: Message
@@ -205,7 +207,6 @@ class MainActivity : AppCompatActivity() {
 
     var jumpR = 0
     var jumpL = 0
-
 
 
     @Synchronized
@@ -410,46 +411,55 @@ class MainActivity : AppCompatActivity() {
 //            withContext(Dispatchers.Main) {
         when (id) {
             LeftRight.RIGHT.ordinal -> {
+                if (readLeft) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                        f0 = (0..4095).random()
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
-                if (onScreen) {
-                    if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+//                    Log.i("RIGHT", "RIGHT")
+                    if (onScreen) {
+                        if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
 //                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
-                    } else {
-                        heatMapUtil.rightFootPoints(foot)
-    //                    rightHeatMap.forceRefresh()
-    //                    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
+                        } else if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+                            heatMapUtil.rightFootPoints(foot)
+                            //                    rightHeatMap.forceRefresh()
+                            //                    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
+                        }
                     }
-                    jumpR = if(jumpR == 0){
+                    jumpR = if (jumpR >= 2) {
                         chartsViewModel.addDataToRightQueue(foot)
-                        1
-                    } else{
                         0
+                    } else {
+                        jumpR + 1
                     }
+                    readRight = true
+                    readLeft = false
                 }
             }
 
             LeftRight.LEFT.ordinal -> {
+                if(readRight){ // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                        f0 = (0..4095).random()
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
-                if (onScreen) {
+//                    Log.i("LEFT", "LEFT")
+                    if (onScreen) {
 //                    heatMapUtil.leftFootPoints(foot)
-                    if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
-                    } else {
-                        heatMapUtil.leftFootPoints(foot)
+                        if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+                        } else if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+                            heatMapUtil.leftFootPoints(foot)
 //                        leftHeatMap.forceRefresh()
+                        }
                     }
-                    jumpL = if(jumpL == 0){
+                    jumpL = if (jumpL >= 2) {
                         chartsViewModel.addDataToLeftQueue(foot)
-                        1
-                    } else{
                         0
+                    } else {
+                        jumpL + 1
                     }
-
+                    readLeft = true
+                    readRight = false
                 }
             }
         }
@@ -805,7 +815,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.addToBackStack(null) // Add to back stack if you want to navigate back
                         transaction.setReorderingAllowed(true)
                         transaction.commit()
-                        chatViewModel.setScreen(Screens.CHART_SCREEN)
+//                        chatViewModel.setScreen(Screens.CHART_SCREEN)
 
                         // if I want to remove the fragment from the back stack using the name of the fragment
 //                        fragmentManager.popBackStack("ChartsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -1090,6 +1100,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 Screens.CHART_SCREEN -> {
 //                    customBottomBar.selectedItemId = R.id.action_charts
+                    customBottomBar.menu.findItem(R.id.action_charts)?.isChecked = true
+
                 }
                 else -> {
 
