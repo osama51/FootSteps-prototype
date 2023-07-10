@@ -12,19 +12,19 @@ import com.toddler.footsteps.R
 import com.toddler.footsteps.database.reference.User
 import com.toddler.footsteps.database.reference.UserDao
 import com.toddler.footsteps.database.reference.UserDatabase
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class StatsViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-        // set User to val
-        // here, we are setting the val to the DAO from the UserDatabase
-        // the UserDatabase is a singleton, so we can access it from anywhere
-        // the use of getInstance is to ensure that the UserDatabase is created
-        // it is created in the companion object of UserDatabase
-        // the companion object is a singleton, so it is only created once
-        // not necessary to use getInstance, but it is good practice
+
+    private val _accelerometerData = MutableLiveData<MutableList<Double>>()
+    val accelerometerData: LiveData<MutableList<Double>>
+        get() = _accelerometerData
+
+    private val gyroscopeData = MutableLiveData<MutableList<FloatArray>>()
+
+
         private val userDao: UserDao = UserDatabase.getInstance(application).userDao
 
         private val _finished = MutableLiveData<Boolean>(false)
@@ -219,10 +219,20 @@ class StatsViewModel(
 
     fun updateLeftPieCharts(leftPieChart: PieChart){
         leftPieChart.rotationAngle = _leftFootAngle.value!!.toFloat()
+        leftPieChart.invalidate()
     }
 
     fun updateRightPieCharts(rightPieChart: PieChart){
         rightPieChart.rotationAngle = _rightFootAngle.value!!.toFloat()
+        rightPieChart.invalidate()
+    }
+
+    fun setRightFootAngle(rightFootAngle: Double) {
+        _rightFootAngle.value = rightFootAngle
+    }
+
+    fun setLeftFootAngle(leftFootAngle: Double) {
+        _leftFootAngle.value = leftFootAngle
     }
 
     fun setStepCount(stepCount: Int) {
@@ -235,7 +245,24 @@ class StatsViewModel(
         _cadence.value?.let {
             _stepTime.value = 60.0 / it
         }
+    }
 
-//        _cadence.postValue(cadence)
+    var a0: Double = 0.0
+    var a1: Double = 10.0
+    var a2: Double = 0.0
+
+    fun updateAccelerometerData(accelerometerData: List<Int>) {
+//        _accelerometerData.value = accelerometerData.toMutableList()
+        _accelerometerData.value = listOf(a0, a1, a2).toMutableList()
+        if(a0 >= 10.0){
+            a0 = 0.0
+        } else {
+            a0++
+        }
+        if(a1 <= 0.0){
+            a1 = 10.0
+        } else {
+            a1--
+        }
     }
 }

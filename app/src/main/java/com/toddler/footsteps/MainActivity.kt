@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var framesViewModel: FramesViewModel
     private lateinit var referenceViewModel: ReferenceViewModel
     private lateinit var chartsViewModel: ChartViewModel
+    private lateinit var statsViewModel: StatsViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -428,6 +429,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     jumpR = if (jumpR >= 2) {
                         chartsViewModel.addDataToRightQueue(foot)
+                        statsViewModel.updateAccelerometerData(listOf(a0, a1, a2))
                         0
                     } else {
                         jumpR + 1
@@ -487,6 +489,7 @@ class MainActivity : AppCompatActivity() {
         framesViewModel = ViewModelProvider(this)[FramesViewModel::class.java]
         referenceViewModel = ViewModelProvider(this)[ReferenceViewModel::class.java]
         chartsViewModel = ViewModelProvider(this)[ChartViewModel::class.java]
+        statsViewModel = ViewModelProvider(this)[StatsViewModel::class.java]
 
 
         chatViewModel.setScreen(Screens.MAIN_SCREEN)

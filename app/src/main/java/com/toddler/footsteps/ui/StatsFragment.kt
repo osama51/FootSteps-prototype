@@ -18,6 +18,7 @@ import com.toddler.footsteps.R
 import com.toddler.footsteps.Screens
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.FragmentStatsBinding
+import kotlin.math.atan2
 
 class StatsFragment : Fragment() {
 
@@ -91,6 +92,12 @@ class StatsFragment : Fragment() {
 //        }
 
         statsViewModel.setCadence(100)
+
+        statsViewModel.accelerometerData.observe(viewLifecycleOwner) {
+            val yaw = atan2(it[0]/10, it[1]/10) * 180 / Math.PI
+            statsViewModel.setRightFootAngle(yaw)
+//            Log.i("StatsFragment", "Yaw: $yaw")
+        }
 
 
 
