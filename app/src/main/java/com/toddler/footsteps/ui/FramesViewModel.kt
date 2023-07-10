@@ -1,4 +1,4 @@
-package com.toddler.footsteps
+package com.toddler.footsteps.ui
 
 import android.app.Application
 import android.util.Log

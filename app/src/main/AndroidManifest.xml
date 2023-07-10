@@ -98,7 +98,10 @@
             android:exported="true"
             android:screenOrientation="portrait">
         </activity>
-<!--        <receiver android:name="com.toddler.bluecomm.BluetoothReceiver"-->
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <!--        <receiver android:name="com.toddler.bluecomm.BluetoothReceiver"-->
 <!--            android:exported="true">-->
 <!--            <intent-filter>-->
 <!--                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />-->

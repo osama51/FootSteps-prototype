@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_search_devices"
+        android:title="@string/str_menu_search_devices"
+        android:icon="@drawable/ic_people"
+        app:showAsAction="ifRoom"/>
+    <!--    <item-->
+    <!--        android:id="@+id/menu_bluetooth_on"-->
+    <!--        android:title="@string/str_menu_search_devices"-->
+    <!--        android:icon="@drawable/ic_bluetooth_searching"-->
+    <!--        app:showAsAction="ifRoom"-->
+    <!--        android:visible="true"/>-->
+    <!--    <item-->
+    <!--        android:id="@+id/menu_bluetooth_off"-->
+    <!--        android:title="@string/str_menu_search_devices"-->
+    <!--        android:icon="@drawable/ic_enabled_bluetooth"-->
+    <!--        app:showAsAction="ifRoom"-->
+    <!--        android:visible="false"/>-->
+</menu>

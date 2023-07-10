@@ -6,10 +6,12 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 
 
 class LineChartStyle (private val context: Context) {
@@ -24,24 +26,32 @@ class LineChartStyle (private val context: Context) {
             axisMinimum = -1000f
             axisMaximum = 4500f
 //            isAutoScaleMinMaxEnabled = true // ruins the last-50-values monitoring and fore displays the whole graph
-//            isGranularityEnabled = true
-//            granularity = 2000f
-            setDrawLabels(false)
-            setDrawGridLines(false)
+            isGranularityEnabled = true
+            granularity = 1400f
+            setDrawGridLines(true)
 //            setVisibleYRange(-100f, 5000f, YAxis.AxisDependency.LEFT)
-//            gridLineWidth =0.2f
-//            gridColor = ContextCompat.getColor(context, R.color.gray_opaque)
+            gridLineWidth =0.5f
+            gridColor = ContextCompat.getColor(context, R.color.gray_opaque)
             setDrawAxisLine(false)
+
+            setDrawLabels(true)
+            valueFormatter = AxisValueFormatter()
+            // change the font of the labels
+            typeface = ResourcesCompat.getFont(context, R.font.chakra_petch_light)
         }
 
         xAxis.apply {
             isEnabled = true
             isGranularityEnabled = true
-            granularity = 100f
+            granularity = 10f
             setDrawLabels(false)
-            setDrawGridLines(false)
+            setDrawGridLines(true)
+//            setVisibleYRange(-100f, 5000f, YAxis.AxisDependency.LEFT)
+            gridLineWidth =0.5f
+            gridColor = ContextCompat.getColor(context, R.color.gray_opaque)
             setDrawAxisLine(true)
             position = XAxis.XAxisPosition.BOTTOM
+            typeface = ResourcesCompat.getFont(context, R.font.chakra_petch_light)
         }
 
         setTouchEnabled(false)
@@ -51,6 +61,7 @@ class LineChartStyle (private val context: Context) {
 
         description = null
         legend.isEnabled = true
+        legend.typeface = ResourcesCompat.getFont(context, R.font.chakra_petch_light)
     }
 
     fun styleLineDataSet(lineDataSet: LineDataSet, leftRight: LeftRight) = lineDataSet.apply {
@@ -60,8 +71,8 @@ class LineChartStyle (private val context: Context) {
 //        valueTextColor = ContextCompat.getColor(context, R.color.icons)
         setDrawValues(false)
         lineWidth = 2f
-        mode = LineDataSet.Mode.LINEAR
-//        mode = LineDataSet.Mode.CUBIC_BEZIER
+//        mode = LineDataSet.Mode.LINEAR
+        mode = LineDataSet.Mode.CUBIC_BEZIER
 //        cubicIntensity = 0.1f
 
 //        var gradientColor: GradientColor = GradientColor(ContextCompat.getColor(context, R.color.grey),ContextCompat.getColor(context, R.color.teal_500))
@@ -88,5 +99,15 @@ class LineChartStyle (private val context: Context) {
             Shader.TileMode.REPEAT
         )
         paint.shader = linGrad
+    }
+}
+
+class AxisValueFormatter: ValueFormatter() {
+    override fun getFormattedValue(value: Float): String {
+        // change the range of the values on the y-axis from 0-5000 to 0%-100%
+
+        var value = value
+        value = value / 4200 * 100
+        return value.toInt().toString() + "%"
     }
 }

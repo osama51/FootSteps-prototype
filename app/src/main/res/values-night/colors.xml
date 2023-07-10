@@ -10,6 +10,7 @@
     <color name="sweet">#40C2FF</color>
     <color name="gray_opaque">#61FFFFFF</color>
     <color name="black">#FFFFFF</color>
+    <color name="semi_black">#F4F4F4</color>
     <color name="white">#4A4A4A</color>
     <color name="white40">#664A4A4A</color>
     <color name="kindaWhite">#2C2C2C</color>
@@ -19,8 +20,6 @@
     <color name="dark_gray">#808080</color>
     <color name="transparent">#00E6E6E6</color>
 
-    <color name="lightGreen">#A7F3D0</color>
-    <color name="lightBlue">#0088B3</color>
 
 
 

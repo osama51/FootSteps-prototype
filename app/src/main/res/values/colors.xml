@@ -8,8 +8,9 @@
     <color name="sweet_primary">#155487</color>
 <!--    <color name="sweet">#FFC107</color>-->
     <color name="sweet">#29B7FA</color>
-    <color name="gray_opaque">#61838383</color>
+    <color name="gray_opaque">#73686767</color>
     <color name="black">#FF000000</color>
+    <color name="semi_black">#3A3A3A</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white40">#66FFFFFF</color>
     <color name="kindaWhite">#F9F9F9</color>
@@ -21,9 +22,47 @@
 
     <color name="lightGreen">#A7F3D0</color>
     <color name="lightGreen40">#66A7F3D0</color>
-    <color name="lightRed">#FF96EE</color>
-    <color name="lightRed40">#66FF96EE</color>
+<!--    <color name="lightRed">#FF96EE</color>-->
+    <color name="lightRed">#FF439D</color>
+    <color name="lightRed40">#66FF439D</color>
 
-    <color name="lightBlue">#57D3FA</color>
+<!--    <color name="lightBlue">#57D3FA</color>-->
+<!--    <color name="lightBlue40">#57D3FA</color>-->
+
+    <color name="lightBlue">#00A8FF</color>
+    <color name="lightBlue40">#6600A8FF</color>
+
+    <color name="lightYellow">#FFF9C4</color>
+    <color name="lightYellow40">#66FFF9C4</color>
+    <color name="lightOrange">#FFD180</color>
+    <color name="lightOrange40">#66FFD180</color>
+    <color name="lightPurple">#E1BEE7</color>
+    <color name="lightPurple40">#66E1BEE7</color>
+    <color name="lightPink">#F8BBD0</color>
+    <color name="lightPink40">#66F8BBD0</color>
+    <color name="lightGray">#E0E0E0</color>
+    <color name="lightGray40">#66E0E0E0</color>
+    <color name="lightBrown">#D7CCC8</color>
+    <color name="lightBrown40">#66D7CCC8</color>
+    <color name="lightCyan">#B2EBF2</color>
+    <color name="lightCyan40">#66B2EBF2</color>
+    <color name="lightLime">#F0F4C3</color>
+    <color name="lightLime40">#66F0F4C3</color>
+    <color name="lightDeepOrange">#FFCCBC</color>
+    <color name="lightDeepOrange40">#66FFCCBC</color>
+    <color name="lightIndigo">#C5CAE9</color>
+    <color name="lightIndigo40">#66C5CAE9</color>
+    <color name="lightBlueGray">#CFD8DC</color>
+    <color name="lightBlueGray40">#66CFD8DC</color>
+    <color name="lightTeal">#B2DFDB</color>
+    <color name="lightTeal40">#66B2DFDB</color>
+    <color name="lightAmber">#FFECB3</color>
+    <color name="lightAmber40">#66FFECB3</color>
+    <color name="lightDeepPurple">#D1C4E9</color>
+    <color name="lightDeepPurple40">#66D1C4E9</color>
+    <color name="lightGreenAccent">#CCFF90</color>
+    <color name="lightGreenAccent40">#66CCFF90</color>
+    <color name="lightRedAccent">#FF8A80</color>
+    <color name="lightRedAccent40">#66FF8A80</color>
 
 </resources>

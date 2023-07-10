@@ -2,162 +2,427 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.toddler.footsteps.ui.StatsViewModel" />
+    </data>
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="40dp">
+        android:layout_height="wrap_content"
+        android:background="@color/offWhite"
+        android:fitsSystemWindows="true"
+        android:layout_margin="8dp"
+        >
 
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView5"
-            app:layout_constraintEnd_toStartOf="@+id/neumorphCardView2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/semi_black">
 
-
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView2"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/neumorphCardView"
-            app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
-
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView3"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView5"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
-
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView4"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-
-            app:layout_constraintBottom_toTopOf="@+id/imageButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
-
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView5"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="40dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-            app:layout_constraintBottom_toTopOf="@+id/neumorphCardView3"
-            app:layout_constraintEnd_toStartOf="@+id/neumorphCardView6"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
-
-        <soup.neumorphism.NeumorphCardView
-            android:id="@+id/neumorphCardView6"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:focusableInTouchMode="true"
-            android:scaleType="center"
-            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/neumorphCardView5"
-            app:layout_constraintTop_toTopOf="@+id/neumorphCardView5"
-            app:neumorph_backgroundColor="@color/kindaWhite"
-            app:neumorph_lightSource="rightTop"
-            app:neumorph_shadowColorDark="@color/gray"
-            app:neumorph_shadowColorLight="@color/white"
-            app:neumorph_shadowElevation="8dp"
-            app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-            app:neumorph_shapeType="flat"
-            app:neumorph_strokeColor="@color/white"
-            app:neumorph_strokeWidth="0dp" />
-
-        <soup.neumorphism.NeumorphImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_test"
-            android:padding="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/toolbar_charts_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/ic_analytics"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/semi_black" />
+
+            <TextView
+                android:id="@+id/charts_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:fontFamily="@font/chakra_petch"
+                android:text="@string/stats"
+                android:textColor="@color/semi_black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
 
 
-</androidx.core.widget.NestedScrollView>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cadenceCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toTopOf="@+id/speedCardView"
+                    app:layout_constraintEnd_toStartOf="@+id/stepCountCardView"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" >
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/cadenceTitle"
+                            style="@style/analytics_titles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cadence_title"
+
+                            app:layout_constraintBottom_toTopOf="@+id/cadenceValue"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/cadenceValue"
+                            style="@style/analytics_values"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{String.valueOf(viewModel.cadence)}"
+                            app:layout_constraintBottom_toTopOf="@+id/cadenceUnit"
+
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cadenceTitle"
+                            tools:text="122" />
+
+                        <TextView
+                            android:id="@+id/cadenceUnit"
+                            style="@style/analytics_units"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cadenceValue"
+                            android:text="@string/cadence_unit"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/stepCountCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toBottomOf="@+id/cadenceCardView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cadenceCardView"
+                    app:layout_constraintTop_toTopOf="@+id/cadenceCardView" >
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/stepCountTitle"
+                            style="@style/analytics_titles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/step_count"
+
+                            app:layout_constraintBottom_toTopOf="@+id/stepCountValue"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/stepCountValue"
+                            style="@style/analytics_values"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.stepCount}"
+                            app:layout_constraintBottom_toTopOf="@+id/stepCountUnit"
+
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/stepCountTitle"
+                            tools:text="6523" />
+
+                        <TextView
+                            android:id="@+id/stepCountUnit"
+                            style="@style/analytics_units"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/stepCountValue"
+                            android:text="@string/step_count_unit"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/speedCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toTopOf="@+id/neumorphCardView3"
+                    app:layout_constraintEnd_toStartOf="@+id/neumorphCardView6"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cadenceCardView">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/speedTitle"
+                            style="@style/analytics_titles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/speed_title"
+
+                            app:layout_constraintBottom_toTopOf="@+id/speedValue"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/speedValue"
+                            style="@style/analytics_values"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{String.valueOf(viewModel.speed)}"
+                            app:layout_constraintBottom_toTopOf="@+id/speedUnit"
+
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/speedTitle"
+                            tools:text="96" />
+
+                        <TextView
+                            android:id="@+id/speedUnit"
+                            style="@style/analytics_units"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/speedValue"
+                            android:text="@string/speed_unit"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/neumorphCardView6"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toBottomOf="@+id/speedCardView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/speedCardView"
+                    app:layout_constraintTop_toTopOf="@+id/speedCardView"
+                    app:neumorph_backgroundColor="@color/kindaWhite"
+                    app:neumorph_lightSource="rightTop"
+                    app:neumorph_shadowColorDark="@color/gray"
+                    app:neumorph_shadowColorLight="@color/white"
+                    app:neumorph_shadowElevation="8dp"
+                    app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                    app:neumorph_shapeType="flat"
+                    app:neumorph_strokeColor="@color/white"
+                    app:neumorph_strokeWidth="0dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/neumorphCardView3"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toTopOf="@+id/neumorphCardView4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/speedCardView"
+                    app:neumorph_backgroundColor="@color/kindaWhite"
+                    app:neumorph_lightSource="rightTop"
+                    app:neumorph_shadowColorDark="@color/gray"
+                    app:neumorph_shadowColorLight="@color/white"
+                    app:neumorph_shadowElevation="8dp"
+                    app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                    app:neumorph_shapeType="flat"
+                    app:neumorph_strokeColor="@color/white"
+                    app:neumorph_strokeWidth="0dp" >
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/leftPieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="1:1"
+                            android:layout_margin="20dp"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/rightPieChart"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/rightPieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="1:1"
+                            android:layout_margin="20dp"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/leftPieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/neumorphCardView4"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="18dp"
+                    app:cardCornerRadius="12dp"
+
+                    android:focusableInTouchMode="true"
+                    android:scaleType="center"
+
+                    app:layout_constraintBottom_toTopOf="@+id/assessMovementButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3"
+                    app:neumorph_backgroundColor="@color/kindaWhite"
+                    app:neumorph_lightSource="rightTop"
+                    app:neumorph_shadowColorDark="@color/gray"
+                    app:neumorph_shadowColorLight="@color/white"
+                    app:neumorph_shadowElevation="8dp"
+                    app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                    app:neumorph_shapeType="flat"
+                    app:neumorph_strokeColor="@color/white"
+                    app:neumorph_strokeWidth="0dp" />
+
+
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/imageButton"-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:layout_margin="18dp"-->
+<!--                    android:src="@drawable/baseline_test"-->
+<!--                    android:padding="30dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintHorizontal_bias="0.0"-->
+<!--                    app:layout_constraintStart_toStartOf="parent" />-->
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/assessMovementButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="18dp"
+                    android:padding="20dp"
+                    android:backgroundTint="@color/white"
+                    android:drawableStart="@drawable/ic_measure"
+                    android:drawableTint="@color/lightBlue"
+                    android:text="@string/assess_movement"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toTopOf="@+id/dummyLinearLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <LinearLayout
+                    android:id="@+id/dummyLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
 
 </layout>

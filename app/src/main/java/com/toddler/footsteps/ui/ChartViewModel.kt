@@ -73,23 +73,22 @@ class ChartViewModel(application: Application) : AndroidViewModel(application) {
     init {
         Log.i("ChartViewModel", "ChartViewModel Created")
 
-        left0.value = mutableListOf(Entry(0f, 0f))
-        right0.value = mutableListOf(Entry(0f, 0f))
+        // Initialize the left and right sensors with zeros
+        left0.value = mutableListOf()
+        left1.value = mutableListOf()
+        left2.value = mutableListOf()
+        left3.value = mutableListOf()
+        left4.value = mutableListOf()
+        left5.value = mutableListOf()
 
-        left1.value = mutableListOf(Entry(0f, 0f))
-        right1.value = mutableListOf(Entry(0f, 0f))
+        right0.value = mutableListOf()
+        right1.value = mutableListOf()
+        right2.value = mutableListOf()
+        right3.value = mutableListOf()
+        right4.value = mutableListOf()
+        right5.value = mutableListOf()
 
-        left2.value = mutableListOf(Entry(0f, 0f))
-        right2.value = mutableListOf(Entry(0f, 0f))
-
-        left3.value = mutableListOf(Entry(0f, 0f))
-        right3.value = mutableListOf(Entry(0f, 0f))
-
-        left4.value = mutableListOf(Entry(0f, 0f))
-        right4.value = mutableListOf(Entry(0f, 0f))
-
-        left5.value = mutableListOf(Entry(0f, 0f))
-        right5.value = mutableListOf(Entry(0f, 0f))
+        initCharts()
 
 
         id.value = 0
@@ -169,6 +168,11 @@ class ChartViewModel(application: Application) : AndroidViewModel(application) {
 //                leftSensorsList[index].value = queue.toMutableList()
 //            }
         }
+    }
+
+    private fun initCharts(){
+        addDataToLeftQueue(Insole())
+        addDataToRightQueue(Insole())
     }
 
     fun updateLeftPointsList(f0: Int, f1: Int) {

@@ -25,7 +25,7 @@ interface LeftFootFrameDao {
     fun getFramesByTimestamp(timestamp: Long): List<LeftFootFrame>
 
     @Query("SELECT * FROM left_foot_frame_table WHERE timestamp BETWEEN :startTimestamp AND :endTimestamp")
-    fun getFramesByTimestampRange(startTimestamp: Long, endTimestamp: Long): List<LeftFootFrame>
+    fun getFramesByTimestampRange(startTimestamp: Long, endTimestamp: Long): Flow<List<LeftFootFrame>>
 
     /**
      * Get the last 50 frames from the database
@@ -34,4 +34,17 @@ interface LeftFootFrameDao {
     @Query("SELECT * FROM left_foot_frame_table ORDER BY timestamp DESC LIMIT 50")
     fun getLast50LeftFrames(): Flow<List<LeftFootFrame>>
 
+    /**
+     * Get the last minute of frames from the database
+     */
+
+    @Query("SELECT * FROM left_foot_frame_table WHERE timestamp BETWEEN :startTimestamp AND :endTimestamp")
+    fun getLastMinuteLeftFrames(startTimestamp: Long, endTimestamp: Long): Flow<List<LeftFootFrame>>
+
+    /**
+     * Get the count of frames in the database
+     */
+
+    @Query("SELECT COUNT(*) FROM left_foot_frame_table")
+    fun getLeftFramesCount(): Flow<Int>
 }

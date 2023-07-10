@@ -12,11 +12,39 @@
         <item name="neumorph_cornerFamily">rounded</item>
         <item name="neumorph_cornerSize">15dp</item>
 
-<!--        &lt;!&ndash; Or if wants different radii depending on the corner. &ndash;&gt;-->
-<!--        <item name="neumorph_cornerSizeTopLeft">16dp</item>-->
-<!--        <item name="neumorph_cornerSizeTopRight">16dp</item>-->
-<!--        <item name="neumorph_cornerSizeBottomLeft">16dp</item>-->
-<!--        <item name="neumorph_cornerSizeBottomRight">16dp</item>-->
+        <!--        &lt;!&ndash; Or if wants different radii depending on the corner. &ndash;&gt;-->
+        <!--        <item name="neumorph_cornerSizeTopLeft">16dp</item>-->
+        <!--        <item name="neumorph_cornerSizeTopRight">16dp</item>-->
+        <!--        <item name="neumorph_cornerSizeBottomLeft">16dp</item>-->
+        <!--        <item name="neumorph_cornerSizeBottomRight">16dp</item>-->
+    </style>
+
+    <style name="charts_titles">
+        <item name="android:fontFamily">@font/chakra_petch_light</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="analytics_titles">
+        <item name="android:fontFamily">@font/chakra_petch</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="analytics_units">
+        <item name="android:fontFamily">@font/chakra_petch_light</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="analytics_values">
+        <item name="android:fontFamily">@font/chakra_petch_bold</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="bottom_navbar">
+        <item name="android:fontFamily">@font/chakra_petch</item>
     </style>
 
 </resources>

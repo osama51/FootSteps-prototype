@@ -1,7 +1,6 @@
 package com.toddler.footsteps.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,8 @@ import com.toddler.footsteps.R
 import com.toddler.footsteps.Screens
 import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.databinding.FragmentChartsBinding
+import com.toddler.footsteps.heatmap.Insole
+import kotlin.math.abs
 
 class ChartsFragment : Fragment() {
 
@@ -34,19 +35,19 @@ class ChartsFragment : Fragment() {
     private lateinit var sensor1Chart: LineChart
 
 
-    var leftf1LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var leftf2LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var leftf3LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var leftf4LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var leftf5LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var leftf6LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+    private var left1LineDataSet: LineDataSet = LineDataSet(null, "Left 1")
+    private var left2LineDataSet: LineDataSet = LineDataSet(null, "Left 2")
+    private var left3LineDataSet: LineDataSet = LineDataSet(null, "Left 3")
+    private var left4LineDataSet: LineDataSet = LineDataSet(null, "Left 4")
+    private var left5LineDataSet: LineDataSet = LineDataSet(null, "Left 5")
+    private var left6LineDataSet: LineDataSet = LineDataSet(null, "Left 6")
 
-    var rightf1LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var rightf2LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var rightf3LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var rightf4LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var rightf5LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
-    var rightf6LineDataSet: LineDataSet = LineDataSet(listOf(Entry(0f, 0f)), "")
+    private var right1LineDataSet: LineDataSet = LineDataSet(null, "Right 1")
+    private var right2LineDataSet: LineDataSet = LineDataSet(null, "Right 2")
+    private var right3LineDataSet: LineDataSet = LineDataSet(null, "Right 3")
+    private var right4LineDataSet: LineDataSet = LineDataSet(null, "Right 4")
+    private var right5LineDataSet: LineDataSet = LineDataSet(null, "Right 5")
+    private var right6LineDataSet: LineDataSet = LineDataSet(null, "Right 6")
 
     private var iLineDataSet1: java.util.ArrayList<ILineDataSet> = java.util.ArrayList()
     private var iLineDataSet2: java.util.ArrayList<ILineDataSet> = java.util.ArrayList()
@@ -64,6 +65,15 @@ class ChartsFragment : Fragment() {
 
     private lateinit var chartStyle: LineChartStyle
 
+    private var charts: ArrayList<LineChart> = ArrayList()
+    private var lineData: ArrayList<LineData> = ArrayList()
+    private var leftLineDataSets: ArrayList<LineDataSet> = ArrayList()
+    private var rightLineDataSets: ArrayList<LineDataSet> = ArrayList()
+    private var iLineDataSets: ArrayList<ArrayList<ILineDataSet>> = ArrayList()
+
+    private var sensorCards: ArrayList<View> = ArrayList()
+    private var imageButtons: ArrayList<View> = ArrayList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,11 +90,23 @@ class ChartsFragment : Fragment() {
         initRightGraphs()
         initLeftGraphs()
 
+        var appbar = binding.appBarLayout
+        var toolbar = binding.toolbar
 
-//        leftf0LineDataSet.lineWidth = 3F
-//        leftf0LineDataSet.formLineWidth = 3F
-//        leftf1LineDataSet.lineWidth = 3F
-//        leftf1LineDataSet.formLineWidth = 3F
+//        toolbar.setNavigationOnClickListener {
+//            chatViewModel.setScreen(Screens.MAIN_SCREEN)
+//            // close the fragment
+//            requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+//        }
+
+//        appbar.setLiftable(true)
+
+
+
+//        left0LineDataSet.lineWidth = 3F
+//        left0LineDataSet.formLineWidth = 3F
+//        left1LineDataSet.lineWidth = 3F
+//        left1LineDataSet.formLineWidth = 3F
 
         sensor6Chart = binding.sensor6Chart
         sensor5Chart = binding.sensor5Chart
@@ -93,10 +115,10 @@ class ChartsFragment : Fragment() {
         sensor2Chart = binding.sensor2Chart
         sensor1Chart = binding.sensor1Chart
 
-//        rightf0LineDataSet.lineWidth = 3F
-//        rightf0LineDataSet.formLineWidth = 3F
-//        rightf1LineDataSet.lineWidth = 3F
-//        rightf1LineDataSet.formLineWidth = 3F
+//        right0LineDataSet.lineWidth = 3F
+//        right0LineDataSet.formLineWidth = 3F
+//        right1LineDataSet.lineWidth = 3F
+//        right1LineDataSet.formLineWidth = 3F
 
         chartStyle = LineChartStyle(requireContext())
 
@@ -111,107 +133,123 @@ class ChartsFragment : Fragment() {
 //        chartStyle.drawLineGraph(binding.sensor5Chart)
 //        chartStyle.drawLineGraph(binding.sensor6Chart)
 
-        chartStyle.styleLineDataSet(leftf6LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf6LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left6LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right6LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf5LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf5LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left5LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right5LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf4LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf4LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left4LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right4LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf3LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf3LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left3LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right3LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf2LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf2LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left2LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right2LineDataSet, LeftRight.RIGHT)
 
-        chartStyle.styleLineDataSet(leftf1LineDataSet, LeftRight.LEFT)
-        chartStyle.styleLineDataSet(rightf1LineDataSet, LeftRight.RIGHT)
+        chartStyle.styleLineDataSet(left1LineDataSet, LeftRight.LEFT)
+        chartStyle.styleLineDataSet(right1LineDataSet, LeftRight.RIGHT)
 
 
 //        test()
         chartsViewModel.right5.observe(viewLifecycleOwner) {
 //            Log.i("ChartsFragment", "right5: ${it}")
 //            Log.i("ChartsFragment", "left5 ${chartsViewModel.left5.value?.get(0)}")
-            updateGraphRight(it, 5, rightf6LineDataSet, leftf6LineDataSet, iLineDataSet6, sensor6Chart, arrayListOf(lineData6))
+            updateGraphRight(it, 5, right6LineDataSet, left6LineDataSet, iLineDataSet6, sensor6Chart, arrayListOf(lineData6))
         }
-
-//        chartsViewModel.left5.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf6LineDataSet, iLineDataSet6, sensor6Chart, arrayListOf(lineData6))
-//        }
 
         chartsViewModel.right4.observe(viewLifecycleOwner) {
-            updateGraphRight( it, 4, rightf5LineDataSet, leftf5LineDataSet, iLineDataSet5, sensor5Chart, arrayListOf(lineData5))
+            updateGraphRight( it, 4, right5LineDataSet, left5LineDataSet, iLineDataSet5, sensor5Chart, arrayListOf(lineData5))
         }
-
-//        chartsViewModel.left4.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf5LineDataSet, iLineDataSet5, sensor5Chart, arrayListOf(lineData5))
-//        }
 
         chartsViewModel.right3.observe(viewLifecycleOwner) {
-            updateGraphRight(it, 3, rightf4LineDataSet, leftf4LineDataSet, iLineDataSet4, sensor4Chart, arrayListOf(lineData4))
+            updateGraphRight(it, 3, right4LineDataSet, left4LineDataSet, iLineDataSet4, sensor4Chart, arrayListOf(lineData4))
         }
-
-//        chartsViewModel.left3.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf4LineDataSet, iLineDataSet4, sensor4Chart, arrayListOf(lineData4))
-//        }
 
         chartsViewModel.right2.observe(viewLifecycleOwner) {
-            updateGraphRight(it, 2, rightf3LineDataSet, leftf3LineDataSet, iLineDataSet3, sensor3Chart, arrayListOf(lineData3))
+            updateGraphRight(it, 2, right3LineDataSet, left3LineDataSet, iLineDataSet3, sensor3Chart, arrayListOf(lineData3))
         }
-
-//        chartsViewModel.left2.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf3LineDataSet, iLineDataSet3, sensor3Chart, arrayListOf(lineData3))
-//        }
 
         chartsViewModel.right1.observe(viewLifecycleOwner) {
-            updateGraphRight(it, 1, rightf2LineDataSet, leftf2LineDataSet, iLineDataSet2, sensor2Chart, arrayListOf(lineData2))
+            updateGraphRight(it, 1, right2LineDataSet, left2LineDataSet, iLineDataSet2, sensor2Chart, arrayListOf(lineData2))
         }
 
-//        chartsViewModel.left1.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf2LineDataSet, iLineDataSet2, sensor2Chart, arrayListOf(lineData2))
-//        }
 
         chartsViewModel.right0.observe(viewLifecycleOwner) {
-            updateGraphRight(it, 0, rightf1LineDataSet, leftf1LineDataSet, iLineDataSet1, sensor1Chart, arrayListOf(lineData1))
+            updateGraphRight(it, 0, right1LineDataSet, left1LineDataSet, iLineDataSet1, sensor1Chart, arrayListOf(lineData1))
         }
 
-//        chartsViewModel.left0.observe(viewLifecycleOwner) {
-//            updateGraphLeft(it, leftf1LineDataSet, iLineDataSet1, sensor1Chart, arrayListOf(lineData1))
-//        }
+
+        // if the user clicks on image button for each graph, it changes it visibilty to visible, when clicked again, it changes it to gone
+        // list of all the charts
+        charts = arrayListOf(sensor1Chart, sensor2Chart, sensor3Chart, sensor4Chart, sensor5Chart, sensor6Chart)
+        // list of all the line data sets
+        lineData = arrayListOf(lineData1, lineData2, lineData3, lineData4, lineData5, lineData6)
+        // list of all left line data sets
+        leftLineDataSets = arrayListOf(left1LineDataSet, left2LineDataSet, left3LineDataSet, left4LineDataSet, left5LineDataSet, left6LineDataSet)
+        // list of all right line data sets
+        rightLineDataSets = arrayListOf(right1LineDataSet, right2LineDataSet, right3LineDataSet, right4LineDataSet, right5LineDataSet, right6LineDataSet)
+        // list of all i line data sets
+        iLineDataSets = arrayListOf(iLineDataSet1, iLineDataSet2, iLineDataSet3, iLineDataSet4, iLineDataSet5, iLineDataSet6)
 
 
+        initCharts()
 
+        // list of all sensor cards
+        sensorCards = arrayListOf(binding.sensor1Card, binding.sensor2Card, binding.sensor3Card,
+                                      binding.sensor4Card, binding.sensor5Card, binding.sensor6Card)
+
+        // list of all image buttons
+        imageButtons = arrayListOf(binding.sensor1Button, binding.sensor2Button, binding.sensor3Button,
+            binding.sensor4Button, binding.sensor5Button, binding.sensor6Button)
+
+        // set click listeners for each sensor card
+        setClickListenersForSensorCards()
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        // go back to the previous fragment upon clicking the back button on the toolbar
+        binding.toolbar.setNavigationOnClickListener {
+//            requireActivity().onBackPressed()
+            fragmentManager.popBackStack()
+        }
 
         return binding.root
     }
 
-//    fun blur(
-//        viewToBlur: ViewGroup = binding.root as ViewGroup,
-//        radius: Float = 16f,
-//        isAutoUpdate: Boolean = true,
-//        hasFixedTransformationMatrix: Boolean = true,
-//    ) {
-//        binding.blurView.setupWith(viewToBlur, RenderScriptBlur(requireContext()))
-//            .setBlurEnabled(true)
-//            .setBlurRadius(radius)
-//            .setBlurAutoUpdate(isAutoUpdate)
-//
-//        binding.blurView.outlineProvider = ViewOutlineProvider.BACKGROUND;
-//        binding.blurView.clipToOutline = true;
-//
-//    }
+    private fun setClickListenersForSensorCards(){
+
+        // loop through each sensor card and each image button and set a click listener for each one
+        for (i in sensorCards){
+            i.setOnClickListener {
+                if (charts[sensorCards.indexOf(i)].visibility == View.GONE) {
+                    charts[sensorCards.indexOf(i)].visibility = View.VISIBLE
+                } else {
+                    charts[sensorCards.indexOf(i)].visibility = View.GONE
+                }
+            }
+        }
+
+        for (i in imageButtons){
+            i.setOnClickListener {
+                if (charts[imageButtons.indexOf(i)].visibility == View.GONE) {
+                    charts[imageButtons.indexOf(i)].visibility = View.VISIBLE
+                } else {
+                    charts[imageButtons.indexOf(i)].visibility = View.GONE
+                }
+            }
+        }
+    }
 
     private fun initRightGraphs(){
-        for(i in arrayListOf(rightf6LineDataSet, rightf5LineDataSet, rightf4LineDataSet, rightf3LineDataSet, rightf2LineDataSet, rightf1LineDataSet)){
+        for(i in arrayListOf(right6LineDataSet, right5LineDataSet, right4LineDataSet, right3LineDataSet, right2LineDataSet, right1LineDataSet)){
             i.label = "Right"
-            i.color = resources.getColor(R.color.lightGreen)
+            i.color = resources.getColor(R.color.lightBlue)
         }
     }
 
     private fun initLeftGraphs(){
-        for(i in arrayListOf(leftf6LineDataSet, leftf5LineDataSet, leftf4LineDataSet, leftf3LineDataSet, leftf2LineDataSet, leftf1LineDataSet)){
+        for(i in arrayListOf(left6LineDataSet, left5LineDataSet, left4LineDataSet, left3LineDataSet, left2LineDataSet, left1LineDataSet)){
             i.label = "Left"
             i.color = resources.getColor(R.color.lightRed)
         }
@@ -228,12 +266,11 @@ class ChartsFragment : Fragment() {
 
 ////
 ////            exampleData.addEntry(...);
-//            rightf6LineDataSet.addEntry(chartsViewModel.right5.value?.last()!!)
+//            right6LineDataSet.addEntry(chartsViewModel.right5.value?.last()!!)
 //            chart.notifyDataSetChanged(); // let the chart know it's data changed
 //            chart.invalidate(); // refresh
 
             rightLineDataSet.values = rightData
-
 
             iLineDataSet.clear()
             iLineDataSet.add(leftLineDataSet)
@@ -247,9 +284,16 @@ class ChartsFragment : Fragment() {
         }
     }
 
+    private fun initCharts(){
+        charts.forEachIndexed { index, chart ->
+            updateGraphRight(chartsViewModel.rightSensorsList[index].value!!, index, rightLineDataSets[index],
+                leftLineDataSets[index], iLineDataSets[index], chart, arrayListOf(lineData[index]))
+        }
+    }
+
     fun test(){
         if (chatViewModel.screen.value == Screens.CHART_SCREEN){
-            leftf6LineDataSet.values = chartsViewModel.leftSensorsList[5].value
+            left6LineDataSet.values = chartsViewModel.leftSensorsList[5].value
 //        leftLineDataSet.label = "Left"
 //        leftLineDataSet.color = resources.getColor(R.color.lightRed)
 
@@ -258,12 +302,12 @@ class ChartsFragment : Fragment() {
 //            chart.notifyDataSetChanged(); // let the chart know it's data changed
 //            chart.invalidate(); // refresh
 
-            rightf6LineDataSet.values = chartsViewModel.right5.value
+            right6LineDataSet.values = chartsViewModel.right5.value
 
 
 //            iLineDataSet.clear()
 //            iLineDataSet.add(leftLineDataSet)
-            iLineDataSet6.add(rightf6LineDataSet)
+            iLineDataSet6.add(right6LineDataSet)
 
             lineData6 = LineData(iLineDataSet6)
 
@@ -272,6 +316,22 @@ class ChartsFragment : Fragment() {
             sensor6Chart.invalidate()
         }
     }
+
+    //    fun blur(
+//        viewToBlur: ViewGroup = binding.root as ViewGroup,
+//        radius: Float = 16f,
+//        isAutoUpdate: Boolean = true,
+//        hasFixedTransformationMatrix: Boolean = true,
+//    ) {
+//        binding.blurView.setupWith(viewToBlur, RenderScriptBlur(requireContext()))
+//            .setBlurEnabled(true)
+//            .setBlurRadius(radius)
+//            .setBlurAutoUpdate(isAutoUpdate)
+//
+//        binding.blurView.outlineProvider = ViewOutlineProvider.BACKGROUND;
+//        binding.blurView.clipToOutline = true;
+//
+//    }
 
     private fun updateGraphLeft(leftData: MutableList<Entry?>, leftLineDataSet: LineDataSet, iLineDataSet:  ArrayList<ILineDataSet>,
                                 chart: LineChart, lineData: ArrayList<LineData>) {
@@ -293,17 +353,17 @@ class ChartsFragment : Fragment() {
 
     fun updateGraph2(leftData: MutableList<Entry?>, rightData: MutableList<Entry?>) {
 
-        rightf6LineDataSet.values = leftData
-        rightf6LineDataSet.label = "Left"
-        rightf6LineDataSet.color = resources.getColor(R.color.lightRed)
+        right6LineDataSet.values = leftData
+        right6LineDataSet.label = "Left"
+        right6LineDataSet.color = resources.getColor(R.color.lightRed)
 
-        rightf1LineDataSet.values = rightData
-        rightf1LineDataSet.label = "Right"
-        rightf1LineDataSet.color = resources.getColor(R.color.lightGreen)
+        right1LineDataSet.values = rightData
+        right1LineDataSet.label = "Right"
+        right1LineDataSet.color = resources.getColor(R.color.lightGreen)
 
         iLineDataSet2.clear()
-        iLineDataSet2.add(rightf6LineDataSet)
-        iLineDataSet2.add(rightf1LineDataSet)
+        iLineDataSet2.add(right6LineDataSet)
+        iLineDataSet2.add(right1LineDataSet)
         lineData2 = LineData(iLineDataSet2)
 
         sensor5Chart.clear()
@@ -329,6 +389,5 @@ class ChartsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
     }
 }

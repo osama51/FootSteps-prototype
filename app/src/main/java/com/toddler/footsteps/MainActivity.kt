@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Instrumentation
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -31,6 +30,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +41,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.toddler.footsteps.bluetooth.DeviceListActivity
 import com.toddler.footsteps.chat.ChatAdapter
@@ -54,9 +56,7 @@ import com.toddler.footsteps.navbar.CustomBottomNavBar
 import com.toddler.footsteps.services.exportcsv.CsvConfig
 import com.toddler.footsteps.services.exportcsv.ExportCsvService
 import com.toddler.footsteps.services.exportcsv.adapters.toUserCSV
-import com.toddler.footsteps.ui.ChartViewModel
-import com.toddler.footsteps.ui.ChartsFragment
-import com.toddler.footsteps.ui.ReferenceViewModel
+import com.toddler.footsteps.ui.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import soup.neumorphism.ShapeType
@@ -418,7 +418,7 @@ class MainActivity : AppCompatActivity() {
 //                        f1 = (f1 + 1) % 60
 //                    Log.i("RIGHT", "RIGHT")
                     if (onScreen) {
-                        if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+                        if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
 //                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
                         } else if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
                             heatMapUtil.rightFootPoints(foot)
@@ -438,7 +438,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             LeftRight.LEFT.ordinal -> {
-                if(readRight){ // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
+                if (readRight) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                        f0 = (0..4095).random()
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
@@ -446,7 +446,7 @@ class MainActivity : AppCompatActivity() {
 //                    Log.i("LEFT", "LEFT")
                     if (onScreen) {
 //                    heatMapUtil.leftFootPoints(foot)
-                        if (chatViewModel.screen.value == Screens.CHART_SCREEN) {
+                        if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
                         } else if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
                             heatMapUtil.leftFootPoints(foot)
 //                        leftHeatMap.forceRefresh()
@@ -771,62 +771,82 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        val fragment = ChartsFragment()
+        val chartsFragment = ChartsFragment()
+        val statsFragment = StatsFragment()
         val fragmentManager = supportFragmentManager
         customBottomBar.setOnItemSelectedListener { it ->
 
+            var tag = ""
+            var fragment: Fragment? = null
             when (it.itemId) {
                 R.id.action_home -> {
 //                    val intent = Intent(this, MainActivity::class.java)
 //                    startActivity(intent)
                 }
-                R.id.action_profile -> {
-                    val intent = Intent(this, ReferenceActivity::class.java)
-                    startActivity(intent)
+                R.id.action_stats -> {
+//                    val intent = Intent(this, ReferenceActivity::class.java)
+//                    startActivity(intent)
+
+                    tag = "StatsFragment"
+                    fragment = statsFragment
+
                 }
                 R.id.action_charts -> {
-
-                    // check if the fragment is already in container and if it is close it and return to the home screen
-                    val currentFragment = fragmentManager.findFragmentByTag("ChartsFragment")
-
-
-                    if (currentFragment != null && currentFragment.isVisible) {
-                        fragmentManager.popBackStack()
-//                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
-
-//                        customBottomBar.menu.setGroupCheckable(0, true, false)
-                        customBottomBar.selectedItemId = R.id.action_home
-//                        onBackPressed()
-
-//                        chatViewModel.setScreen(Screens.MAIN_SCREEN)
-                        return@setOnItemSelectedListener false
-                    } else {
-                        // Replace the current content of the FrameLayout with your Fragment
-                        val transaction = fragmentManager.beginTransaction()
-                        // Specify custom animations for enter and exit transitions
-                        transaction.setCustomAnimations(
-                            R.anim.slide_in_down,   // Animation resource for enter transition
-                            R.anim.slide_out_down,  // Animation resource for exit transition
-                            R.anim.slide_in_down,   // Animation resource for pop enter transition
-                            R.anim.slide_out_down
-                        )  // Animation resource for pop exit transition
-
-                        transaction.replace(R.id.frameLayout, fragment, "ChartsFragment")
-                        transaction.addToBackStack(null) // Add to back stack if you want to navigate back
-                        transaction.setReorderingAllowed(true)
-                        transaction.commit()
-//                        chatViewModel.setScreen(Screens.CHART_SCREEN)
-
-                        // if I want to remove the fragment from the back stack using the name of the fragment
-//                        fragmentManager.popBackStack("ChartsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-//                        // Deselect the item visually
-//                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
-                    }
+                    tag = "ChartsFragment"
+                    fragment = chartsFragment
                 }
             }
+
+            // proceed in case framgent is not null
+            if (fragment != null) {
+                handleFragmentNavigation(fragment, fragmentManager, customBottomBar, it, tag)
+            } else {
+                false
+            }
+
+//                    // check if the fragment is already in container and if it is close it and return to the home screen
+//                    val currentFragment = fragmentManager.findFragmentByTag("ChartsFragment")
+//
+//
+//                    if (currentFragment != null && currentFragment.isVisible) {
+//                        fragmentManager.popBackStack()
+////                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
+//
+////                        customBottomBar.menu.setGroupCheckable(0, true, false)
+//                        customBottomBar.selectedItemId = R.id.action_home
+////                        onBackPressed()
+//
+////                        chatViewModel.setScreen(Screens.MAIN_SCREEN)
+//                        return@setOnItemSelectedListener false
+//                    } else {
+//                        fragmentManager.popBackStack()
+//
+//                        // Replace the current content of the FrameLayout with your Fragment
+//                        val transaction = fragmentManager.beginTransaction()
+//                        // Specify custom animations for enter and exit transitions
+//                        transaction.setCustomAnimations(
+//                            R.anim.slide_in_down,   // Animation resource for enter transition
+//                            R.anim.slide_out_down,  // Animation resource for exit transition
+//                            R.anim.slide_in_down,   // Animation resource for pop enter transition
+//                            R.anim.slide_out_down
+//                        )  // Animation resource for pop exit transition
+//
+//                        transaction.replace(R.id.frameLayout, chartsFragment, "ChartsFragment")
+//                        transaction.addToBackStack(null) // Add to back stack if you want to navigate back
+//                        transaction.setReorderingAllowed(true)
+//                        transaction.commit()
+////                        chatViewModel.setScreen(Screens.CHART_SCREEN)
+//
+//                        // if I want to remove the fragment from the back stack using the name of the fragment
+////                        fragmentManager.popBackStack("ChartsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//
+////                        // Deselect the item visually
+////                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
+//                    }
+//                }
+//            }
+////            true
 //            true
-            true
         }
 
         manageScreenStates()
@@ -881,6 +901,53 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+    }
+
+    private fun handleFragmentNavigation(
+        fragment: Fragment,
+        fragmentManager: FragmentManager,
+        customBottomBar: BottomNavigationView,
+        item: MenuItem,
+        tag: String
+    ): Boolean {
+
+        // check if the fragment is already in container and if it is close it and return to the home screen
+        val currentFragment = fragmentManager.findFragmentByTag(tag)
+
+
+        if (currentFragment != null && currentFragment.isVisible) {
+            fragmentManager.popBackStack()
+//                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
+//                        customBottomBar.menu.setGroupCheckable(0, true, false)
+            customBottomBar.selectedItemId = R.id.action_home
+//                        chatViewModel.setScreen(Screens.MAIN_SCREEN)
+            return false
+        } else {
+            fragmentManager.popBackStack()
+
+            // Replace the current content of the FrameLayout with your Fragment
+            val transaction = fragmentManager.beginTransaction()
+            // Specify custom animations for enter and exit transitions
+            transaction.setCustomAnimations(
+                R.anim.slide_in_down,   // Animation resource for enter transition
+                R.anim.slide_out_down,  // Animation resource for exit transition
+                R.anim.slide_in_down,   // Animation resource for pop enter transition
+                R.anim.slide_out_down
+            )  // Animation resource for pop exit transition
+
+            transaction.replace(R.id.frameLayout, fragment, tag)
+            transaction.addToBackStack(null) // Add to back stack if you want to navigate back
+            transaction.setReorderingAllowed(true)
+            transaction.commit()
+//                        chatViewModel.setScreen(Screens.CHART_SCREEN)
+
+            // if I want to remove the fragment from the back stack using the name of the fragment
+//                        fragmentManager.popBackStack("ChartsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+//                        // Deselect the item visually
+//                        customBottomBar.menu.findItem(it.itemId)?.isChecked = false
+        }
+        return true
     }
 
     private fun createPrivateFolder() {
@@ -1062,34 +1129,51 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
+//    override fun onBackPressed() {
+//        val fragmentTag =
+//            "ChartsFragment" // Replace with the actual tag of the fragment you want to check
+//        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+//
+//        Log.i("backpresssssssssssssed", fragment.toString())
+//        if (fragment != null && fragment.isVisible) {
+//            // The fragment is open
+//            super.onBackPressed()
+//            customBottomBar.selectedItemId = R.id.action_home
+//            chatViewModel.setScreen(Screens.MAIN_SCREEN)
+//        } else {
+//            // The fragment is not open or does not exist
+//            if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+//                if (pressedTime + 1500 > System.currentTimeMillis()) {
+//                    super.onBackPressed()
+//                    finish()
+//                } else {
+//                    toast =
+//                        Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
+//                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+//                    toast.show()
+//                }
+//                pressedTime = System.currentTimeMillis()
+//            } else{
+//                super.onBackPressed()
+//            }
+//        }
+//    }
+
     override fun onBackPressed() {
-        val fragmentTag =
-            "ChartsFragment" // Replace with the actual tag of the fragment you want to check
-        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
-
-        Log.i("backpresssssssssssssed", fragment.toString())
-        if (fragment != null && fragment.isVisible) {
-            // The fragment is open
-            super.onBackPressed()
-            customBottomBar.selectedItemId = R.id.action_home
-            chatViewModel.setScreen(Screens.MAIN_SCREEN)
-        } else {
-            // The fragment is not open or does not exist
-            if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
-                if (pressedTime + 1500 > System.currentTimeMillis()) {
-                    super.onBackPressed()
-                    finish()
-                } else {
-                    toast =
-                        Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
-                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-                    toast.show()
-                }
-                pressedTime = System.currentTimeMillis()
+        if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
+            if (pressedTime + 1500 > System.currentTimeMillis()) {
+                super.onBackPressed()
+                finish()
+            } else {
+                toast =
+                    Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+                toast.show()
             }
+            pressedTime = System.currentTimeMillis()
+        } else {
+            super.onBackPressed()
         }
-
-
     }
 
     private fun manageScreenStates() {
@@ -1101,6 +1185,11 @@ class MainActivity : AppCompatActivity() {
                 Screens.CHART_SCREEN -> {
 //                    customBottomBar.selectedItemId = R.id.action_charts
                     customBottomBar.menu.findItem(R.id.action_charts)?.isChecked = true
+
+                }
+                Screens.STATISTICS_SCREEN -> {
+//                    customBottomBar.selectedItemId = R.id.action_charts
+                    customBottomBar.menu.findItem(R.id.action_stats)?.isChecked = true
 
                 }
                 else -> {

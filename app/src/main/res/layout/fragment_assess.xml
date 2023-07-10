@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AssessFragment">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.toddler.footsteps.ui.AssessViewModel" />
+    </data>
+
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/offWhite"
+        android:fitsSystemWindows="true"
+        android:layout_margin="8dp"
+        >
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/transparent"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/semi_black">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/toolbar_charts_icon"-->
+            <!--                    android:layout_width="25dp"-->
+            <!--                    android:layout_height="25dp"-->
+            <!--                    android:layout_marginTop="12dp"-->
+            <!--                    android:layout_marginEnd="12dp"-->
+            <!--                    android:layout_marginBottom="12dp"-->
+            <!--                    android:src="@drawable/ic_analytics"-->
+            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent"-->
+            <!--                    app:tint="@color/semi_black" />-->
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/charts_toolbar_title"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginEnd="32dp"-->
+            <!--                    android:fontFamily="@font/chakra_petch"-->
+            <!--                    android:text="@string/stats"-->
+            <!--                    android:textColor="@color/semi_black"-->
+            <!--                    android:textSize="20sp"-->
+            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/offWhite"
+        android:padding="30dp"
+        android:layout_marginBottom="100dp">
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/assessmentCardView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:neumorph_lightSource="rightTop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:neumorph_backgroundColor="@color/white">
+
+
+        </soup.neumorphism.NeumorphCardView>
+
+        <soup.neumorphism.NeumorphButton
+            android:id="@+id/neumorphButton2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Export Data"
+
+            android:padding="20dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:neumorph_lightSource="rightTop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:layout_constraintEnd_toStartOf="@+id/neumorphButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentCardView"
+            app:neumorph_backgroundColor="@color/white" />
+
+        <soup.neumorphism.NeumorphButton
+            android:id="@+id/neumorphButton"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:text="Assess"
+            android:padding="20dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            app:neumorph_lightSource="rightTop"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/neumorphButton2"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentCardView"
+            app:neumorph_backgroundColor="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</layout>
