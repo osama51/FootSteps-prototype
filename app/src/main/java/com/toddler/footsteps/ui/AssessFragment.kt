@@ -176,11 +176,11 @@ class AssessFragment: Fragment() {
 
         assessViewModel.timerFinished.observe(viewLifecycleOwner) {
             if(it) {
-                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
-                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+//                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+//                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
             } else {
-                handleVisibility(binding.exportDataButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
-                handleVisibility(binding.assessMovementButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
+//                handleVisibility(binding.exportDataButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
+//                handleVisibility(binding.assessMovementButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
             }
         }
 
