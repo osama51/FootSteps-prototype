@@ -456,6 +456,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     jumpL = if (jumpL >= 2) {
                         chartsViewModel.addDataToLeftQueue(foot)
+                        statsViewModel.updateAccelerometerLeftData(listOf(a0, a1, a2))
                         0
                     } else {
                         jumpL + 1

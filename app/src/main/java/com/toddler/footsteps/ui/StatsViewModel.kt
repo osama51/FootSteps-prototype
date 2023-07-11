@@ -18,9 +18,13 @@ class StatsViewModel(
 ) : AndroidViewModel(application) {
 
 
-    private val _accelerometerData = MutableLiveData<MutableList<Double>>()
-    val accelerometerData: LiveData<MutableList<Double>>
-        get() = _accelerometerData
+    private val _accelerometerRightData = MutableLiveData<MutableList<Double>>()
+    val accelerometerRightData: LiveData<MutableList<Double>>
+        get() = _accelerometerRightData
+
+    private val _accelerometerLeftData = MutableLiveData<MutableList<Double>>()
+    val accelerometerLeftData: LiveData<MutableList<Double>>
+        get() = _accelerometerLeftData
 
     private val gyroscopeData = MutableLiveData<MutableList<FloatArray>>()
 
@@ -128,15 +132,16 @@ class StatsViewModel(
 
 
 
-        fun setReference(user: User) {
-            _user.value = user
-        }
+    fun setReference(user: User) {
+        _user.value = user
+    }
 
-        init {
-            _stepCount.value = 6253
-            Log.i("ReferenceViewModel", "ReferenceViewModel Created")
-            _user.value = User()
-        }
+    init {
+        _stepCount.value = 6253
+        _strideLength.value = 54.2
+        Log.i("ReferenceViewModel", "ReferenceViewModel Created")
+        _user.value = User()
+    }
 
 
     fun setPieChart(rightPieChart: PieChart, leftPieChart: PieChart) {
@@ -239,6 +244,16 @@ class StatsViewModel(
         _stepCount.value = stepCount
     }
 
+    fun setStrideLength(strideLength: Double) {
+        _strideLength.value = strideLength
+        _cadence.value?.let {
+            _speed.value = strideLength * it / 100
+
+            // round the speed to 1 decimal place
+            _speed.value = String.format("%.1f", _speed.value).toDouble()
+        }
+    }
+
     fun setCadence(cadence: Int) {
         _cadence.value = cadence
         Log.i("StatsViewModel", "Cadence: ${_cadence.value}")
@@ -253,7 +268,7 @@ class StatsViewModel(
 
     fun updateAccelerometerData(accelerometerData: List<Int>) {
 //        _accelerometerData.value = accelerometerData.toMutableList()
-        _accelerometerData.value = listOf(a0, a1, a2).toMutableList()
+        _accelerometerRightData.value = listOf(a0, a1, a2).toMutableList()
         if(a0 >= 10.0){
             a0 = 0.0
         } else {
@@ -263,6 +278,24 @@ class StatsViewModel(
             a1 = 10.0
         } else {
             a1--
+        }
+    }
+
+    var a0L: Double = 0.0
+    var a1L: Double = 10.0
+    var a2L: Double = 0.0
+    fun updateAccelerometerLeftData(accelerometerData: List<Int>) {
+//        _accelerometerData.value = accelerometerData.toMutableList()
+        _accelerometerLeftData.value = listOf(a0L, a1L, a2).toMutableList()
+        if(a0L >= 10.0){
+            a0L = 0.0
+        } else {
+            a0L++
+        }
+        if(a1L <= 0.0){
+            a1L = 10.0
+        } else {
+            a1L--
         }
     }
 }

@@ -1,19 +1,12 @@
 package com.toddler.footsteps.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
-import com.github.mikephil.charting.utils.ColorTemplate.rgb
 import com.toddler.footsteps.R
 import com.toddler.footsteps.Screens
 import com.toddler.footsteps.chat.ChatViewModel
@@ -91,11 +84,19 @@ class StatsFragment : Fragment() {
 //            binding.stepCountValue.text = it.toString()
 //        }
 
-        statsViewModel.setCadence(100)
+        statsViewModel.setCadence(103) // in steps per minute
+        statsViewModel.setStrideLength(54.2) // in cm
 
-        statsViewModel.accelerometerData.observe(viewLifecycleOwner) {
-            val yaw = atan2(it[0]/10, it[1]/10) * 180 / Math.PI
+
+        statsViewModel.accelerometerRightData.observe(viewLifecycleOwner) {
+            val yaw = atan2(-it[0]/10, it[1]/10) * 180 / Math.PI
             statsViewModel.setRightFootAngle(yaw)
+//            Log.i("StatsFragment", "Yaw: $yaw")
+        }
+
+        statsViewModel.accelerometerLeftData.observe(viewLifecycleOwner) {
+            val yaw = atan2(-it[0]/10, -it[1]/10) * 180 / Math.PI
+            statsViewModel.setLeftFootAngle(yaw)
 //            Log.i("StatsFragment", "Yaw: $yaw")
         }
 

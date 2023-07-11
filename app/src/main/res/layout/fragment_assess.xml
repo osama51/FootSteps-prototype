@@ -418,8 +418,8 @@
                                     android:indeterminate="false"
                                     android:max="60"
                                     android:progress="60"
-                                    android:progressTint="@color/switcher_red"
-                                    android:progressTintMode="src_atop" />
+                                    android:background="@drawable/bg_gray_progressbar"
+                                    android:progressDrawable="@drawable/bg_blue_progressbar" />
 
 
                             </FrameLayout>
@@ -430,6 +430,7 @@
                                 android:id="@+id/startTimerButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
                                 android:layout_marginBottom="20dp"
                                 android:backgroundTint="@color/white"
                                 android:src="@drawable/ic_play"
@@ -447,6 +448,7 @@
                                 android:id="@+id/pauseTimerButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
                                 android:backgroundTint="@color/white"
                                 android:src="@drawable/ic_pause"
                                 android:tint="@color/semi_black"
@@ -465,6 +467,7 @@
                                 android:id="@+id/stopTimerButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
                                 android:backgroundTint="@color/white"
                                 android:src="@drawable/ic_stop"
                                 android:tint="@color/semi_black"
