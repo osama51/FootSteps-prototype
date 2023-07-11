@@ -47,4 +47,11 @@
         <item name="android:fontFamily">@font/chakra_petch</item>
     </style>
 
+    <style name="assessment_points">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:fontFamily">@font/chakra_petch</item>
+        <item name="android:textColor">@color/semi_black</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>

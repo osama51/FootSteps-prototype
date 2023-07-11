@@ -114,4 +114,28 @@
     <string name="step_sway_velocity_x_unit">%</string>
     <string name="step_sway_velocity_y_unit">%</string>
     <string name="step_sway_velocity_z_unit">%</string>
+
+
+<!--    Requirements    -->
+    <string name="requirements">Requirements</string>
+    <string name="requirements_text">1. The user should be able to walk for 20 seconds. \n\n2. The user should be able to walk in a straight line. \n\n3. The user should be able to walk without any support. \n\n4. The user should be able to walk without any footwear.</string>
+    <string name="requirement1_text">1. You should be able to walk for 1 minute without support.</string>
+    <string name="requirement2_text">2. Wear both insoles and make sure they\'re positioned properly.</string>
+    <string name="requirement3_text">3. Make sure the device is charged.</string>
+    <string name="requirement4_text">4. Connect to the insoles via the Bluetooth icon in the main screen.</string>
+    <string name="requirement5_text">5. Make sure the device is connected to the internet.</string>
+
+
+<!--    Instructions    -->
+    <string name="instructions">Instructions</string>
+    <string name="instructions_text">1. Place the sensor on the foot as shown in the image below. \n\n2. Press the start button to start the assessment. \n\n3. Walk for 20 seconds. \n\n4. Press the stop button to stop the assessment. \n\n5. Press the save button to save the assessment. \n\n6. Press the reset button to reset the assessment.</string>
+    <string name="instruction1_text">1. Choose the amount of time to be stored.</string>
+    <string name="instruction2_text">2. Press the start button to start the timer.</string>
+    <string name="instruction3_text">3. Walk in a strait line if possible.</string>
+    <string name="instruction4_text">4. Keep walking until the timer finishes.</string>
+    <string name="instruction5_text">5. Press "Export Data" to extract the data as an excel file.</string>
+    <string name="instruction6_text">6. Press "Assess" to start the assessment.</string>
+    <string name="export_data">Export Data</string>
+    <string name="assess">Assess</string>
+
 </resources>
