@@ -120,23 +120,67 @@ class AssessFragment: Fragment() {
         val instructionsContainer = binding.instructionsContainer
         assessViewModel.allRequirementsMet.observe(viewLifecycleOwner) {
             if(it == true) {
-                handleVisibility(timerView, ShowHide.SHOW, 0f, 0f, -1f, 0f)
-                handleVisibility(requirementsContainer, ShowHide.HIDE, 0f, -1f, 0f, 0f)
-                handleVisibility(instructionsContainer, ShowHide.SHOW, 1f, 0f, 0f, 0f)
+                handleVisibility(timerView, ShowHide.SHOW, 1000,0f, 0f, -2f, 0f)
+                handleVisibility(requirementsContainer, ShowHide.HIDE, 500, 0f, -1f, 0f, 0f)
+                handleVisibility(instructionsContainer, ShowHide.SHOW, 500,1f, 0f, 0f, 0f)
             } else {
-                handleVisibility(timerView, ShowHide.HIDE, 0f, 0f, 0f, -1f)
-                handleVisibility(requirementsContainer, ShowHide.SHOW, -1f, 0f, 0f, 0f)
-                handleVisibility(instructionsContainer, ShowHide.HIDE, 0f, 1f, 0f, 0f)
+                handleVisibility(timerView, ShowHide.HIDE, 1000, 0f, 0f, 0f, -2f)
+                handleVisibility(requirementsContainer, ShowHide.SHOW, 500,-1f, 0f, 0f, 0f)
+                handleVisibility(instructionsContainer, ShowHide.HIDE, 500,0f, 1f, 0f, 0f)
             }
         }
 
         binding.instructionsBack.setOnClickListener() {
-            handleVisibility(timerView, ShowHide.HIDE, 0f, 0f, 0f, -1f)
-            handleVisibility(requirementsContainer, ShowHide.SHOW, -1f, 0f, 0f, 0f)
-            handleVisibility(instructionsContainer, ShowHide.HIDE, 0f, 1f, 0f, 0f)
+            handleVisibility(timerView, ShowHide.HIDE, 1000,0f, 0f, 0f, -2f)
+            handleVisibility(requirementsContainer, ShowHide.SHOW, 500,-1f, 0f, 0f, 0f)
+            handleVisibility(instructionsContainer, ShowHide.HIDE, 500,0f, 1f, 0f, 0f)
 
             for(switch in req_switch_array) {
                 switch.setChecked(false)
+            }
+        }
+
+        binding.imageAddButton.setOnClickListener() {
+            assessViewModel.incrementCounter()
+        }
+
+        // if pressed for 2 seconds, incerement by 10
+       /**
+       *  |||||||||||||||||||||||||||||||||||||||||||||
+       * */
+
+        binding.imageRemoveButton.setOnClickListener() {
+            assessViewModel.decrementCounter()
+        }
+
+        binding.startTimerButton.setOnClickListener() {
+            assessViewModel.startTimer()
+            binding.stopTimerButton.visibility = View.VISIBLE
+            binding.pauseTimerButton.visibility = View.VISIBLE
+            it.isEnabled = false
+            true
+        }
+
+        binding.stopTimerButton.setOnClickListener() {
+            assessViewModel.stopTimer()
+            binding.stopTimerButton.visibility = View.GONE
+            binding.pauseTimerButton.visibility = View.GONE
+            binding.startTimerButton.isEnabled = true
+            true
+        }
+
+        binding.pauseTimerButton.setOnClickListener() {
+            assessViewModel.pauseTimer()
+            true
+        }
+
+        assessViewModel.timerFinished.observe(viewLifecycleOwner) {
+            if(it) {
+                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+            } else {
+                handleVisibility(binding.exportDataButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
+                handleVisibility(binding.assessMovementButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
             }
         }
 
@@ -144,7 +188,7 @@ class AssessFragment: Fragment() {
     }
 
 
-    private fun handleVisibility(view: View, showHide: ShowHide, fromX: Float, toX: Float, fromY: Float, toY: Float) {
+    private fun handleVisibility(view: View, showHide: ShowHide, duration: Long, fromX: Float, toX: Float, fromY: Float, toY: Float) {
         var _fromY = fromY
         var _toY = toY
         var _fromX = fromX
@@ -168,7 +212,7 @@ class AssessFragment: Fragment() {
         )
 
         // Set the duration and interpolator for the animation
-        animation.duration = 500
+        animation.duration = duration
         animation.interpolator = AccelerateInterpolator()
 
         // Set the AnimationListener to handle the view's visibility change

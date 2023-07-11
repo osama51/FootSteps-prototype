@@ -53,7 +53,7 @@
     <string name="speed_title">Speed</string>
     <string name="step_count">Step Count</string>
     <string name="cadence_title">Cadence</string>
-    <string name="stride_length_title">Stride Length</string>
+    <string name="stride_length_title">Stride Len</string>
     <string name="step_length_title">Step Length</string>
     <string name="step_width_title">Step Width</string>
     <string name="step_time_title">Step Time</string>
@@ -114,6 +114,8 @@
     <string name="step_sway_velocity_x_unit">%</string>
     <string name="step_sway_velocity_y_unit">%</string>
     <string name="step_sway_velocity_z_unit">%</string>
+
+    <string name="seconds">Seconds</string>
 
 
 <!--    Requirements    -->

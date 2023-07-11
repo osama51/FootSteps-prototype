@@ -355,7 +355,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/timer_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="70dp"
                     android:visibility="gone"
                     tools:visibility="visible"
@@ -364,33 +364,186 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-                    <soup.neumorphism.NeumorphCardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/assessmentCardView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="50dp"
+                        app:cardCornerRadius="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.100000024"
-                        app:neumorph_backgroundColor="@color/white"
-                        app:neumorph_lightSource="rightTop">
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingStart="20dp"
+                            android:paddingTop="30dp"
+                            android:paddingEnd="20dp"
+                            android:paddingBottom="12dp">
+
+                            <TextView
+                                android:id="@+id/timerTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/chakra_petch_bold"
+                                android:text="@{viewModel.counterText}"
+                                android:textColor="@color/semi_black"
+                                android:textSize="24sp"
+                                app:layout_constraintBottom_toTopOf="@+id/progressBarFL"
+                                app:layout_constraintEnd_toEndOf="@+id/stopTimerButton"
+                                app:layout_constraintStart_toStartOf="@+id/startTimerButton"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <FrameLayout
+                                android:id="@+id/progressBarFL"
+                                android:layout_width="0dp"
+                                android:layout_height="20dp"
+                                android:layout_margin="10dp"
+                                app:layout_constraintBottom_toTopOf="@+id/startTimerButton"
+                                app:layout_constraintEnd_toStartOf="@+id/timerTextField"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/timerTextField">
+
+                                <androidx.core.widget.ContentLoadingProgressBar
+                                    android:id="@+id/progressBar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:indeterminate="false"
+                                    android:max="60"
+                                    android:progress="60"
+                                    android:progressTint="@color/switcher_red"
+                                    android:progressTintMode="src_atop"
+
+                                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                    />
 
 
-                    </soup.neumorphism.NeumorphCardView>
+                            </FrameLayout>
+
+                            <!--                            NOTICE BACKGROUNDTINT IS FROM APP AND NOT ANDROID, IF YOU USED ANDROID
+                                IT WILL LEAVE A COLORED LINE AROUND THE BUTTON-->
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/startTimerButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="20dp"
+                                android:backgroundTint="@color/white"
+                                android:src="@drawable/ic_play"
+                                android:tint="@color/semi_black"
+                                app:backgroundTint="@color/white"
+                                app:fabCustomSize="40dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/pauseTimerButton"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:maxImageSize="24dp" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/pauseTimerButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:src="@drawable/ic_pause"
+                                android:tint="@color/semi_black"
+                                android:visibility="gone"
+                                app:backgroundTint="@color/white"
+                                app:fabCustomSize="40dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/startTimerButton"
+                                app:layout_constraintEnd_toStartOf="@+id/stopTimerButton"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toEndOf="@+id/startTimerButton"
+                                app:layout_constraintTop_toTopOf="@+id/startTimerButton"
+                                app:maxImageSize="24dp"
+                                tools:visibility="visible" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/stopTimerButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:src="@drawable/ic_stop"
+                                android:tint="@color/semi_black"
+                                android:visibility="gone"
+                                app:backgroundTint="@color/white"
+                                app:fabCustomSize="40dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/startTimerButton"
+                                app:layout_constraintEnd_toStartOf="@+id/timerTextField"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toEndOf="@+id/pauseTimerButton"
+                                app:layout_constraintTop_toTopOf="@+id/startTimerButton"
+                                app:maxImageSize="24dp"
+                                tools:visibility="visible" />
+
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/timerTextField"
+                                android:layout_width="70dp"
+                                android:layout_height="0dp"
+                                android:gravity="center"
+                                android:imeActionLabel="@string/seconds"
+                                app:layout_constraintBottom_toBottomOf="@+id/imageRemoveButton"
+                                app:layout_constraintEnd_toStartOf="@+id/imageAddButton"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintHorizontal_chainStyle="packed"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/imageAddButton">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/rounded_edittext"
+                                    android:inputType="number"
+                                    android:maxLength="2"
+                                    android:text="@{String.valueOf(viewModel.counter)}"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/semi_black"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
+                            <ImageButton
+                                android:id="@+id/imageAddButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/offWhite"
+                                android:src="@drawable/ic_add"
+                                app:layout_constraintBottom_toTopOf="@+id/imageRemoveButton"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toEndOf="@+id/timerTextField"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_chainStyle="packed" />
+
+                            <ImageButton
+                                android:id="@+id/imageRemoveButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/semi_black"
+                                android:src="@drawable/ic_remove"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/timerTextField"
+                                app:layout_constraintTop_toBottomOf="@+id/imageAddButton" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    </androidx.cardview.widget.CardView>
 
                     <soup.neumorphism.NeumorphButton
-                        android:id="@+id/neumorphButton2"
+                        android:id="@+id/exportDataButton"
                         style="@style/Widget.Neumorph.Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:gravity="center"
                         android:padding="20dp"
                         android:text="@string/export_data"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/neumorphButton"
+                        app:layout_constraintEnd_toStartOf="@+id/assessMovementButton"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/assessmentCardView"
@@ -398,7 +551,7 @@
                         app:neumorph_lightSource="rightTop" />
 
                     <soup.neumorphism.NeumorphButton
-                        android:id="@+id/neumorphButton"
+                        android:id="@+id/assessMovementButton"
                         style="@style/Widget.Neumorph.Button"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
@@ -406,9 +559,11 @@
                         android:padding="20dp"
                         android:text="@string/assess"
                         android:textAlignment="center"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/neumorphButton2"
+                        app:layout_constraintStart_toEndOf="@+id/exportDataButton"
                         app:layout_constraintTop_toBottomOf="@+id/assessmentCardView"
                         app:neumorph_backgroundColor="@color/white"
                         app:neumorph_lightSource="rightTop" />
