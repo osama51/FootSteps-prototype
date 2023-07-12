@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -170,8 +172,27 @@ class StatsViewModel(
         rightPieChart.description.isEnabled = false
         leftPieChart.description.isEnabled = false
 
-        rightPieChart.legend.isEnabled = false
-        leftPieChart.legend.isEnabled = false
+        rightPieChart.legend.isEnabled = true
+        leftPieChart.legend.isEnabled = true
+
+        // add legend only to one entry
+        rightPieChart.legend.direction = Legend.LegendDirection.LEFT_TO_RIGHT
+        rightPieChart.legend.maxSizePercent = 0.15f
+        rightPieChart.legend.setCustom(arrayListOf(LegendEntry("Right", Legend.LegendForm.CIRCLE, 10f, 20f, null, resources.getColor(R.color.lightBlue))))
+
+        leftPieChart.legend.direction = Legend.LegendDirection.RIGHT_TO_LEFT
+        leftPieChart.legend.maxSizePercent = 0.15f
+        leftPieChart.legend.setCustom(arrayListOf(LegendEntry("Left", Legend.LegendForm.CIRCLE, 10f, 20f, null, resources.getColor(R.color.lightRed))))
+
+
+
+        // change the position of the legend
+        rightPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        rightPieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+
+        leftPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        leftPieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+
 
         rightPieChart.setTouchEnabled(false)
         leftPieChart.setTouchEnabled(false)
@@ -185,8 +206,8 @@ class StatsViewModel(
         leftPieEntries.add(PieEntry(50f, ""))
         leftPieEntries.add(PieEntry(50f, "Left"))
 
-        val rightPieDataSet = PieDataSet(rightPieEntries, "Right Foot")
-        val leftPieDataSet = PieDataSet(leftPieEntries, "Left Foot")
+        val rightPieDataSet = PieDataSet(rightPieEntries, "")
+        val leftPieDataSet = PieDataSet(leftPieEntries, "")
 
         rightPieDataSet.setDrawValues(false)
         leftPieDataSet.setDrawValues(false)

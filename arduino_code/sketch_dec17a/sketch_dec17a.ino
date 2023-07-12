@@ -13,7 +13,12 @@
 #endif
 
 BluetoothSerial SerialBT;
-int counter = 0;
+int counter0 = 0;
+int counter1 = 0;
+int counter2 = 0;
+int counter3 = 0;
+int counter4 = 0;
+int counter5 = 0;
 int id = 1;
 String str= "";
 void setup() {
@@ -47,12 +52,42 @@ void loop() {
 //  counter = (counter + 68) % 4095;
 
 //counter = (counter + 1) % 60;
-if(id == 1){
+//if(counter0 >= 3930){
+  if(id == 1){
   id = 2;
   } else {
     id = 1;  
   }
-counter = (counter + 100) % 4095;
+//}
+
+counter0 = (counter0 + 40) % 4000;
+counter1 = (counter1 + 15) % 1500;
+counter2 = (counter2 + 25) % 2500;
+counter3 = (counter3 + 30) % 3000;
+counter4 = (counter4 + 35) % 3500;
+counter5 = (counter5 + 35) % 3500;
+
+str = id;
+str += "i";
+str += String(counter0);
+str += "s";
+str += String(counter1);
+str += "t";
+str += String(counter2);
+str += "u";
+str += String(counter3);
+str += "v";
+str += String(counter4);
+str += "w";
+str += String(counter5);
+str += "x";
+str += "1233a1543b1543c1543d1543e1543f#";
+    SerialBT.println(str);
+//    SerialBT.println(str);
+//    delay(100);
+//  }
+  delay(25);
+}
 
 
 //SerialBT.print("1i");
@@ -65,23 +100,3 @@ counter = (counter + 100) % 4095;
 //SerialBT.print("1543e");
 //SerialBT.print("1543f");
 //SerialBT.print("#");
-
-str = id;
-str += "i";
-str += String(counter);
-str += "s1233t";
-str += String(counter);
-str += "u";
-str += String(counter);
-str += "v";
-str += String(counter);
-str += "w";
-str += String(counter);
-str += "x";
-str += "1233a1543b1543c1543d1543e1543f#";
-    SerialBT.println(str);
-//    SerialBT.println(str);
-//    delay(100);
-//  }
-  delay(25);
-}

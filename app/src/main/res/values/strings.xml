@@ -33,7 +33,7 @@
     <string name="no_devices_msg">No nearby Bluetooth devices were found</string>
 
     <!--  Screen Components  -->
-    <string name="charts">Charts</string>
+    <string name="charts">Gait</string>
     <string name="stats">Analytics</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="profile">Profile</string>

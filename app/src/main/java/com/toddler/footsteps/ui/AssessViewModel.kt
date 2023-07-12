@@ -115,6 +115,9 @@ class AssessViewModel(
                 // decrement the counter
                 _counterText.postValue(_counterText.value?.minus(1))
             }
+            if(_counterText.value!! <= 0) {
+                _counterText.value = 0
+            }
             if(_counterText.value!! == 0) {
                 _timerFinished.value = true
             }

@@ -46,6 +46,6 @@ interface RightFootFrameDao {
      */
 
     @Query("SELECT COUNT(*) FROM left_foot_frame_table")
-    fun getLeftFramesCount(): Flow<Int>
+    fun getRightFramesCount(): Flow<Int>
 
 }

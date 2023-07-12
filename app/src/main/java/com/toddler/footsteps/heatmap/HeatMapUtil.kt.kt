@@ -177,21 +177,21 @@ class HeatMapUtil(
             // The first point in the array is the top left corner of the heat map.
             // The last point in the array is the bottom right corner
 
-            pointLC = HeatMap.DataPoint(0.6F, 0.1F, foot.sensor6 / 1.0)
-            pointLB =
-                HeatMap.DataPoint(
-                    0.3F,
-                    0.25F,
-                    ((foot.sensor5 * 0.35) + (foot.sensor4 * 0.65)) / 1.0
-                )
-            pointLD2 = HeatMap.DataPoint(0.73F, 0.255F, foot.sensor5 * 0.6)
+            pointLC = HeatMap.DataPoint(0.6F, 0.1F, foot.sensor6 / 1.0) // great toe
+
+            pointLD2 = HeatMap.DataPoint(0.7F, 0.255F, foot.sensor5 / 2.0)
             pointLD = HeatMap.DataPoint(0.75F, 0.25F, foot.sensor5 / 1.0)
-            pointLE = HeatMap.DataPoint(0.3F, 0.35F, foot.sensor4 / 1.0)
-            pointLF = HeatMap.DataPoint(0.27F, 0.45F, (foot.sensor4 + foot.sensor3) / 2.0)
-            pointLI = HeatMap.DataPoint(0.3F, 0.6F, foot.sensor3 / 1.0)
-            pointLH = HeatMap.DataPoint(0.3F, 0.7F, foot.sensor3 / 1.0) // Fake point
-            pointLG = HeatMap.DataPoint(0.65F, 0.79F, foot.sensor2 / 1.0) // fake point
-            pointLJ = HeatMap.DataPoint(0.35F, 0.78F, foot.sensor2 / 1.0)
+
+            pointLB = HeatMap.DataPoint(0.3F, 0.25F, foot.sensor4 / 0.70)
+
+            pointLE = HeatMap.DataPoint(0.3F, 0.35F, (foot.sensor3 / 2.5) + (foot.sensor4 / 2.5))
+            pointLF = HeatMap.DataPoint(0.27F, 0.45F, foot.sensor3 / 1.0)
+
+            pointLI = HeatMap.DataPoint(0.3F, 0.6F, (foot.sensor2 / 3.0) + (foot.sensor3 / 3.0))
+            pointLH = HeatMap.DataPoint(0.4F, 0.7F, foot.sensor2 / 1.0)   // fake point
+
+            pointLG = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor1 / 2.0) // fake point
+            pointLJ = HeatMap.DataPoint(0.35F, 0.79F, foot.sensor1 / 2.0) // fake point
             pointLK = HeatMap.DataPoint(0.56F, 0.91F, foot.sensor1 / 1.0)
 
 
@@ -258,20 +258,20 @@ class HeatMapUtil(
 
 //        pointRA = HeatMap.DataPoint(0.25F, 0.55F, ((foot.sensor5 * 0.5) + (foot.sensor3 * 0.5)) / 2.0)
             pointRC = HeatMap.DataPoint(0.4F, 0.1F, foot.sensor6 / 1.0)
-            pointRB =
-                HeatMap.DataPoint(
-                    0.7F,
-                    0.25F,
-                    ((foot.sensor5 * 0.35) + (foot.sensor4 * 0.65)) / 1.0
-                )
+
+            pointRD2 = HeatMap.DataPoint(0.3F, 0.255F, foot.sensor5 / 2.0)
             pointRD = HeatMap.DataPoint(0.25F, 0.25F, foot.sensor5 / 1.0)
-            pointRD2 = HeatMap.DataPoint(0.27F, 0.255F, foot.sensor5 * 0.6)
-            pointRE = HeatMap.DataPoint(0.7F, 0.35F, foot.sensor4 / 1.0)
-            pointRF = HeatMap.DataPoint(0.73F, 0.45F, (foot.sensor4 + foot.sensor3) / 2.0)
-            pointRI = HeatMap.DataPoint(0.7F, 0.6F, foot.sensor3 / 1.0)
-            pointRH = HeatMap.DataPoint(0.7F, 0.7F, foot.sensor3 / 1.0) // Fake point
-            pointRG = HeatMap.DataPoint(0.35F, 0.79F, foot.sensor2 / 1.0) // fake point
-            pointRJ = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor2 / 1.0)
+
+            pointRB = HeatMap.DataPoint(0.7F, 0.25F, foot.sensor4 / 0.70)
+
+            pointRE = HeatMap.DataPoint(0.7F, 0.35F, (foot.sensor3 / 2.5) + (foot.sensor4 / 2.5))
+            pointRF = HeatMap.DataPoint(0.73F, 0.45F, foot.sensor3 / 1.0)
+
+            pointRI = HeatMap.DataPoint(0.7F, 0.6F, (foot.sensor2 / 3.0) + (foot.sensor3 / 3.0))
+            pointRH = HeatMap.DataPoint(0.6F, 0.7F, foot.sensor2 / 1.0)   // fake point
+
+            pointRG = HeatMap.DataPoint(0.35F, 0.79F, foot.sensor1 / 2.0) // fake point
+            pointRJ = HeatMap.DataPoint(0.65F, 0.78F, foot.sensor1 / 2.0)
             pointRK = HeatMap.DataPoint(0.44F, 0.91F, foot.sensor1 / 1.0)
 
 //        val startTime = System.currentTimeMillis()
