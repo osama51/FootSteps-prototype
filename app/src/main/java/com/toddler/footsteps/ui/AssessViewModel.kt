@@ -20,9 +20,19 @@ class AssessViewModel(
         get() = _counter
 
     private val _counterText: MutableLiveData<Int> = MutableLiveData(counter.value)
+    val counterTextInt: LiveData<Int>
+        get() = _counterText
     val counterText: LiveData<CharSequence>
         get() = Transformations.map(_counterText) {
-       "00:${it}"
+            if (it < 0) {
+                "00:00"
+            } else if (it < 10) {
+                "00:0${it}"
+            } else if (it < 60) {
+                "00:${it}"
+            } else {
+                "01:00"
+            }
     }
 
     var paused = false

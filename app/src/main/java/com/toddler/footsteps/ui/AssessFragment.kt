@@ -1,12 +1,19 @@
 package com.toddler.footsteps.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -141,6 +148,10 @@ class AssessFragment: Fragment() {
         }
 
         binding.imageAddButton.setOnClickListener() {
+            if(binding.timerTextField.text.toString() == "") {
+                binding.timerTextField.setText("0")
+            }
+            assessViewModel.setCounter(binding.timerTextField.text.toString().toInt())
             assessViewModel.incrementCounter()
         }
 
@@ -154,11 +165,46 @@ class AssessFragment: Fragment() {
         }
 
         binding.startTimerButton.setOnClickListener() {
-            assessViewModel.startTimer()
-            binding.stopTimerButton.visibility = View.VISIBLE
-            binding.pauseTimerButton.visibility = View.VISIBLE
-            it.isEnabled = false
-            true
+            // get the time writen in the text field and set it as the timer
+            if(binding.timerTextField.text.toString() == "") {
+                binding.timerTextField.setText("0")
+                Toast.makeText(requireContext(), "Please enter a time", Toast.LENGTH_SHORT).show()
+            } else if(binding.timerTextField.text.toString().toInt() == 0) {
+                Toast.makeText(requireContext(), "Please enter a time greater than 0", Toast.LENGTH_SHORT).show()
+            } else if(binding.timerTextField.text.toString().toInt() > 60) {
+                Toast.makeText(requireContext(), "Please enter a time less than 60", Toast.LENGTH_SHORT).show()
+            } else {
+                assessViewModel.setCounter(binding.timerTextField.text.toString().toInt())
+
+                assessViewModel.startTimer()
+                binding.stopTimerButton.visibility = View.VISIBLE
+                binding.pauseTimerButton.visibility = View.VISIBLE
+                it.isEnabled = false
+            }
+        }
+
+
+        assessViewModel.counterTextInt.observe(viewLifecycleOwner) {
+            val progressBar = binding.progressBar
+            progressBar.max = assessViewModel.counter.value!!
+            progressBar.progress = it
+//            // set an animation for the progress bar for each tick
+//            val animation = ObjectAnimator.ofInt(progressBar, "progress", progressBar.progress, it)
+//            animation.duration = 500
+//            animation.interpolator = LinearInterpolator()
+//            animation.start()
+
+
+//            animation.addListener(object : AnimatorListenerAdapter() {
+//                override fun onAnimationEnd(animation: Animator?) {
+//                    super.onAnimationEnd(animation)
+//                    progressBar.progress = it
+//
+////                    if(assessViewModel.counterTextInt.value == assessViewModel.counter.value) {
+////                        assessViewModel.timerFinished()
+////                    }
+//                }
+//            })
         }
 
         binding.stopTimerButton.setOnClickListener() {
@@ -166,7 +212,6 @@ class AssessFragment: Fragment() {
             binding.stopTimerButton.visibility = View.GONE
             binding.pauseTimerButton.visibility = View.GONE
             binding.startTimerButton.isEnabled = true
-            true
         }
 
         binding.pauseTimerButton.setOnClickListener() {
@@ -175,7 +220,14 @@ class AssessFragment: Fragment() {
         }
 
         assessViewModel.timerFinished.observe(viewLifecycleOwner) {
+
+
             if(it) {
+                assessViewModel.stopTimer()
+                binding.stopTimerButton.visibility = View.GONE
+                binding.pauseTimerButton.visibility = View.GONE
+                binding.startTimerButton.isEnabled = true
+                
 //                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
 //                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
             } else {
