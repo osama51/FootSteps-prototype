@@ -64,7 +64,7 @@ class ExportCsvService @Inject constructor(
 ) {
 
     @WorkerThread
-    fun <T> writeToCSV(csvConfig: CsvConfig, csvFileUri: Uri, content: List<T>) = flow<Uri> {
+    fun <T> writeToCSV(csvConfig: CsvConfig, csvFileUri: Uri, uriString: String = "", content: List<T>) = flow<Uri> {
 
         csvConfig.hostPath.ifEmpty { throw IllegalStateException("Wrong Path") }
         val hostDirectory = File(csvConfig.hostPath)
@@ -74,7 +74,7 @@ class ExportCsvService @Inject constructor(
         }
 
         // 👇 create csv file
-        val csvFile = File("${hostDirectory.path}/${csvConfig.fileName}")
+        val csvFile = File("${hostDirectory.path}/${uriString}")
         val csvWriter = CSVWriter(FileWriter(csvFile))
         Log.i("ExportService", "Creating file: ${csvFile.path}")
 

@@ -287,36 +287,36 @@ class StatsViewModel(
     var a1: Double = 10.0
     var a2: Double = 0.0
 
-    fun updateAccelerometerData(accelerometerData: List<Int>) {
+    fun updateAccelerometerData(accelerometerData: List<Double>) {
 //        _accelerometerData.value = accelerometerData.toMutableList()
-        _accelerometerRightData.value = listOf(a0, a1, a2).toMutableList()
-        if(a0 >= 10.0){
-            a0 = 0.0
-        } else {
-            a0++
-        }
-        if(a1 <= 0.0){
-            a1 = 10.0
-        } else {
-            a1--
-        }
+        _accelerometerRightData.value = accelerometerData.toMutableList()
+//        if(a0 >= 10.0){
+//            a0 = 0.0
+//        } else {
+//            a0++
+//        }
+//        if(a1 <= 0.0){
+//            a1 = 10.0
+//        } else {
+//            a1--
+//        }
     }
 
     var a0L: Double = 0.0
     var a1L: Double = 10.0
     var a2L: Double = 0.0
-    fun updateAccelerometerLeftData(accelerometerData: List<Int>) {
+    fun updateAccelerometerLeftData(accelerometerData: List<Double>) {
 //        _accelerometerData.value = accelerometerData.toMutableList()
-        _accelerometerLeftData.value = listOf(a0L, a1L, a2).toMutableList()
-        if(a0L >= 10.0){
-            a0L = 0.0
-        } else {
-            a0L++
-        }
-        if(a1L <= 0.0){
-            a1L = 10.0
-        } else {
-            a1L--
-        }
+        _accelerometerLeftData.value = accelerometerData.toMutableList()
+//        if(a0L >= 10.0){
+//            a0L = 0.0
+//        } else {
+//            a0L++
+//        }
+//        if(a1L <= 0.0){
+//            a1L = 10.0
+//        } else {
+//            a1L--
+//        }
     }
 }

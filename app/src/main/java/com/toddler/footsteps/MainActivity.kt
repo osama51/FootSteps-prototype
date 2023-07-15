@@ -49,6 +49,7 @@ import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.database.rawdata.LeftFootFrame
 import com.toddler.footsteps.database.rawdata.RightFootFrame
 import com.toddler.footsteps.database.reference.User
+import com.toddler.footsteps.database.repository.leftFootRepository
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.heatmap.HeatMapViewModel
 import com.toddler.footsteps.heatmap.Insole
@@ -97,6 +98,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var referenceViewModel: ReferenceViewModel
     private lateinit var chartsViewModel: ChartViewModel
     private lateinit var statsViewModel: StatsViewModel
+    private lateinit var assessViewModel: AssessViewModel
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var messageList: RecyclerView
     private lateinit var searchDevices: MenuItem
@@ -171,12 +173,12 @@ class MainActivity : AppCompatActivity() {
     private var f3: Int = 0
     private var f4: Int = 0
     private var f5: Int = 0
-    private var a0: Int = 0
-    private var a1: Int = 0
-    private var a2: Int = 0
-    private var g0: Int = 0
-    private var g1: Int = 0
-    private var g2: Int = 0
+    private var a0: Double = 0.0
+    private var a1: Double = 0.0
+    private var a2: Double = 0.0
+    private var g0: Double = 0.0
+    private var g1: Double = 0.0
+    private var g2: Double = 0.0
     private var counter: Int = 0
 
     private var pointX0: HeatMap.DataPoint = HeatMap.DataPoint(0.0f, 0.0f, 0.0)
@@ -366,29 +368,29 @@ class MainActivity : AppCompatActivity() {
                                 strHolder = "0"
                             }
                             'a' -> {
-                                a0 = strHolder.toInt()
+                                a0 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'b' -> {
-                                a1 = strHolder.toInt()
+                                a1 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'c' -> {
-                                a2 = strHolder.toInt()
+                                a2 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'd' -> {
-                                g0 = strHolder.toInt()
+                                g0 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'e' -> {
-                                g1 = strHolder.toInt()
+                                g1 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             'f' -> {
                                 // sometimes this stores "" into g2 if I set strHolder to default ""
                                 // I still have no idea why it only happens to g2
-                                g2 = strHolder.toInt()
+                                g2 = strHolder.toDouble()
                                 strHolder = "0"
                             }
                             else -> {
@@ -418,6 +420,13 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
 //                    Log.i("RIGHT", "RIGHT")
+                    if (assessViewModel.storeData.value!!) {
+                        framesViewModel.insertRightFootFrame(
+                            RightFootFrame(
+                                id = 1, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
+                                a0, a1, a2, g0, g1, g2)
+                        )
+                    }
                     if (onScreen) {
                         if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
 //                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
@@ -446,6 +455,13 @@ class MainActivity : AppCompatActivity() {
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
 //                    Log.i("LEFT", "LEFT")
+                    if (assessViewModel.storeData.value!!) {
+                        framesViewModel.insertLeftFootFrame(
+                            LeftFootFrame(
+                                id = 2, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
+                                a0, a1, a2, g0, g1, g2)
+                        )
+                    }
                     if (onScreen) {
 //                    heatMapUtil.leftFootPoints(foot)
                         if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
@@ -491,6 +507,8 @@ class MainActivity : AppCompatActivity() {
         referenceViewModel = ViewModelProvider(this)[ReferenceViewModel::class.java]
         chartsViewModel = ViewModelProvider(this)[ChartViewModel::class.java]
         statsViewModel = ViewModelProvider(this)[StatsViewModel::class.java]
+        assessViewModel = ViewModelProvider(this)[AssessViewModel::class.java]
+
 
 
         chatViewModel.setScreen(Screens.MAIN_SCREEN)
@@ -665,8 +683,15 @@ class MainActivity : AppCompatActivity() {
 
 //        testingHeatmap()
         binding.addData.setOnClickListener {
-
-            referenceViewModel.fetchUsersFromDB()
+            framesViewModel.insertRightFootFrame(
+                RightFootFrame(
+                    id = 1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
+                    11.0, 12.0, 13.0, 14.0, 15.0, 16.0,))
+            framesViewModel.insertLeftFootFrame(
+                LeftFootFrame(
+                    id = 2, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
+                    11.0, 12.0, 13.0, 14.0, 15.0, 16.0,))
+//            referenceViewModel.fetchUsersFromDB()
 ////            addDataToDatabase()
         }
 
