@@ -8,10 +8,15 @@
 
 #include "BluetoothSerial.h"
 
+
+#include <MPU6050_tockn.h>
+#include <Wire.h>
+
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
+MPU6050 mpu6050(Wire);
 BluetoothSerial SerialBT;
 int counter0 = 0;
 int counter1 = 0;
@@ -19,15 +24,31 @@ int counter2 = 0;
 int counter3 = 0;
 int counter4 = 0;
 int counter5 = 0;
+
+int acc1 = 0;
+int acc2 = 0;
+int acc3 = 0;
+
+
 int id = 1;
 String str= "";
 void setup() {
   Serial.begin(115200);
   SerialBT.begin("ESP32test"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
+
+  Wire.begin();
+  mpu6050.begin();
+  mpu6050.calcGyroOffsets(true);
 }
 
 void loop() {
+  mpu6050.update();
+
+  acc1 = mpu6050.getAngleX() + 180;
+  acc2 = mpu6050.getAngleY() + 180;
+  acc3 = mpu6050.getAngleZ() + 180;
+  
   str = "";
   if (Serial.available()) {
     SerialBT.write(Serial.read());
@@ -81,7 +102,15 @@ str += String(counter4);
 str += "w";
 str += String(counter5);
 str += "x";
-str += "1233a1543b1543c1543d1543e1543f#";
+
+str += String(acc1);
+str += "a";
+str += String(acc2);
+str += "b";
+str += String(acc3);
+str += "c";
+str += "1543d1543e1543f#";
+
     SerialBT.println(str);
 //    SerialBT.println(str);
 //    delay(100);

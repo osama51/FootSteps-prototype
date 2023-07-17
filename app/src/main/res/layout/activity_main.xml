@@ -138,7 +138,7 @@
             app:neumorph_lightSource="rightTop"
             app:neumorph_shadowColorDark="@color/gray"
 
-        app:neumorph_shadowColorLight="@color/white"
+            app:neumorph_shadowColorLight="@color/white"
             app:neumorph_strokeColor="@color/white"
             app:neumorph_strokeWidth="0dp"
             app:neumorph_shadowElevation="5dp"

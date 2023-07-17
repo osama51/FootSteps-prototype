@@ -41,4 +41,13 @@ interface UserDao {
     @Query("SELECT * FROM user_table WHERE selected = :selected")
     suspend fun getUsersBySelected(selected: Boolean): List<User>
 
+    /**
+     * Get Last User
+     *
+     * @return last user.
+     */
+
+    @Query("SELECT * FROM user_table ORDER BY id DESC LIMIT 1")
+    suspend fun getLastUser(): User?
+
 }

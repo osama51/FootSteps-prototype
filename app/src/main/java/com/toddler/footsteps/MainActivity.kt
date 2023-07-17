@@ -14,6 +14,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
@@ -194,6 +195,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dataPoints: List<HeatMap.DataPoint>
 
     private var foot: Insole = Insole()
+    var leftFoot: Insole = Insole()
+    var rightFoot: Insole = Insole()
+    var leftAcc: Double = 0.0
+    var rightAcc: Double = 0.0
 
     private var strHolder: String = ""
 
@@ -241,10 +246,19 @@ class MainActivity : AppCompatActivity() {
             deviceName = data?.getStringExtra("deviceName")!!
             device = data?.getParcelableExtra<BluetoothDevice>("device")!!
             bluetoothUtils?.connect(bluetoothAdapter!!.getRemoteDevice(connectedDevice))
+
+//           val fragmentManager = supportFragmentManager
+//
+//            // Replace the current content of the FrameLayout with your Fragment
+//            val transaction = fragmentManager.beginTransaction()
+//            var fragment = RefInstructionsFragment()
+//            transaction.replace(R.id.frameLayout, fragment, "")
+//            transaction.addToBackStack(null) // Add to back stack if you want to navigate back
+//            transaction.commit()
         }
     }
 
-    private var handler: Handler = Handler(Handler.Callback { message ->
+    var handler: Handler = Handler(Handler.Callback { message ->
 //        startTime = System.currentTimeMillis()
 //        Log.d("___CALL___", "Current time: $startTime milliseconds")
 
@@ -432,17 +446,21 @@ class MainActivity : AppCompatActivity() {
 //                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
                         } else if (chatViewModel.screen.value == Screens.MAIN_SCREEN) {
                             heatMapUtil.rightFootPoints(foot)
-                            //                    rightHeatMap.forceRefresh()
-                            //                    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
+                            //    rightHeatMap.forceRefresh()
+                            //    Log.i("BEFORE CONDITION ", chatViewModel.screen.value.toString())
                         }
                     }
-                    jumpR = if (jumpR >= 2) {
+
+                        rightFoot = foot
+                        rightAcc = a1
+//                    jumpR = if (jumpR >= 2) {
                         chartsViewModel.addDataToRightQueue(foot)
                         statsViewModel.updateAccelerometerData(listOf(a0, a1, a2))
-                        0
-                    } else {
-                        jumpR + 1
-                    }
+//                        Log.i("RIGHT", "${a0}, ${a1}, ${a2}")
+//                        0
+//                    } else {
+//                        jumpR + 1
+//                    }
                     readRight = true
                     readLeft = false
                 }
@@ -470,18 +488,30 @@ class MainActivity : AppCompatActivity() {
 //                        leftHeatMap.forceRefresh()
                         }
                     }
-                    jumpL = if (jumpL >= 2) {
+
+                        leftFoot = foot
+                        leftAcc = a1
+//                    jumpL = if (jumpL >= 2) {
                         chartsViewModel.addDataToLeftQueue(foot)
                         statsViewModel.updateAccelerometerLeftData(listOf(a0, a1, a2))
-                        0
-                    } else {
-                        jumpL + 1
-                    }
+//                        Log.i("LEFT", "${a0}, ${a1}, ${a2}")
+//                        0
+//                    } else {
+//                        jumpL + 1
+//                    }
                     readLeft = true
                     readRight = false
                 }
             }
         }
+
+        jumpL = if (jumpL >= 2) {
+            referenceViewModel.setAlarms(leftFoot, rightFoot, leftAcc, rightAcc,  binding.frameLayout)
+            0
+        } else {
+            jumpL + 1
+        }
+
 //          }
 //      }
 //  }
@@ -695,60 +725,60 @@ class MainActivity : AppCompatActivity() {
 ////            addDataToDatabase()
         }
 
-        referenceViewModel.users.observe(this) {
-            lifecycleScope.launch {
-                it?.let {
-                    val csvConfig = CsvConfig()
-                    // set the Uri of the file from the csvConfig hostPath and fileName
-                    val uri = Uri.parse("${csvConfig.hostPath}/${csvConfig.fileName}")
-
-
-                    ExportCsvService(this@MainActivity).writeToCSV(csvConfig, uri, "",it.toUserCSV())
-                        .catch { error ->
-                            // 👇 handle error here
-                            toast = Toast.makeText(
-                                this@MainActivity,
-                                "Error: ${error.message}",
-                                Toast.LENGTH_SHORT
-                            )
-                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-
-                            toast.show()
-                            Log.e("ReferenceViewModel", "Error: ${error.message}")
-                        }.collect { _ ->
-                            // 👇 do anything on success
-                            toast = Toast.makeText(
-                                this@MainActivity,
-                                "Data Successfully Exported to CSV",
-                                Toast.LENGTH_SHORT
-                            )
-                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
-                            toast.show()
-                            Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
-
-                        }
-//                    Log.i("ReferenceViewModel", "usersssssss: ${it.toUserCSV()}")
-//                    // 👇 call export function from Export serivce
+//        referenceViewModel.users.observe(this) {
+//            lifecycleScope.launch {
+//                it?.let {
 //                    val csvConfig = CsvConfig()
-//                    ExportService.export<UserCSV>(
-//                        type = Exports.CSV(csvConfig), // 👈 apply config + type of export
-//                        content = it.toUserCSV() // 👈 send transformed data of exportable type
-//                    ).catch { error ->
-//                        // 👇 handle error here
-//                        Log.e("ReferenceViewModel", "Error: ${error.message}")
-//                    }.collect { _ ->
-//                        // 👇 do anything on success
-//                        Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
-//                    }
+//                    // set the Uri of the file from the csvConfig hostPath and fileName
+//                    val uri = Uri.parse("${csvConfig.hostPath}/${csvConfig.fileName}")
 //
-////                    csvWriter().writeAll(
-////                        it.asSequence(),
-////                        "${csvConfig.hostPath}/${csvConfig.fileName}",
-////                        append = true
-////                    )
-                }
-            }
-        }
+//
+//                    ExportCsvService(this@MainActivity).writeToCSV(csvConfig, uri, "",it.toUserCSV())
+//                        .catch { error ->
+//                            // 👇 handle error here
+//                            toast = Toast.makeText(
+//                                this@MainActivity,
+//                                "Error: ${error.message}",
+//                                Toast.LENGTH_SHORT
+//                            )
+//                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+//
+//                            toast.show()
+//                            Log.e("ReferenceViewModel", "Error: ${error.message}")
+//                        }.collect { _ ->
+//                            // 👇 do anything on success
+//                            toast = Toast.makeText(
+//                                this@MainActivity,
+//                                "Data Successfully Exported to CSV",
+//                                Toast.LENGTH_SHORT
+//                            )
+//                            toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
+//                            toast.show()
+//                            Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
+//
+//                        }
+////                    Log.i("ReferenceViewModel", "usersssssss: ${it.toUserCSV()}")
+////                    // 👇 call export function from Export serivce
+////                    val csvConfig = CsvConfig()
+////                    ExportService.export<UserCSV>(
+////                        type = Exports.CSV(csvConfig), // 👈 apply config + type of export
+////                        content = it.toUserCSV() // 👈 send transformed data of exportable type
+////                    ).catch { error ->
+////                        // 👇 handle error here
+////                        Log.e("ReferenceViewModel", "Error: ${error.message}")
+////                    }.collect { _ ->
+////                        // 👇 do anything on success
+////                        Log.i("ReferenceViewModel", "Success: ${it.toUserCSV()}")
+////                    }
+////
+//////                    csvWriter().writeAll(
+//////                        it.asSequence(),
+//////                        "${csvConfig.hostPath}/${csvConfig.fileName}",
+//////                        append = true
+//////                    )
+//                }
+//            }
+//        }
 
         // Create the pulsating animation
         animator = ValueAnimator.ofFloat(1.0f, 1.3f).apply {
@@ -879,6 +909,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         manageScreenStates()
+
+        referenceViewModel.alarmState.observe(this) {
+
+            Log.i("alarmState", "alarmState: $it")
+            // transition the foreground of the frame layout between the two drawables of alertDrawables array
+            val transition = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
+            val transition2 = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
+            binding.frameLayout.foreground = transition2
+            transition2.startTransition(1000)
+//            binding.frameLayout.foreground = transition
+//            transition.startTransition(1000)
+        }
 
 
 //        flActionBtn.setOnTouchListener(object : View.OnTouchListener {
@@ -1019,7 +1061,7 @@ class MainActivity : AppCompatActivity() {
             if (isTouching) {
                 referenceSet = true
                 cancelPulsatingAnimation()
-                addUserToDatabase()
+                addUserToDatabase(leftFoot, rightFoot, leftAcc, rightAcc)
                 toast = Toast.makeText(this, "New Reference Added", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
@@ -1142,14 +1184,30 @@ class MainActivity : AppCompatActivity() {
         framesViewModel.insertRightFootFrame(rightFootFrame)
     }
 
-    fun addUserToDatabase() {
+    fun addUserToDatabase(left: Insole, right: Insole, leftAcc1: Double, rightAcc1: Double) {
         val user = User(
             title = "Zeft",
             timestamp = System.currentTimeMillis(),
-            selected = true
+            selected = true,
+            sensorL1 = left.sensor1,
+            sensorL2 = left.sensor2,
+            sensorL3 = left.sensor3,
+            sensorL4 = left.sensor4,
+            sensorL5 = left.sensor5,
+            sensorL6 = left.sensor6,
+            sensorR1 = right.sensor1,
+            sensorR2 = right.sensor2,
+            sensorR3 = right.sensor3,
+            sensorR4 = right.sensor4,
+            sensorR5 = right.sensor5,
+            sensorR6 = right.sensor6,
+            accL1 = leftAcc1,
+            accR1 = rightAcc1
+
         )
         referenceViewModel.insertUser(user)
     }
+
 
     override fun onStart() {
         heatMapUtil.leftFootPoints(Insole())

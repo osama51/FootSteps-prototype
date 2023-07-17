@@ -323,42 +323,52 @@ class HeatMapUtil(
 
     fun analyticTheme() {
 
+
         // ARGB --> 0xAARRGGBB
         //make the colour gradient from pink to yellow
+        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
+
+        colorStops.put(0.1f, 0x604294ff.toInt()) // bluish
+        colorStops.put(0.15f, 0xa02684ff.toInt()) // bluish
+        colorStops.put(0.20f, 0xff60f52a.toInt()) // greenish
+        colorStops.put(0.35f, 0xff60f52a.toInt()) // greenish
+
+        colorStops.put(0.4f, 0xfffff600.toInt()) // yellowish
+        colorStops.put(0.6f, 0xfffff600.toInt()) // yellowish
+        colorStops.put(0.65f, 0xfff9c320.toInt()) // yellowish
+
+        colorStops.put(0.7f, 0xfff9aa20.toInt()) // reddish
+        colorStops.put(0.75f, 0xaaff2100.toInt()) // reddish
+        colorStops.put(0.85f, 0xaaff2100.toInt()) // reddish
+        colorStops.put(1.0f, 0xaaff2100.toInt()) // reddish
+
+        leftHeatMap.setMinimumOpacity(220)
+        leftHeatMap.setMaximumOpacity(250)
+
+        rightHeatMap.setMinimumOpacity(220)
+        rightHeatMap.setMaximumOpacity(250)
+
+
+
 //        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
 //
-//        colorStops.put(0.25f, 0xff4294ff.toInt()) // bluish
+//        colorStops.put(0.1f, 0xff0000ff.toInt()) // blue
+//
+//        colorStops.put(0.25f, 0xff00ffff.toInt()) // cyan
 ////        colorStops.put(0.15f, 0xff2684ff.toInt()) // bluish
 ////        colorStops.put(0.20f, 0xff60f52a.toInt()) // greenish
-//        colorStops.put(0.35f, 0xff60f52a.toInt()) // greenish
+//        colorStops.put(0.35f, 0xff00ff00.toInt()) // green
 //
-//        colorStops.put(0.4f, 0xfffff600.toInt()) // yellowish
+//        colorStops.put(0.4f, 0xff00ff00.toInt()) // green
 //        colorStops.put(0.6f, 0xfffff600.toInt()) // yellowish
-//        colorStops.put(0.65f, 0xfff9c320.toInt()) // yellowish
+//        colorStops.put(0.65f, 0xffffff00.toInt()) // yellowish
 //
-//        colorStops.put(0.7f, 0xfff9aa20.toInt()) // reddish
+//        colorStops.put(0.7f, 0xffffa500.toInt()) // orange
 //        colorStops.put(0.75f, 0xffff2100.toInt()) // reddish
 //        colorStops.put(0.85f, 0xffff2100.toInt()) // reddish
 //        colorStops.put(0.99f, 0xffff2100.toInt()) // reddish
 
 
-        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
-
-        colorStops.put(0.1f, 0xff0000ff.toInt()) // blue
-
-        colorStops.put(0.25f, 0xff00ffff.toInt()) // cyan
-//        colorStops.put(0.15f, 0xff2684ff.toInt()) // bluish
-//        colorStops.put(0.20f, 0xff60f52a.toInt()) // greenish
-        colorStops.put(0.35f, 0xff00ff00.toInt()) // green
-
-        colorStops.put(0.4f, 0xff00ff00.toInt()) // green
-        colorStops.put(0.6f, 0xfffff600.toInt()) // yellowish
-        colorStops.put(0.65f, 0xffffff00.toInt()) // yellowish
-
-        colorStops.put(0.7f, 0xffffa500.toInt()) // orange
-        colorStops.put(0.75f, 0xffff2100.toInt()) // reddish
-        colorStops.put(0.85f, 0xffff2100.toInt()) // reddish
-        colorStops.put(0.99f, 0xffff2100.toInt()) // reddish
 
 
 //        colorStops.put(0.7f, 0xfff9c320.toInt()) // reddish
@@ -372,26 +382,62 @@ class HeatMapUtil(
 //        leftHeatMap.setRadius(pixels)
 //        rightHeatMap.setRadius(pixels)
 
+
+
         leftHeatMap.setColorStops(colorStops)
         rightHeatMap.setColorStops(colorStops)
     }
 
     fun userFriendlyTheme() {
+//
+//        // ARGB --> 0xAARRGGBB
+//        //make colour gradients of turquoise
+//        colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
+//
+//        colorStops.put(0.1f, 0xff73D3CE.toInt()) // blue
+//
+////        colorStops.put(0.05f, 0xff005af4.toInt()) // -0x11bd0c
+////        colorStops.put(0.25f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
+////        colorStops.put(1.0f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
+//
+////        colorStops.put(0.1f, 0xff82ecff.toInt())  // turquoise
+////        colorStops.put(0.25f, 0xffffffff.toInt())  // turquoise
+////        colorStops.put(0.15f, 0xff00fff4.toInt()) // turquoise
+//        colorStops.put(0.25f, 0xff00fff4.toInt()) // turquoise
+//
+//        colorStops.put(0.35f, 0xff00fff4.toInt()) // turquoise
+//        colorStops.put(0.4f, 0xff00fff4.toInt())  // turquoise
+//        colorStops.put(0.6f, 0xff00fff4.toInt())  // turquoise
+//        colorStops.put(0.65f, 0xff00fff4.toInt()) // turquoise
+//
+//        colorStops.put(0.7f, 0xff00fff4.toInt())  // turquoise
+//        colorStops.put(0.75f, 0xff00fff4.toInt()) // turquoise
+//        colorStops.put(0.85f, 0xfff72d63.toInt()) // reddish
+//        colorStops.put(0.99f, 0xfff72d63.toInt())  // reddish
+//
+////        rightHeatMap.setOpacity(0)
+////        leftHeatMap.setOpacity(0)
+////
+////        leftHeatMap.setMinimumOpacity(0)
+////        leftHeatMap.setMaximumOpacity(255)
+////
+////        rightHeatMap.setMinimumOpacity(0)
+////        rightHeatMap.setMaximumOpacity(255)
+//
+////        leftHeatMap.setRadius(pixels)
+////        rightHeatMap.setRadius(pixels)
 
         // ARGB --> 0xAARRGGBB
         //make colour gradients of turquoise
         colorStops.put(0.0f, 0xff75898C.toInt()) // gray background
 
-        colorStops.put(0.1f, 0xff73D3CE.toInt()) // blue
-
 //        colorStops.put(0.05f, 0xff005af4.toInt()) // -0x11bd0c
 //        colorStops.put(0.25f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
 //        colorStops.put(1.0f, 0xff00fff4.toInt()) //#4287f5 -0x110bbe
 
-//        colorStops.put(0.1f, 0xff82ecff.toInt())  // turquoise
-//        colorStops.put(0.25f, 0xffffffff.toInt())  // turquoise
-//        colorStops.put(0.15f, 0xff00fff4.toInt()) // turquoise
-        colorStops.put(0.25f, 0xff00fff4.toInt()) // turquoise
+        colorStops.put(0.1f, 0xff82ecff.toInt())  // turquoise
+        colorStops.put(0.15f, 0xff00fff4.toInt()) // turquoise
+        colorStops.put(0.20f, 0xff00fff4.toInt()) // turquoise
 
         colorStops.put(0.35f, 0xff00fff4.toInt()) // turquoise
         colorStops.put(0.4f, 0xff00fff4.toInt())  // turquoise
@@ -401,19 +447,14 @@ class HeatMapUtil(
         colorStops.put(0.7f, 0xff00fff4.toInt())  // turquoise
         colorStops.put(0.75f, 0xff00fff4.toInt()) // turquoise
         colorStops.put(0.85f, 0xfff72d63.toInt()) // reddish
-        colorStops.put(0.99f, 0xfff72d63.toInt())  // reddish
+        colorStops.put(1.0f, 0xfff72d63.toInt())  // reddish
 
-//        rightHeatMap.setOpacity(0)
-//        leftHeatMap.setOpacity(0)
-//
-//        leftHeatMap.setMinimumOpacity(0)
-//        leftHeatMap.setMaximumOpacity(255)
-//
-//        rightHeatMap.setMinimumOpacity(0)
-//        rightHeatMap.setMaximumOpacity(255)
+        leftHeatMap.setMinimumOpacity(200)
+        leftHeatMap.setMaximumOpacity(250)
 
-//        leftHeatMap.setRadius(pixels)
-//        rightHeatMap.setRadius(pixels)
+        rightHeatMap.setMinimumOpacity(200)
+        rightHeatMap.setMaximumOpacity(250)
+
 
         leftHeatMap.setColorStops(colorStops)
         rightHeatMap.setColorStops(colorStops)

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
@@ -272,6 +273,40 @@ class AssessFragment: Fragment() {
             Animation.RELATIVE_TO_SELF, _toX,
             Animation.RELATIVE_TO_SELF, _fromY,
             Animation.RELATIVE_TO_SELF, _toY)
+
+        // Set the duration and interpolator for the animation
+        animation.duration = duration
+        animation.interpolator = AccelerateInterpolator()
+
+        // Set the AnimationListener to handle the view's visibility change
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(animation: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                // Set the visibility of the view to "gone" after the animation ends
+                view.visibility = viewVisibility
+            }
+        })
+        view.startAnimation(animation)
+    }
+
+
+    // another function to handle visibility with fading instead of translating
+    private fun handleVisibilityWithFade(view: View, showHide: ShowHide, duration: Long, fromAlpha: Float, toAlpha: Float) {
+        var _fromAlpha = fromAlpha
+        var _toAlpha = toAlpha
+        var viewVisibility = View.GONE
+
+        if(showHide == ShowHide.SHOW) {
+            viewVisibility = View.VISIBLE
+            view.visibility = viewVisibility
+
+        } else if(showHide == ShowHide.HIDE) {
+            viewVisibility = View.GONE
+        }
+
+        // Create a TranslateAnimation to animate the view's position
+        val animation = AlphaAnimation(_fromAlpha, _toAlpha)
 
         // Set the duration and interpolator for the animation
         animation.duration = duration

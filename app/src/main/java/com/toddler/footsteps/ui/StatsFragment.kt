@@ -90,13 +90,13 @@ class StatsFragment : Fragment() {
 
         statsViewModel.accelerometerRightData.observe(viewLifecycleOwner) {
             val yaw = atan2(-it[0]/10, it[1]/10) * 180 / Math.PI
-            statsViewModel.setRightFootAngle(yaw)
+            statsViewModel.setRightFootAngle(it[1])
 //            Log.i("StatsFragment", "Yaw: $yaw")
         }
 
         statsViewModel.accelerometerLeftData.observe(viewLifecycleOwner) {
             val yaw = atan2(-it[0]/10, -it[1]/10) * 180 / Math.PI
-            statsViewModel.setLeftFootAngle(yaw)
+            statsViewModel.setLeftFootAngle(it[1])
 //            Log.i("StatsFragment", "Yaw: $yaw")
         }
 
