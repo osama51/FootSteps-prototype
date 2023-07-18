@@ -64,6 +64,10 @@ class ReferenceViewModel(
     val finished: MutableLiveData<Boolean>
         get() = _finished
 
+    private val _referenceSet = MutableLiveData<Boolean>(false)
+    val referenceSet: MutableLiveData<Boolean>
+        get() = _referenceSet
+
     private val _users: MutableLiveData<List<User>> = MutableLiveData()
     val users: LiveData<List<User>>
         get() = _users
@@ -90,6 +94,10 @@ class ReferenceViewModel(
 
     fun setReference(user: User) {
         _user.value = user
+    }
+
+    fun setReferenceSet(value: Boolean) {
+        _referenceSet.value = value
     }
 
     fun getLeftRefSum(): Double{
@@ -165,6 +173,8 @@ class ReferenceViewModel(
 
     var _fromDrawableId: Int = R.drawable.bg_gradient_red
     var _toDrawableId: Int = R.drawable.bg_gradient_red
+    var state = AlarmState.NONE
+
     fun setAlarms(leftFoot: Insole, rightFoot: Insole, leftAcc: Double, rightAcc: Double, frameLayout: FrameLayout) {
         viewModelScope.launch {
 
@@ -182,41 +192,63 @@ class ReferenceViewModel(
 //                    null
 //                )
 
-            var state = AlarmState.NONE
             var leftFootSum = leftFoot.sensor1 + leftFoot.sensor2 + leftFoot.sensor3 + leftFoot.sensor4 + leftFoot.sensor5 + leftFoot.sensor6
             var rightFootSum = rightFoot.sensor1 + rightFoot.sensor2 + rightFoot.sensor3 + rightFoot.sensor4 + rightFoot.sensor5 + rightFoot.sensor6
 
-//            Log.i("ReferenceViewModel", "leftAcc: $leftAcc rightAcc: $rightAcc")
-            if(kotlin.math.abs(leftAcc - rightAcc) > 150) {
-                if(_alarmState.value != AlarmState.ALL){
-                    _fromDrawableId = _toDrawableId
-                    _toDrawableId = R.drawable.bg_alert_all
+
+            frameLayout.foreground = ResourcesCompat.getDrawable(
+                getApplication<Application>().resources,
+                if (kotlin.math.abs(leftAcc - rightAcc) > 60 ) {
                     state = AlarmState.ALL
-                }
-
-            } else{
-                if(_alarmState.value != AlarmState.NONE ){
-                    _fromDrawableId = _toDrawableId
-                    _toDrawableId = R.drawable.bg_gradient_red
+                    R.drawable.bg_alert_all
+                } else if (leftFootSum > getLeftRefSum() * 3 && _referenceSet.value!!) {
+                    state = AlarmState.LEFT
+                    R.drawable.bg_alert_left
+                } else if (rightFootSum > getRightRefSum() * 3 && _referenceSet.value!!) {
+                    state = AlarmState.RIGHT
+                    R.drawable.bg_alert_right
+                } else {
                     state = AlarmState.NONE
-                }
-            }
+                    R.drawable.bg_gradient_red
+                },
+                null
+            )
 
 
-//        } else if(leftFootSum > getLeftRefSum() * 1.5){
+//
+////            Log.i("ReferenceViewModel", "leftAcc: $leftAcc rightAcc: $rightAcc")
+//            if(kotlin.math.abs(leftAcc - rightAcc) > 60) {
+//                if(_alarmState.value != AlarmState.ALL){
+//                    _fromDrawableId = _toDrawableId
+//                    _toDrawableId = R.drawable.bg_alert_all
+//                    state = AlarmState.ALL
+//                }
+//            } else if(leftFootSum > getLeftRefSum() * 1.5){
 //            if(_alarmState.value != AlarmState.LEFT){
 //                _fromDrawableId = _toDrawableId
 //                _toDrawableId = R.drawable.bg_alert_left
 //                state = AlarmState.LEFT
 //            }
-//        } else if(rightFootSum > getRightRefSum() * 1.5){
-//            if(_alarmState.value != AlarmState.RIGHT){
-//                _fromDrawableId = _toDrawableId
-//                _toDrawableId = R.drawable.bg_alert_right
-//                state = AlarmState.RIGHT
+//        } else if(rightFootSum > getRightRefSum() * 1.5) {
+//                if (_alarmState.value != AlarmState.RIGHT) {
+//                    _fromDrawableId = _toDrawableId
+//                    _toDrawableId = R.drawable.bg_alert_right
+//                    state = AlarmState.RIGHT
+//
+//                }
+//            }else{
+//                Log.i("ReferenceViewModel", "Condition:::Im in the wrong condition")
+//                if(_alarmState.value != AlarmState.NONE ){
+//                    _fromDrawableId = _toDrawableId
+//                    _toDrawableId = R.drawable.bg_gradient_red
+//                    state = AlarmState.NONE
+//                }
 //            }
+//
+//            Log.i("ReferenceViewModel", "Condition:::${rightFootSum > getRightRefSum() * 1.5}")
+//
 
-
+//
 
 
 
@@ -233,8 +265,6 @@ class ReferenceViewModel(
 //                    _alarmState.value = AlarmState.LEFT
 //                }
 //            }
-
-
 
             // array of drawables of left and right alerts
             _arrayDrawables.value = arrayOf(

@@ -14,7 +14,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
@@ -34,7 +33,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import ca.hss.heatmaplib.HeatMap
 import com.github.mikephil.charting.charts.LineChart
@@ -50,17 +48,12 @@ import com.toddler.footsteps.chat.ChatViewModel
 import com.toddler.footsteps.database.rawdata.LeftFootFrame
 import com.toddler.footsteps.database.rawdata.RightFootFrame
 import com.toddler.footsteps.database.reference.User
-import com.toddler.footsteps.database.repository.leftFootRepository
 import com.toddler.footsteps.databinding.ActivityMainBinding
 import com.toddler.footsteps.heatmap.HeatMapViewModel
 import com.toddler.footsteps.heatmap.Insole
 import com.toddler.footsteps.navbar.CustomBottomNavBar
-import com.toddler.footsteps.services.exportcsv.CsvConfig
-import com.toddler.footsteps.services.exportcsv.ExportCsvService
-import com.toddler.footsteps.services.exportcsv.adapters.toUserCSV
 import com.toddler.footsteps.ui.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.catch
 import soup.neumorphism.ShapeType
 import java.text.SimpleDateFormat
 import java.util.*
@@ -202,11 +195,22 @@ class MainActivity : AppCompatActivity() {
 
     private var strHolder: String = ""
 
-    private var startTime by Delegates.notNull<Long>()
+    var startTime = System.currentTimeMillis()
+    var strideStartTime = System.currentTimeMillis()
+    var strideEndTime = System.currentTimeMillis()
 
     var onScreen = true
     var readLeft = false
     var readRight = true
+    var heelStrike = false
+    var toeStrike = false
+    var heelStrikeL = false
+    var toeStrikeL = false
+    var toeOff = false
+    var toeOffL = false
+    var startTimePicked = false
+    var strideTimePicked = false
+    var strideTimeEndPicked = false
     private var pressedTime: Long = 0L
 
     private lateinit var messageCopy: Message
@@ -428,19 +432,12 @@ class MainActivity : AppCompatActivity() {
 //            withContext(Dispatchers.Main) {
         when (id) {
             LeftRight.RIGHT.ordinal -> {
-                if (readLeft) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                        f0 = (0..4095).random()
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
 //                    Log.i("RIGHT", "RIGHT")
-                    if (assessViewModel.storeData.value!!) {
-                        framesViewModel.insertRightFootFrame(
-                            RightFootFrame(
-                                id = 1, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
-                                a0, a1, a2, g0, g1, g2)
-                        )
-                    }
+
                     if (onScreen) {
                         if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
 //                        Log.i("AFTER CONDITION ", chatViewModel.screen.value.toString())
@@ -451,11 +448,11 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                        rightFoot = foot
-                        rightAcc = a1
+                rightFoot = foot
+                rightAcc = a1
+                if (readLeft) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                    jumpR = if (jumpR >= 2) {
                         chartsViewModel.addDataToRightQueue(foot)
-                        statsViewModel.updateAccelerometerData(listOf(a0, a1, a2))
 //                        Log.i("RIGHT", "${a0}, ${a1}, ${a2}")
 //                        0
 //                    } else {
@@ -464,22 +461,41 @@ class MainActivity : AppCompatActivity() {
                     readRight = true
                     readLeft = false
                 }
+                statsViewModel.updateAccelerometerData(listOf(a0, a1, a2))
+                if (assessViewModel.storeData.value!!) {
+                    framesViewModel.insertRightFootFrame(
+                        RightFootFrame(
+                            id = 1, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
+                            a0, a1, a2, g0, g1, g2)
+                    )
+                }
+
+                if(foot.sensor1 > 200){
+                    heelStrike = true
+                }
+
+                if(heelStrike && foot.sensor1 < 200 && !toeStrike && foot.sensor6 > 200){
+                    toeStrike = true
+                    heelStrike = false
+                    statsViewModel.incrementStepCount()
+                }
+
+                if(toeStrike && foot.sensor6 < 200 ){
+                    toeStrike = false
+                }
+
+                if(!startTimePicked){
+                    startTime = System.currentTimeMillis()
+                    startTimePicked = true
+                }
             }
 
             LeftRight.LEFT.ordinal -> {
-                if (readRight) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                        f0 = (0..4095).random()
 //                        f1 = (0..4095).random()
 //                        f0 = (f0 + 1) % 60
 //                        f1 = (f1 + 1) % 60
 //                    Log.i("LEFT", "LEFT")
-                    if (assessViewModel.storeData.value!!) {
-                        framesViewModel.insertLeftFootFrame(
-                            LeftFootFrame(
-                                id = 2, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
-                                a0, a1, a2, g0, g1, g2)
-                        )
-                    }
                     if (onScreen) {
 //                    heatMapUtil.leftFootPoints(foot)
                         if (chatViewModel.screen.value != Screens.MAIN_SCREEN) {
@@ -489,11 +505,11 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                        leftFoot = foot
-                        leftAcc = a1
+                leftFoot = foot
+                leftAcc = a1
+                if (readRight) { // <-- this is to make sure each foot is read only once before the other is getting read (pure cheating)
 //                    jumpL = if (jumpL >= 2) {
-                        chartsViewModel.addDataToLeftQueue(foot)
-                        statsViewModel.updateAccelerometerLeftData(listOf(a0, a1, a2))
+                    chartsViewModel.addDataToLeftQueue(foot)
 //                        Log.i("LEFT", "${a0}, ${a1}, ${a2}")
 //                        0
 //                    } else {
@@ -501,6 +517,43 @@ class MainActivity : AppCompatActivity() {
 //                    }
                     readLeft = true
                     readRight = false
+                }
+                statsViewModel.updateAccelerometerLeftData(listOf(a0, a1, a2))
+                if (assessViewModel.storeData.value!!) {
+                    framesViewModel.insertLeftFootFrame(
+                        LeftFootFrame(
+                            id = 2, foot.sensor1, foot.sensor2, foot.sensor3, foot.sensor4, foot.sensor5, foot.sensor6,
+                            a0, a1, a2, g0, g1, g2)
+                    )
+                }
+
+                if(foot.sensor1 > 200){
+                    heelStrikeL = true
+                    if(strideTimePicked){
+                        strideTimePicked = false
+                        strideEndTime = System.currentTimeMillis()
+                        strideTimeEndPicked = true
+                    }
+                }
+
+
+                if(toeStrikeL && foot.sensor6 < 200){
+                    toeStrikeL = false
+                    strideStartTime = System.currentTimeMillis()
+                }
+//
+                if(heelStrikeL && foot.sensor1 < 200 && !toeStrikeL && foot.sensor6 > 200){
+                    toeStrikeL = true
+                    heelStrikeL = false
+                    statsViewModel.incrementStepCount()
+                    if(strideTimeEndPicked){
+                        strideTimeEndPicked = false
+                        strideTimePicked = false
+                        var strideTimeRange = strideEndTime - strideStartTime
+                        strideTimeRange /= 1000
+                        statsViewModel.setStrideLength(strideTimeRange * 20.0)
+                    }
+//
                 }
             }
         }
@@ -912,14 +965,17 @@ class MainActivity : AppCompatActivity() {
 
         referenceViewModel.alarmState.observe(this) {
 
+            if(it != AlarmState.NONE) {
+                vibrateWhenHigh()
+            }
             Log.i("alarmState", "alarmState: $it")
-            // transition the foreground of the frame layout between the two drawables of alertDrawables array
-            val transition = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
-            val transition2 = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
-            binding.frameLayout.foreground = transition2
-            transition2.startTransition(1000)
-//            binding.frameLayout.foreground = transition
-//            transition.startTransition(1000)
+//            // transition the foreground of the frame layout between the two drawables of alertDrawables array
+//            val transition = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
+//            val transition2 = TransitionDrawable(referenceViewModel.arrayDrawables.value!!)
+//            binding.frameLayout.foreground = transition2
+//            transition2.startTransition(1000)
+////            binding.frameLayout.foreground = transition
+////            transition.startTransition(1000)
         }
 
 
@@ -1065,6 +1121,8 @@ class MainActivity : AppCompatActivity() {
                 toast = Toast.makeText(this, "New Reference Added", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, yOffset)
                 toast.show()
+
+                referenceViewModel.setReferenceSet(true)
             }
         }
         handler.postDelayed(longPressRunnable!!, 3000) // 3 seconds

@@ -346,9 +346,9 @@
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_margin="18dp"
-                    app:cardCornerRadius="12dp"
                     android:focusableInTouchMode="true"
                     android:scaleType="center"
+                    app:cardCornerRadius="12dp"
                     app:layout_constraintBottom_toTopOf="@+id/neumorphCardView4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -362,27 +362,27 @@
                     app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
                     app:neumorph_shapeType="flat"
                     app:neumorph_strokeColor="@color/white"
-                    app:neumorph_strokeWidth="0dp" >
+                    app:neumorph_strokeWidth="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-<!--                        <TextView-->
-<!--                            style="@style/analytics_units"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Left"-->
-<!--                            app:layout_constraintStart_toStartOf="@+id/leftPieChart" />-->
+                        <!--                        <TextView-->
+                        <!--                            style="@style/analytics_units"-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:text="Left"-->
+                        <!--                            app:layout_constraintStart_toStartOf="@+id/leftPieChart" />-->
 
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/leftPieChart"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            app:layout_constraintDimensionRatio="1:1"
                             android:layout_margin="10dp"
                             android:visibility="visible"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toStartOf="@+id/rightPieChart"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
@@ -392,10 +392,10 @@
                             android:id="@+id/rightPieChart"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            app:layout_constraintDimensionRatio="1:1"
                             android:layout_margin="10dp"
                             android:visibility="visible"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toEndOf="@+id/leftPieChart"
@@ -405,30 +405,30 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/neumorphCardView4"
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_margin="18dp"
-                    app:cardCornerRadius="12dp"
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:id="@+id/neumorphCardView4"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="150dp"-->
+<!--                    android:layout_margin="18dp"-->
+<!--                    app:cardCornerRadius="12dp"-->
 
-                    android:focusableInTouchMode="true"
-                    android:scaleType="center"
+<!--                    android:focusableInTouchMode="true"-->
+<!--                    android:scaleType="center"-->
 
-                    app:layout_constraintBottom_toTopOf="@+id/assessMovementButton"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3"
-                    app:neumorph_backgroundColor="@color/kindaWhite"
-                    app:neumorph_lightSource="rightTop"
-                    app:neumorph_shadowColorDark="@color/gray"
-                    app:neumorph_shadowColorLight="@color/white"
-                    app:neumorph_shadowElevation="8dp"
-                    app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
-                    app:neumorph_shapeType="flat"
-                    app:neumorph_strokeColor="@color/white"
-                    app:neumorph_strokeWidth="0dp" />
+<!--                    app:layout_constraintBottom_toTopOf="@+id/assessMovementButton"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintHorizontal_bias="0.5"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3"-->
+<!--                    app:neumorph_backgroundColor="@color/kindaWhite"-->
+<!--                    app:neumorph_lightSource="rightTop"-->
+<!--                    app:neumorph_shadowColorDark="@color/gray"-->
+<!--                    app:neumorph_shadowColorLight="@color/white"-->
+<!--                    app:neumorph_shadowElevation="8dp"-->
+<!--                    app:neumorph_shapeAppearance="@style/CustomShapeAppearance"-->
+<!--                    app:neumorph_shapeType="flat"-->
+<!--                    app:neumorph_strokeColor="@color/white"-->
+<!--                    app:neumorph_strokeWidth="0dp" />-->
 
 
 
@@ -449,15 +449,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="18dp"
-                    android:padding="20dp"
                     android:backgroundTint="@color/white"
                     android:drawableStart="@drawable/ic_measure"
                     android:drawableTint="@color/lightBlue"
+                    android:padding="20dp"
                     android:text="@string/assess_movement"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toTopOf="@+id/dummyLinearLayout"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/neumorphCardView3" />
 
 
                 <LinearLayout

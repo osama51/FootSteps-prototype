@@ -31,23 +31,23 @@ class StatsViewModel(
     private val gyroscopeData = MutableLiveData<MutableList<FloatArray>>()
 
 
-        private val userDao: UserDao = UserDatabase.getInstance(application).userDao
+    private val userDao: UserDao = UserDatabase.getInstance(application).userDao
 
-        private val _finished = MutableLiveData<Boolean>(false)
-        val finished: MutableLiveData<Boolean>
-            get() = _finished
+    private val _finished = MutableLiveData<Boolean>(false)
+    val finished: MutableLiveData<Boolean>
+        get() = _finished
 
-        private val _users: MutableLiveData<List<User>> = MutableLiveData()
-        val users: LiveData<List<User>>
-            get() = _users
+    private val _users: MutableLiveData<List<User>> = MutableLiveData()
+    val users: LiveData<List<User>>
+        get() = _users
 
-        private val _nonSelectedUsers = MutableLiveData<List<User>>(ArrayList())
-        val nonSelectedUsers: MutableLiveData<List<User>>
-            get() = _nonSelectedUsers
+    private val _nonSelectedUsers = MutableLiveData<List<User>>(ArrayList())
+    val nonSelectedUsers: MutableLiveData<List<User>>
+        get() = _nonSelectedUsers
 
-        private var _user: MutableLiveData<User> = MutableLiveData()
-        val user: MutableLiveData<User>
-            get() = _user
+    private var _user: MutableLiveData<User> = MutableLiveData()
+    val user: MutableLiveData<User>
+        get() = _user
 
     // create a flow variable of type double to hold the speed
     private val _speed = MutableLiveData<Double>(0.0)
@@ -72,10 +72,19 @@ class StatsViewModel(
                 "$it"
             }
         }
+    val stepCountInt: MutableLiveData<Int>
+        get() = _stepCount
+
+    // get rough estimate of cadence from the step count
+    fun getRoughCadence(stepCount: Int, time: Long) {
+        _cadence.value = (stepCount / (time)).toInt()
+    }
 
 //    private val _stepCount = MutableLiveData<Int>(0)
 //    val stepCount: LiveData<Int>
 //        get() = _stepCount
+
+
 
     private val _strideLength = MutableLiveData<Double>(0.0)
     val strideLength: MutableLiveData<Double>
@@ -139,8 +148,10 @@ class StatsViewModel(
     }
 
     init {
-        _stepCount.value = 6253
-        _strideLength.value = 54.2
+        _stepCount.value = 0
+
+
+        _strideLength.value = 0.0
         Log.i("ReferenceViewModel", "ReferenceViewModel Created")
         _user.value = User()
     }
@@ -244,12 +255,12 @@ class StatsViewModel(
     }
 
     fun updateLeftPieCharts(leftPieChart: PieChart){
-        leftPieChart.rotationAngle = _leftFootAngle.value!!.toFloat()
+        leftPieChart.rotationAngle = _leftFootAngle.value!!.toFloat() + 90
         leftPieChart.invalidate()
     }
 
     fun updateRightPieCharts(rightPieChart: PieChart){
-        rightPieChart.rotationAngle = _rightFootAngle.value!!.toFloat()
+        rightPieChart.rotationAngle = _rightFootAngle.value!!.toFloat() + 90
         rightPieChart.invalidate()
     }
 
@@ -264,6 +275,11 @@ class StatsViewModel(
     fun setStepCount(stepCount: Int) {
         _stepCount.value = stepCount
     }
+
+    fun incrementStepCount() {
+        _stepCount.value = _stepCount.value?.plus(1)
+    }
+
 
     fun setStrideLength(strideLength: Double) {
         _strideLength.value = strideLength

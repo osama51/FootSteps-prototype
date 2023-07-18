@@ -132,10 +132,10 @@ class AssessViewModel(
 
     fun decrementCounter() {
         // decrement the counter by 1
-        if (_counter.value!! > 0) {
+        if (_counter.value!! > 10) {
             _counter.value = _counter.value?.minus(1)
         } else {
-            _counter.value = 0
+            _counter.value = 10
         }
     }
 

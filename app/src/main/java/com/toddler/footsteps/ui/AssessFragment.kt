@@ -176,7 +176,10 @@ class AssessFragment: Fragment() {
                 Toast.makeText(requireContext(), "Please enter a time", Toast.LENGTH_SHORT).show()
             } else if(binding.timerTextField.text.toString().toInt() == 0) {
                 Toast.makeText(requireContext(), "Please enter a time greater than 0", Toast.LENGTH_SHORT).show()
-            } else if(binding.timerTextField.text.toString().toInt() > 60) {
+            } else if(binding.timerTextField.text.toString().toInt() < 10){
+                Toast.makeText(requireContext(), "Please enter a time greater than 10", Toast.LENGTH_SHORT).show()
+            }
+            else if(binding.timerTextField.text.toString().toInt() > 60) {
                 Toast.makeText(requireContext(), "Please enter a time less than 60", Toast.LENGTH_SHORT).show()
             } else {
                 assessViewModel.setCounter(binding.timerTextField.text.toString().toInt())
@@ -238,12 +241,20 @@ class AssessFragment: Fragment() {
                 binding.pauseTimerButton.visibility = View.GONE
                 binding.startTimerButton.isEnabled = true
 
-//                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
-//                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+                handleVisibility(binding.exportDataButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
+                handleVisibility(binding.assessMovementButton, ShowHide.SHOW, 500, 0f, 0f, -1f, 0f)
             } else {
-//                handleVisibility(binding.exportDataButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
-//                handleVisibility(binding.assessMovementButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
+                handleVisibility(binding.exportDataButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
+                handleVisibility(binding.assessMovementButton, ShowHide.HIDE, 500, 0f, 0f, 0f, -1f)
             }
+        }
+
+        binding.assessMovementButton.setOnClickListener() {
+            binding.textView2.visibility = View.VISIBLE
+
+            // indicate the AI model concluded that the movement is normal
+
+            binding.textView2.text = "Movement is normal"
         }
 
 

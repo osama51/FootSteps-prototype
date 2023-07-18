@@ -537,15 +537,20 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <soup.neumorphism.NeumorphButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/exportDataButton"
                         style="@style/Widget.Neumorph.Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
                         android:gravity="center"
                         android:padding="20dp"
                         android:text="@string/export_data"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp"
+
                         android:textAlignment="center"
+                        app:layout_constraintBottom_toTopOf="@+id/textView2"
                         app:layout_constraintEnd_toStartOf="@+id/assessMovementButton"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -553,14 +558,17 @@
                         app:neumorph_backgroundColor="@color/white"
                         app:neumorph_lightSource="rightTop" />
 
-                    <soup.neumorphism.NeumorphButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/assessMovementButton"
                         style="@style/Widget.Neumorph.Button"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:gravity="center"
                         android:padding="20dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp"
                         android:text="@string/assess"
+                        android:backgroundTint="@color/white"
                         android:textAlignment="center"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -568,6 +576,24 @@
                         app:layout_constraintTop_toBottomOf="@+id/assessmentCardView"
                         app:neumorph_backgroundColor="@color/white"
                         app:neumorph_lightSource="rightTop" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="sssssss"
+                        android:padding="30dp"
+                        android:elevation="4dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/semi_black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:background="@drawable/rounded_corner"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
 
 <!--                    <soup.neumorphism.NeumorphButton-->
 <!--                        android:id="@+id/neumorphButton2"-->

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.charts.PieChart
+import com.toddler.footsteps.MainActivity
 import com.toddler.footsteps.R
 import com.toddler.footsteps.Screens
 import com.toddler.footsteps.chat.ChatViewModel
@@ -46,6 +47,9 @@ class StatsFragment : Fragment() {
         val assessFragment = AssessFragment()
         val fragmentManager = requireActivity().supportFragmentManager
 
+        var mainActivity = requireActivity() as MainActivity
+
+
         binding.assessMovementButton.setOnClickListener {
 //            chatViewModel.setScreen(Screens.ASSESS_MOVEMENT_SCREEN)
             // Replace the current content of the FrameLayout with your Fragment
@@ -77,15 +81,30 @@ class StatsFragment : Fragment() {
             statsViewModel.updateLeftPieCharts(leftPieChart)
         }
 
-        statsViewModel.setStepCount(5235)
+//        statsViewModel.setStepCount(5235)
+
+        statsViewModel.stepCountInt.observe(viewLifecycleOwner) {
+            val now = System.currentTimeMillis()
+            // time from startTime to now in seconds
+            if(now != mainActivity.startTime){
+                val time = (now - mainActivity.startTime) / 1000
+                statsViewModel.getRoughCadence(statsViewModel.stepCountInt.value!!, time)
+
+            }
+        }
+
+
+
 
 //        statsViewModel.stepCount.observe(viewLifecycleOwner) {
 //            Log.i("StatsFragment", "Step count: $it")
 //            binding.stepCountValue.text = it.toString()
 //        }
 
-        statsViewModel.setCadence(103) // in steps per minute
-        statsViewModel.setStrideLength(54.2) // in cm
+//        statsViewModel.setCadence(103) // in steps per minute
+//        statsViewModel.setStrideLength(54.2) // in cm
+
+
 
 
         statsViewModel.accelerometerRightData.observe(viewLifecycleOwner) {
@@ -98,6 +117,14 @@ class StatsFragment : Fragment() {
             val yaw = atan2(-it[0]/10, -it[1]/10) * 180 / Math.PI
             statsViewModel.setLeftFootAngle(it[1])
 //            Log.i("StatsFragment", "Yaw: $yaw")
+
+            // set random stride length between 40 and 60 cm
+//            statsViewModel.setStrideLength( (40..60).random().toDouble())
+
+
+            // get estimate stride length in cm from YAW angle
+//            statsViewModel.getStrideLength(yaw)
+
         }
 
 
